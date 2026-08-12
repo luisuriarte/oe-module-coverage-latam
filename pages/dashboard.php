@@ -378,12 +378,164 @@ if ($resProviders) {
 
         <?php elseif ($activeTab === 'config'): ?>
 
-            <div class="card shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold"><i class="fa-solid fa-sliders text-primary me-2"></i><?php echo xlt('Configuración de Reglas'); ?></h5>
+            <div class="row g-4">
+                <!-- Seccion 1: Reglas de Autorizacion Previa -->
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="fa-solid fa-shield-halved text-primary me-2"></i><?php echo xlt('Reglas de Autorización Previa'); ?>
+                            </h5>
+                            <span class="badge bg-light text-dark border"><?php echo xlt('covl_auth_rules'); ?></span>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small mb-3">
+                                <?php echo xlt('Determina si una práctica solicitada ante un financiador requiere autorización previa (requerida), se aprueba automáticamente (automatica) o no la requiere (no_requerida). Evaluadas por prioridad (menor valor = mayor relevancia).'); ?>
+                            </p>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th># ID</th>
+                                            <th><?php echo xlt('Financiador'); ?></th>
+                                            <th><?php echo xlt('Patrón de Plan'); ?></th>
+                                            <th><?php echo xlt('Tipo Código'); ?></th>
+                                            <th><?php echo xlt('Código Práctica'); ?></th>
+                                            <th><?php echo xlt('Modo de Autorización'); ?></th>
+                                            <th><?php echo xlt('Máx. Auto'); ?></th>
+                                            <th><?php echo xlt('Prioridad'); ?></th>
+                                            <th><?php echo xlt('Estado'); ?></th>
+                                            <th><?php echo xlt('Notas'); ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $resAuthRules = sqlStatement(
+                                            "SELECT r.*, ic.name AS insurer_name
+                                             FROM covl_auth_rules r
+                                             LEFT JOIN insurance_companies ic ON ic.id = r.insurance_company_id
+                                             ORDER BY r.priority ASC, r.id ASC"
+                                        );
+                                        $hasAuthRules = false;
+                                        while ($r = sqlFetchArray($resAuthRules)) {
+                                            $hasAuthRules = true;
+                                            $modeBadge = match ($r['auth_mode']) {
+                                                'automatica'   => 'bg-success',
+                                                'requerida'    => 'bg-warning text-dark',
+                                                'no_requerida' => 'bg-secondary',
+                                                default        => 'bg-light text-dark',
+                                            };
+                                            $planLabel = ($r['plan_pattern'] === '0' || $r['plan_pattern'] === null) ? '<em>Todos los planes</em>' : text($r['plan_pattern']);
+                                            $codeLabel = ($r['code'] === '0' || $r['code'] === null) ? '<em>Todos los códigos</em>' : text($r['code']);
+                                            ?>
+                                            <tr>
+                                                <td>#<?php echo text($r['id']); ?></td>
+                                                <td><strong><?php echo text($r['insurer_name'] ?? 'Financiador ID ' . $r['insurance_company_id']); ?></strong></td>
+                                                <td><code><?php echo $planLabel; ?></code></td>
+                                                <td><span class="badge bg-light text-dark border"><?php echo text($r['code_type']); ?></span></td>
+                                                <td><code><?php echo $codeLabel; ?></code></td>
+                                                <td><span class="badge <?php echo $modeBadge; ?>"><?php echo text(strtoupper($r['auth_mode'])); ?></span></td>
+                                                <td><?php echo $r['max_quantity'] !== null ? text($r['max_quantity']) : '-'; ?></td>
+                                                <td><span class="badge bg-outline-secondary border text-dark"><?php echo text($r['priority']); ?></span></td>
+                                                <td>
+                                                    <?php if ((int)$r['active'] === 1): ?>
+                                                        <span class="badge bg-success bg-opacity-10 text-success border border-success"><?php echo xlt('Activa'); ?></span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-secondary"><?php echo xlt('Inactiva'); ?></span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td><small class="text-muted"><?php echo text($r['notes'] ?? ''); ?></small></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        if (!$hasAuthRules): ?>
+                                            <tr>
+                                                <td colspan="10" class="text-center py-4 text-muted">
+                                                    <i class="fa-regular fa-folder-open fa-2x mb-2 d-block"></i>
+                                                    <?php echo xlt('No hay reglas de autorización configuradas en la base de datos.'); ?>
+                                                </td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="text-muted"><?php echo xlt('Reglas de autorización previa y restricciones de frecuencia configuradas.'); ?></p>
+
+                <!-- Seccion 2: Reglas de Frecuencia y Periodicidad -->
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="fa-solid fa-clock-rotate-left text-primary me-2"></i><?php echo xlt('Reglas de Frecuencia y Periodicidad'); ?>
+                            </h5>
+                            <span class="badge bg-light text-dark border"><?php echo xlt('covl_frequency_rules'); ?></span>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small mb-3">
+                                <?php echo xlt('Valida si una práctica puede realizarse evaluando la fecha de facturación previa en billing y solicitudes activas en covl_authorizations dentro del intervalo mínimo configurado.'); ?>
+                            </p>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th># ID</th>
+                                            <th><?php echo xlt('Financiador'); ?></th>
+                                            <th><?php echo xlt('Tipo Código'); ?></th>
+                                            <th><?php echo xlt('Código Práctica'); ?></th>
+                                            <th><?php echo xlt('Intervalo Mínimo (Días)'); ?></th>
+                                            <th><?php echo xlt('Máx. Anual'); ?></th>
+                                            <th><?php echo xlt('Severidad'); ?></th>
+                                            <th><?php echo xlt('Estado'); ?></th>
+                                            <th><?php echo xlt('Notas'); ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $resFreqRules = sqlStatement(
+                                            "SELECT f.*, ic.name AS insurer_name
+                                             FROM covl_frequency_rules f
+                                             LEFT JOIN insurance_companies ic ON ic.id = f.insurance_company_id
+                                             ORDER BY f.id ASC"
+                                        );
+                                        $hasFreqRules = false;
+                                        while ($f = sqlFetchArray($resFreqRules)) {
+                                            $hasFreqRules = true;
+                                            $sevBadge = ($f['severity'] === 'bloqueo') ? 'bg-danger' : 'bg-warning text-dark';
+                                            ?>
+                                            <tr>
+                                                <td>#<?php echo text($f['id']); ?></td>
+                                                <td><strong><?php echo text($f['insurer_name'] ?? 'Financiador ID ' . $f['insurance_company_id']); ?></strong></td>
+                                                <td><span class="badge bg-light text-dark border"><?php echo text($f['code_type']); ?></span></td>
+                                                <td><code><?php echo text($f['code']); ?></code></td>
+                                                <td><strong><?php echo text($f['min_interval_days']); ?> <?php echo xlt('días'); ?></strong></td>
+                                                <td><?php echo $f['max_per_year'] !== null ? text($f['max_per_year']) . ' / año' : '<em>Sin límite</em>'; ?></td>
+                                                <td><span class="badge <?php echo $sevBadge; ?>"><?php echo text(strtoupper($f['severity'])); ?></span></td>
+                                                <td>
+                                                    <?php if ((int)$f['active'] === 1): ?>
+                                                        <span class="badge bg-success bg-opacity-10 text-success border border-success"><?php echo xlt('Activa'); ?></span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-secondary"><?php echo xlt('Inactiva'); ?></span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td><small class="text-muted"><?php echo text($f['notes'] ?? ''); ?></small></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        if (!$hasFreqRules): ?>
+                                            <tr>
+                                                <td colspan="9" class="text-center py-4 text-muted">
+                                                    <i class="fa-regular fa-folder-open fa-2x mb-2 d-block"></i>
+                                                    <?php echo xlt('No hay reglas de frecuencia configuradas en la base de datos.'); ?>
+                                                </td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
