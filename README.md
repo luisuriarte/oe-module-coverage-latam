@@ -19,6 +19,7 @@
 - [Arquitectura](#-arquitectura)
 - [Tablas de la base de datos](#-tablas-de-la-base-de-datos)
 - [Instalación](#-instalación)
+- [Navegación y Estructura del Menú](#-navegación-y-estructura-del-menú)
 - [Paquete Argentina](#-paquete-argentina)
 - [Adaptadores de integración](#-adaptadores-de-integración)
 - [Servicios incluidos](#-servicios-incluidos)
@@ -227,6 +228,26 @@ Desde **Administración → Módulos**, hacer clic en **Desinstalar**.
 Se ejecuta `sql/uninstall.sql` que elimina todas las tablas `covl_*` en orden FK-seguro.
 
 > ⚠️ **Advertencia:** La desinstalación elimina permanentemente todos los datos de autorizaciones, lotes y convenios almacenados en el módulo. Hacé un respaldo antes.
+
+---
+
+## 📌 Navegación y Estructura del Menú
+
+Al activar el módulo desde el **Module Manager**, se registra la entrada en el menú **Servicios / Honorarios** (o en la barra de menú principal en instalaciones personalizadas):
+
+```
+📂 Servicios / Honorarios (o Menú Principal)
+└── 🏥 Coberturas LATAM
+    ├── 📊 Dashboard                  (Métricas globales y resumen operativo)
+    ├── 📋 Autorizaciones             (Gestión de solicitudes y estado de trámites)
+    ├── 📦 Lotes de Liquidación       (Presentaciones masivas y cobro a obras sociales)
+    ├── 👨‍⚕️ Convenios Prestadores     (Vigencia por profesional y financiador)
+    └── ⚙️ Configuración              (Reglas de autorización previa y frecuencia)
+```
+
+### 🔒 Permisos y control de acceso (ACL):
+- 📊 **Dashboard, Autorizaciones y Lotes:** Accesibles para personal administrativo y recepción (`patients`, `demo`).
+- 👨‍⚕️ **Convenios Prestadores y Configuración:** Accesibles exclusivamente para administradores y auditores médicos (`admin`, `docs`).
 
 ---
 

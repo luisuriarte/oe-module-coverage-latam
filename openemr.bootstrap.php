@@ -86,16 +86,17 @@ function oe_module_covlatam_add_menu_item(MenuEvent $event): MenuEvent
     $subMenu->target      = 'covl';
     $subMenu->menu_id     = 'covl_submenu';
     $subMenu->label       = xlt('Coberturas LATAM');
-    $subMenu->children    = [$menuDash, $menuAuth, $menuBatch, $menuProviders, $menuConfig];
-    $subMenu->acl_req     = ['patients', 'demo'];
-
-    $i = 0;
+    $inserted = false;
     foreach ($menu as $item) {
-        if ($item->menu_id === 'service') {
+        if ($item->menu_id === 'feeimg' || $item->menu_id === 'service' || strtolower($item->label) === 'services' || strtolower($item->label) === 'servicios') {
             $item->children[] = $subMenu;
+            $inserted = true;
+            break;
         }
-        $menu[$i] = $item;
-        $i++;
+    }
+
+    if (!$inserted) {
+        $menu[] = $subMenu;
     }
 
     $event->setMenu($menu);

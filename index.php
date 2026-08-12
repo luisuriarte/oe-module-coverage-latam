@@ -11,4 +11,4 @@
  */
 
 // This file intentionally left as a placeholder.
-// Access the module via the OpenEMR menu: Servicios → Coberturas LATAM
+// Access the module via the OpenEMR main menu: Coberturas LATAM
