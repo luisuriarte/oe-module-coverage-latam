@@ -1,14 +1,14 @@
 <?php
 
 /**
- * oe-module-coverage-latam — Dashboard Principal
+ * oe-module-coverage-latam — Dashboard Principal & CRUD de Configuración
  *
  * Interfaz unificada de gestión de Coberturas LATAM:
  * - Tab 1: Dashboard / Métricas
  * - Tab 2: Autorizaciones Previas
  * - Tab 3: Lotes de Liquidación
  * - Tab 4: Convenios de Prestadores
- * - Tab 5: Reglas de Configuración
+ * - Tab 5: Reglas de Configuración (CRUD Reglas de Autorización y Frecuencia)
  *
  * @package   OpenEMR\Modules\CoverageLatam
  * @author    Luis A. Uriarte <luis.uriarte@gmail.com>
@@ -21,6 +21,110 @@ require_once $GLOBALS['srcdir'] . '/formatting.inc.php';
 
 use OpenEMR\Core\Header;
 use OpenEMR\Common\Acl\AclMain;
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// ---------------------------------------------------------------------------
+// Procesamiento de Acciones POST (CRUD)
+// ---------------------------------------------------------------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    $action = $_POST['action'];
+
+    // 1. Crear Regla de Autorización
+    if ($action === 'add_auth_rule') {
+        $insCompanyId = (int) ($_POST['insurance_company_id'] ?? 0);
+        $planPattern  = trim($_POST['plan_pattern'] ?? '0');
+        if ($planPattern === '') { $planPattern = '0'; }
+        $codeType     = trim($_POST['code_type'] ?? 'NNAR');
+        $code         = trim($_POST['code'] ?? '0');
+        if ($code === '') { $code = '0'; }
+        $authMode     = $_POST['auth_mode'] ?? 'requerida';
+        $maxQty       = isset($_POST['max_quantity']) && $_POST['max_quantity'] !== '' ? (int)$_POST['max_quantity'] : null;
+        $priority     = (int) ($_POST['priority'] ?? 100);
+        $notes        = trim($_POST['notes'] ?? '');
+
+        if ($insCompanyId > 0) {
+            sqlStatement(
+                "INSERT INTO covl_auth_rules 
+                    (insurance_company_id, plan_pattern, code_type, code, auth_mode, max_quantity, priority, notes)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                [$insCompanyId, $planPattern, $codeType, $code, $authMode, $maxQty, $priority, $notes]
+            );
+            $_SESSION['covl_msg'] = ['type' => 'success', 'text' => xlt('Regla de autorización creada exitosamente.')];
+        }
+        header('Location: dashboard.php?tab=config');
+        exit;
+    }
+
+    // 2. Activar / Inactivar Regla de Autorización
+    if ($action === 'toggle_auth_rule') {
+        $ruleId = (int) ($_POST['rule_id'] ?? 0);
+        if ($ruleId > 0) {
+            sqlStatement("UPDATE covl_auth_rules SET active = 1 - active WHERE id = ?", [$ruleId]);
+            $_SESSION['covl_msg'] = ['type' => 'info', 'text' => xlt('Estado de la regla de autorización actualizado.')];
+        }
+        header('Location: dashboard.php?tab=config');
+        exit;
+    }
+
+    // 3. Eliminar Regla de Autorización
+    if ($action === 'delete_auth_rule') {
+        $ruleId = (int) ($_POST['rule_id'] ?? 0);
+        if ($ruleId > 0) {
+            sqlStatement("DELETE FROM covl_auth_rules WHERE id = ?", [$ruleId]);
+            $_SESSION['covl_msg'] = ['type' => 'warning', 'text' => xlt('Regla de autorización eliminada.')];
+        }
+        header('Location: dashboard.php?tab=config');
+        exit;
+    }
+
+    // 4. Crear Regla de Frecuencia
+    if ($action === 'add_freq_rule') {
+        $insCompanyId = (int) ($_POST['insurance_company_id'] ?? 0);
+        $codeType     = trim($_POST['code_type'] ?? 'NNAR');
+        $code         = trim($_POST['code'] ?? '');
+        $minInterval  = (int) ($_POST['min_interval_days'] ?? 0);
+        $maxPerYear   = isset($_POST['max_per_year']) && $_POST['max_per_year'] !== '' ? (int)$_POST['max_per_year'] : null;
+        $severity     = $_POST['severity'] ?? 'alerta';
+        $notes        = trim($_POST['notes'] ?? '');
+
+        if ($insCompanyId > 0 && $code !== '' && $minInterval > 0) {
+            sqlStatement(
+                "INSERT INTO covl_frequency_rules 
+                    (insurance_company_id, code_type, code, min_interval_days, max_per_year, severity, notes)
+                 VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [$insCompanyId, $codeType, $code, $minInterval, $maxPerYear, $severity, $notes]
+            );
+            $_SESSION['covl_msg'] = ['type' => 'success', 'text' => xlt('Regla de frecuencia creada exitosamente.')];
+        }
+        header('Location: dashboard.php?tab=config');
+        exit;
+    }
+
+    // 5. Activar / Inactivar Regla de Frecuencia
+    if ($action === 'toggle_freq_rule') {
+        $ruleId = (int) ($_POST['rule_id'] ?? 0);
+        if ($ruleId > 0) {
+            sqlStatement("UPDATE covl_frequency_rules SET active = 1 - active WHERE id = ?", [$ruleId]);
+            $_SESSION['covl_msg'] = ['type' => 'info', 'text' => xlt('Estado de la regla de frecuencia actualizado.')];
+        }
+        header('Location: dashboard.php?tab=config');
+        exit;
+    }
+
+    // 6. Eliminar Regla de Frecuencia
+    if ($action === 'delete_freq_rule') {
+        $ruleId = (int) ($_POST['rule_id'] ?? 0);
+        if ($ruleId > 0) {
+            sqlStatement("DELETE FROM covl_frequency_rules WHERE id = ?", [$ruleId]);
+            $_SESSION['covl_msg'] = ['type' => 'warning', 'text' => xlt('Regla de frecuencia eliminada.')];
+        }
+        header('Location: dashboard.php?tab=config');
+        exit;
+    }
+}
 
 $activeTab = $_GET['tab'] ?? 'dashboard';
 $allowedTabs = ['dashboard', 'authorizations', 'batches', 'providers', 'config'];
@@ -54,6 +158,13 @@ if ($resBatches) {
 $resProviders = sqlQuery("SELECT COUNT(*) AS total FROM covl_provider_coverage WHERE active = 1");
 if ($resProviders) {
     $activeProvidersCount = (int) $resProviders['total'];
+}
+
+// Lista de financiadores para los selectores modal
+$insurersList = [];
+$resIns = sqlStatement("SELECT id, name FROM insurance_companies WHERE id > 0 ORDER BY name ASC");
+while ($rIns = sqlFetchArray($resIns)) {
+    $insurersList[] = $rIns;
 }
 
 ?>
@@ -117,6 +228,15 @@ if ($resProviders) {
                 <span class="badge bg-light text-primary px-3 py-2 fw-semibold">OpenEMR 8+ Module</span>
             </div>
         </div>
+
+        <!-- Mensajes de Notificación Session -->
+        <?php if (isset($_SESSION['covl_msg'])): ?>
+            <div class="alert alert-<?php echo text($_SESSION['covl_msg']['type']); ?> alert-dismissible fade show mb-4" role="alert">
+                <i class="fa-solid fa-circle-info me-2"></i><?php echo text($_SESSION['covl_msg']['text']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <?php unset($_SESSION['covl_msg']); ?>
+        <?php endif; ?>
 
         <!-- Pestañas de Navegación Principal -->
         <ul class="nav nav-tabs mb-4">
@@ -382,11 +502,13 @@ if ($resProviders) {
                 <!-- Seccion 1: Reglas de Autorizacion Previa -->
                 <div class="col-12">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
+                        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <h5 class="mb-0 fw-bold">
                                 <i class="fa-solid fa-shield-halved text-primary me-2"></i><?php echo xlt('Reglas de Autorización Previa'); ?>
                             </h5>
-                            <span class="badge bg-light text-dark border"><?php echo xlt('covl_auth_rules'); ?></span>
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalNewAuthRule" data-toggle="modal" data-target="#modalNewAuthRule" onclick="openModal('modalNewAuthRule')">
+                                <i class="fa-solid fa-plus me-1"></i><?php echo xlt('Nueva Regla de Autorización'); ?>
+                            </button>
                         </div>
                         <div class="card-body">
                             <p class="text-muted small mb-3">
@@ -401,11 +523,11 @@ if ($resProviders) {
                                             <th><?php echo xlt('Patrón de Plan'); ?></th>
                                             <th><?php echo xlt('Tipo Código'); ?></th>
                                             <th><?php echo xlt('Código Práctica'); ?></th>
-                                            <th><?php echo xlt('Modo de Autorización'); ?></th>
+                                            <th><?php echo xlt('Modo'); ?></th>
                                             <th><?php echo xlt('Máx. Auto'); ?></th>
                                             <th><?php echo xlt('Prioridad'); ?></th>
                                             <th><?php echo xlt('Estado'); ?></th>
-                                            <th><?php echo xlt('Notas'); ?></th>
+                                            <th><?php echo xlt('Acciones'); ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -444,7 +566,24 @@ if ($resProviders) {
                                                         <span class="badge bg-secondary"><?php echo xlt('Inactiva'); ?></span>
                                                     <?php endif; ?>
                                                 </td>
-                                                <td><small class="text-muted"><?php echo text($r['notes'] ?? ''); ?></small></td>
+                                                <td>
+                                                    <div class="d-flex gap-1">
+                                                        <form method="post" action="dashboard.php?tab=config" class="d-inline">
+                                                            <input type="hidden" name="action" value="toggle_auth_rule">
+                                                            <input type="hidden" name="rule_id" value="<?php echo text($r['id']); ?>">
+                                                            <button type="submit" class="btn btn-sm btn-outline-secondary" title="<?php echo xlt('Activar/Inactivar'); ?>">
+                                                                <i class="fa-solid fa-power-off"></i>
+                                                            </button>
+                                                        </form>
+                                                        <form method="post" action="dashboard.php?tab=config" class="d-inline" onsubmit="return confirm('<?php echo xlt('¿Eliminar esta regla?'); ?>');">
+                                                            <input type="hidden" name="action" value="delete_auth_rule">
+                                                            <input type="hidden" name="rule_id" value="<?php echo text($r['id']); ?>">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="<?php echo xlt('Eliminar'); ?>">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
                                             </tr>
                                             <?php
                                         }
@@ -466,11 +605,13 @@ if ($resProviders) {
                 <!-- Seccion 2: Reglas de Frecuencia y Periodicidad -->
                 <div class="col-12">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
+                        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <h5 class="mb-0 fw-bold">
                                 <i class="fa-solid fa-clock-rotate-left text-primary me-2"></i><?php echo xlt('Reglas de Frecuencia y Periodicidad'); ?>
                             </h5>
-                            <span class="badge bg-light text-dark border"><?php echo xlt('covl_frequency_rules'); ?></span>
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalNewFreqRule" data-toggle="modal" data-target="#modalNewFreqRule" onclick="openModal('modalNewFreqRule')">
+                                <i class="fa-solid fa-plus me-1"></i><?php echo xlt('Nueva Regla de Frecuencia'); ?>
+                            </button>
                         </div>
                         <div class="card-body">
                             <p class="text-muted small mb-3">
@@ -484,11 +625,11 @@ if ($resProviders) {
                                             <th><?php echo xlt('Financiador'); ?></th>
                                             <th><?php echo xlt('Tipo Código'); ?></th>
                                             <th><?php echo xlt('Código Práctica'); ?></th>
-                                            <th><?php echo xlt('Intervalo Mínimo (Días)'); ?></th>
+                                            <th><?php echo xlt('Intervalo Mínimo'); ?></th>
                                             <th><?php echo xlt('Máx. Anual'); ?></th>
                                             <th><?php echo xlt('Severidad'); ?></th>
                                             <th><?php echo xlt('Estado'); ?></th>
-                                            <th><?php echo xlt('Notas'); ?></th>
+                                            <th><?php echo xlt('Acciones'); ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -519,7 +660,24 @@ if ($resProviders) {
                                                         <span class="badge bg-secondary"><?php echo xlt('Inactiva'); ?></span>
                                                     <?php endif; ?>
                                                 </td>
-                                                <td><small class="text-muted"><?php echo text($f['notes'] ?? ''); ?></small></td>
+                                                <td>
+                                                    <div class="d-flex gap-1">
+                                                        <form method="post" action="dashboard.php?tab=config" class="d-inline">
+                                                            <input type="hidden" name="action" value="toggle_freq_rule">
+                                                            <input type="hidden" name="rule_id" value="<?php echo text($f['id']); ?>">
+                                                            <button type="submit" class="btn btn-sm btn-outline-secondary" title="<?php echo xlt('Activar/Inactivar'); ?>">
+                                                                <i class="fa-solid fa-power-off"></i>
+                                                            </button>
+                                                        </form>
+                                                        <form method="post" action="dashboard.php?tab=config" class="d-inline" onsubmit="return confirm('<?php echo xlt('¿Eliminar esta regla?'); ?>');">
+                                                            <input type="hidden" name="action" value="delete_freq_rule">
+                                                            <input type="hidden" name="rule_id" value="<?php echo text($f['id']); ?>">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="<?php echo xlt('Eliminar'); ?>">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
                                             </tr>
                                             <?php
                                         }
@@ -539,8 +697,167 @@ if ($resProviders) {
                 </div>
             </div>
 
+            <!-- MODAL: Nueva Regla de Autorizacion -->
+            <div class="modal fade" id="modalNewAuthRule" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <form method="post" action="dashboard.php?tab=config">
+                            <input type="hidden" name="action" value="add_auth_rule">
+                            <div class="modal-header">
+                                <h5 class="modal-title fw-bold"><i class="fa-solid fa-shield-halved text-primary me-2"></i><?php echo xlt('Nueva Regla de Autorización'); ?></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close" onclick="closeModal('modalNewAuthRule')"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold"><?php echo xlt('Financiador / Obra Social'); ?></label>
+                                        <select name="insurance_company_id" class="form-select" required>
+                                            <option value=""><?php echo xlt('-- Seleccionar Financiador --'); ?></option>
+                                            <?php foreach ($insurersList as $ins): ?>
+                                                <option value="<?php echo text($ins['id']); ?>"><?php echo text($ins['name']); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold"><?php echo xlt('Modo de Autorización'); ?></label>
+                                        <select name="auth_mode" class="form-select" required>
+                                            <option value="requerida"><?php echo xlt('Requerida (Trámite pendiente)'); ?></option>
+                                            <option value="automatica"><?php echo xlt('Automática (Auto-aprobación)'); ?></option>
+                                            <option value="no_requerida"><?php echo xlt('No Requerida (Exenta)'); ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold"><?php echo xlt('Patrón de Plan (0 = Todos los planes)'); ?></label>
+                                        <input type="text" name="plan_pattern" class="form-control" value="0" placeholder="0 o ej: GOLD%">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold"><?php echo xlt('Tipo de Código'); ?></label>
+                                        <input type="text" name="code_type" class="form-control" value="NNAR" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold"><?php echo xlt('Código de la Práctica (0 = Todos)'); ?></label>
+                                        <input type="text" name="code" class="form-control" value="0" placeholder="0 o ej: 380601">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold"><?php echo xlt('Máx. Cant. Auto'); ?></label>
+                                        <input type="number" name="max_quantity" class="form-control" placeholder="Ej: 2">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold"><?php echo xlt('Prioridad (Menor = Más Alta)'); ?></label>
+                                        <input type="number" name="priority" class="form-control" value="100" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold"><?php echo xlt('Notas / Descripción'); ?></label>
+                                        <input type="text" name="notes" class="form-control" placeholder="Justificación o normativa aplicable">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal" onclick="closeModal('modalNewAuthRule')"><?php echo xlt('Cancelar'); ?></button>
+                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save me-1"></i><?php echo xlt('Guardar Regla'); ?></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: Nueva Regla de Frecuencia -->
+            <div class="modal fade" id="modalNewFreqRule" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <form method="post" action="dashboard.php?tab=config">
+                            <input type="hidden" name="action" value="add_freq_rule">
+                            <div class="modal-header">
+                                <h5 class="modal-title fw-bold"><i class="fa-solid fa-clock-rotate-left text-primary me-2"></i><?php echo xlt('Nueva Regla de Frecuencia'); ?></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close" onclick="closeModal('modalNewFreqRule')"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold"><?php echo xlt('Financiador / Obra Social'); ?></label>
+                                        <select name="insurance_company_id" class="form-select" required>
+                                            <option value=""><?php echo xlt('-- Seleccionar Financiador --'); ?></option>
+                                            <?php foreach ($insurersList as $ins): ?>
+                                                <option value="<?php echo text($ins['id']); ?>"><?php echo text($ins['name']); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold"><?php echo xlt('Severidad de Restricción'); ?></label>
+                                        <select name="severity" class="form-select" required>
+                                            <option value="alerta"><?php echo xlt('Alerta (Emite advertencia, permite continuar)'); ?></option>
+                                            <option value="bloqueo"><?php echo xlt('Bloqueo (Impide generar la orden)'); ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold"><?php echo xlt('Tipo de Código'); ?></label>
+                                        <input type="text" name="code_type" class="form-control" value="NNAR" required>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label class="form-label fw-bold"><?php echo xlt('Código Práctica'); ?></label>
+                                        <input type="text" name="code" class="form-control" placeholder="Ej: 380601" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold"><?php echo xlt('Intervalo Mínimo (Días)'); ?></label>
+                                        <input type="number" name="min_interval_days" class="form-control" placeholder="Ej: 180" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold"><?php echo xlt('Máximo de Veces por Año (Opcional)'); ?></label>
+                                        <input type="number" name="max_per_year" class="form-control" placeholder="Ej: 2 (dejar vacío si es sin límite)">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold"><?php echo xlt('Notas / Referencia Normativa'); ?></label>
+                                        <input type="text" name="notes" class="form-control" placeholder="Ej: Resolución o norma de frecuencia">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal" onclick="closeModal('modalNewFreqRule')"><?php echo xlt('Cancelar'); ?></button>
+                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save me-1"></i><?php echo xlt('Guardar Regla'); ?></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         <?php endif; ?>
 
     </div>
+
+    <!-- Script de soporte universal para modales (Bootstrap 4 / Bootstrap 5 / JS Nativo) -->
+    <script>
+        function openModal(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            if (window.bootstrap && window.bootstrap.Modal) {
+                var modal = window.bootstrap.Modal.getOrCreateInstance(el);
+                if (modal) { modal.show(); return; }
+            }
+            if (window.jQuery && typeof window.jQuery(el).modal === 'function') {
+                window.jQuery(el).modal('show');
+                return;
+            }
+            el.style.display = 'block';
+            el.classList.add('show');
+            document.body.classList.add('modal-open');
+        }
+
+        function closeModal(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            if (window.bootstrap && window.bootstrap.Modal) {
+                var modal = window.bootstrap.Modal.getInstance(el);
+                if (modal) { modal.hide(); return; }
+            }
+            if (window.jQuery && typeof window.jQuery(el).modal === 'function') {
+                window.jQuery(el).modal('hide');
+                return;
+            }
+            el.style.display = 'none';
+            el.classList.remove('show');
+            document.body.classList.remove('modal-open');
+        }
+    </script>
 </body>
 </html>
+
