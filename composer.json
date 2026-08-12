@@ -1,0 +1,21 @@
+{
+    "name": "openemr/oe-module-coverage-latam",
+    "description": "Gestión de Coberturas LATAM para OpenEMR 8+ — Autorizaciones, liquidaciones por lotes, convenios de prestadores.",
+    "type": "library",
+    "license": "GPL-3.0-only",
+    "authors": [
+        {
+            "name": "Luis A. Uriarte",
+            "email": "luis.uriarte@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenEMR\\Modules\\CoverageLatam\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
