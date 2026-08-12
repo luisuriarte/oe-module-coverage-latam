@@ -28,12 +28,15 @@ CREATE TABLE IF NOT EXISTS `covl_config` (
 
 -- ---------------------------------------------------------------------------
 -- 2. covl_authorizations — Autorizaciones previas de prácticas
+-- Corrección FK types: pid, encounter_id, insurance_data_id y requested_by
+--   usan int(11) para coincidir con patient_data.pid, form_encounter.encounter,
+--   insurance_data.id y users.id en OpenEMR nativo.
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `covl_authorizations` (
-  `id`                   bigint(20)   NOT NULL AUTO_INCREMENT                COMMENT 'Clave primaria autoincremental',
-  `pid`                  bigint(20)   NOT NULL                               COMMENT 'FK → patient_data.pid — paciente al que corresponde la autorización',
-  `encounter_id`         bigint(20)   DEFAULT NULL                           COMMENT 'FK → form_encounter.encounter — encuentro clínico asociado (puede ser NULL al solicitar antes del encuentro)',
-  `insurance_data_id`    bigint(20)   NOT NULL                               COMMENT 'FK → insurance_data.id — registro de cobertura vigente del paciente',
+  `id`                   int(11)      NOT NULL AUTO_INCREMENT                COMMENT 'Clave primaria autoincremental',
+  `pid`                  int(11)      NOT NULL                               COMMENT 'FK → patient_data.pid — paciente al que corresponde la autorización',
+  `encounter_id`         int(11)      DEFAULT NULL                           COMMENT 'FK → form_encounter.encounter — encuentro clínico asociado (puede ser NULL al solicitar antes del encuentro)',
+  `insurance_data_id`    int(11)      NOT NULL                               COMMENT 'FK → insurance_data.id — registro de cobertura vigente del paciente',
   `insurance_company_id` int(11)      NOT NULL                               COMMENT 'FK → insurance_companies.id — financiador (denormalizado para consultas rápidas)',
   `code_type`            varchar(15)  NOT NULL                               COMMENT 'Tipo de código de la práctica (ct_key de code_types, ej: CPT4, NNAR)',
   `code`                 varchar(25)  NOT NULL                               COMMENT 'Código de la práctica a autorizar',
@@ -48,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `covl_authorizations` (
   `valid_until`          date         DEFAULT NULL                           COMMENT 'Fecha de vencimiento de la autorización otorgada',
   `reject_reason`        text         DEFAULT NULL                           COMMENT 'Motivo de rechazo o auditoría (si el estado es rechazada o en_auditoria)',
   `notes`                text         DEFAULT NULL                           COMMENT 'Notas internas del operador sobre esta autorización',
-  `requested_by`         bigint(20)   DEFAULT NULL                           COMMENT 'FK → users.id — usuario del sistema que generó la solicitud',
+  `requested_by`         int(11)      DEFAULT NULL                           COMMENT 'FK → users.id — usuario del sistema que generó la solicitud',
   `adapter_id`           int(11)      DEFAULT NULL                           COMMENT 'FK → covl_adapters.id — adaptador de integración utilizado (NULL si fue carga manual)',
   `external_ref`         varchar(100) DEFAULT NULL                           COMMENT 'Referencia externa del sistema del financiador para trazabilidad cruzada',
   `created_at`           datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP     COMMENT 'Fecha y hora de creación del registro',
@@ -64,13 +67,14 @@ CREATE TABLE IF NOT EXISTS `covl_authorizations` (
 
 -- ---------------------------------------------------------------------------
 -- 3. covl_authorization_history — Historial de cambios de estado
+-- Corrección FK types: id, authorization_id y changed_by usan int(11)
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `covl_authorization_history` (
-  `id`               bigint(20)   NOT NULL AUTO_INCREMENT                COMMENT 'Clave primaria autoincremental',
-  `authorization_id` bigint(20)   NOT NULL                               COMMENT 'FK → covl_authorizations.id — autorización cuyo estado cambió',
+  `id`               int(11)      NOT NULL AUTO_INCREMENT                COMMENT 'Clave primaria autoincremental',
+  `authorization_id` int(11)      NOT NULL                               COMMENT 'FK → covl_authorizations.id — autorización cuyo estado cambió',
   `status_from`      varchar(30)  DEFAULT NULL                           COMMENT 'Estado anterior al cambio',
   `status_to`        varchar(30)  NOT NULL                               COMMENT 'Nuevo estado registrado',
-  `changed_by`       bigint(20)   DEFAULT NULL                           COMMENT 'FK → users.id — usuario que realizó el cambio (NULL si fue automático)',
+  `changed_by`       int(11)      DEFAULT NULL                           COMMENT 'FK → users.id — usuario que realizó el cambio (NULL si fue automático)',
   `change_reason`    text         DEFAULT NULL                           COMMENT 'Motivo o detalle del cambio de estado',
   `created_at`       datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP     COMMENT 'Fecha y hora en que se registró el cambio de estado',
   PRIMARY KEY (`id`),
@@ -81,15 +85,19 @@ CREATE TABLE IF NOT EXISTS `covl_authorization_history` (
 
 -- ---------------------------------------------------------------------------
 -- 4. covl_auth_rules — Reglas de autorización por práctica × financiador × plan
+-- Corrección UNIQUE KEY con NULL: plan_pattern y code usan NOT NULL DEFAULT '0'
+--   (valor sentinel) en lugar de DEFAULT NULL. MySQL no detecta duplicados cuando
+--   algún campo del índice único es NULL. En PHP: tratar '0' como wildcard
+--   (todos los planes / todos los códigos del tipo).
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `covl_auth_rules` (
   `id`                   int(11)      NOT NULL AUTO_INCREMENT              COMMENT 'Clave primaria autoincremental',
   `insurance_company_id` int(11)      NOT NULL                             COMMENT 'FK → insurance_companies.id — financiador al que aplica la regla',
-  `plan_pattern`         varchar(255) DEFAULT NULL                         COMMENT 'Patrón de nombre de plan al que aplica (NULL = todos los planes del financiador; soporta % como comodín)',
+  `plan_pattern`         varchar(255) NOT NULL DEFAULT '0'                 COMMENT 'Patrón de nombre de plan al que aplica (0 = todos los planes del financiador; cualquier otro valor soporta % como comodín SQL LIKE)',
   `code_type`            varchar(15)  NOT NULL                             COMMENT 'Tipo de código al que aplica la regla (ct_key de code_types)',
-  `code`                 varchar(25)  DEFAULT NULL                         COMMENT 'Código específico de la práctica (NULL = todos los códigos del tipo indicado)',
+  `code`                 varchar(25)  NOT NULL DEFAULT '0'                 COMMENT 'Código específico de la práctica (0 = todos los códigos del tipo indicado — wildcard)',
   `auth_mode`            enum('automatica','requerida','no_requerida') NOT NULL DEFAULT 'requerida' COMMENT 'Modo de autorización: automatica = se aprueba sin gestión, requerida = requiere auditoría del financiador, no_requerida = exenta',
-  `max_quantity`         int(11)      DEFAULT NULL                         COMMENT 'Cantidad máxima aprobable automáticamente (aplica si auth_mode = automatica)',
+  `max_quantity`         int(11)      DEFAULT NULL                         COMMENT 'Cantidad máxima aprobable automáticamente (aplica si auth_mode = automatica; si se supera, se escala a requerida)',
   `priority`             int(11)      NOT NULL DEFAULT 100                 COMMENT 'Orden de evaluación cuando múltiples reglas coinciden (menor valor = mayor prioridad)',
   `active`               tinyint(1)   NOT NULL DEFAULT 1                   COMMENT 'Estado de la regla (1=activa, 0=inactiva)',
   `country_code`         char(2)      DEFAULT NULL                         COMMENT 'País de aplicación ISO 3166-1 alpha-2 (NULL = genérico para cualquier país)',
@@ -127,12 +135,16 @@ CREATE TABLE IF NOT EXISTS `covl_frequency_rules` (
 
 -- ---------------------------------------------------------------------------
 -- 6. covl_provider_coverage — Vigencia de convenio prestador × financiador
+-- Corrección FK types: user_id usa int(11) (igual que users.id en OpenEMR nativo).
+-- Corrección UNIQUE KEY con NULL: facility_id usa NOT NULL DEFAULT 0 (sentinel)
+--   en lugar de DEFAULT NULL. En PHP: tratar facility_id = 0 como
+--   "aplica a todas las sedes" en vez de consultar con IS NULL.
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `covl_provider_coverage` (
   `id`                   int(11)      NOT NULL AUTO_INCREMENT              COMMENT 'Clave primaria autoincremental',
-  `user_id`              bigint(20)   NOT NULL                             COMMENT 'FK → users.id — profesional o prestador con el convenio',
+  `user_id`              int(11)      NOT NULL                             COMMENT 'FK → users.id — profesional o prestador con el convenio',
   `insurance_company_id` int(11)      NOT NULL                             COMMENT 'FK → insurance_companies.id — financiador con el que tiene convenio',
-  `facility_id`          int(11)      DEFAULT NULL                         COMMENT 'FK → facility.id — sede donde aplica el convenio (NULL = aplica en todas las sedes)',
+  `facility_id`          int(11)      NOT NULL DEFAULT 0                   COMMENT 'FK → facility.id — sede donde aplica el convenio (0 = aplica en todas las sedes — sentinel para UNIQUE KEY)',
   `provider_number`      varchar(50)  DEFAULT NULL                         COMMENT 'Número de prestador ante el financiador (matrícula de convenio o código de efector)',
   `date_from`            date         NOT NULL                             COMMENT 'Fecha de inicio de vigencia del convenio',
   `date_to`              date         DEFAULT NULL                         COMMENT 'Fecha de fin de vigencia del convenio (NULL = vigente sin fecha de vencimiento definida)',
@@ -150,14 +162,17 @@ CREATE TABLE IF NOT EXISTS `covl_provider_coverage` (
 
 -- ---------------------------------------------------------------------------
 -- 7. covl_settlement_batches — Lotes de liquidación periódica
+-- Corrección FK types: id y created_by usan int(11).
+-- Nuevo campo: currency char(3) ISO 4217 para soporte multi-país.
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `covl_settlement_batches` (
-  `id`                   bigint(20)    NOT NULL AUTO_INCREMENT             COMMENT 'Clave primaria autoincremental',
+  `id`                   int(11)       NOT NULL AUTO_INCREMENT             COMMENT 'Clave primaria autoincremental',
   `batch_number`         varchar(30)   NOT NULL                            COMMENT 'Número de lote único (ej: AR-OSDE-2026-08-001)',
   `insurance_company_id` int(11)       NOT NULL                            COMMENT 'FK → insurance_companies.id — financiador al que se presenta el lote',
   `facility_id`          int(11)       NOT NULL                            COMMENT 'FK → facility.id — sede que presenta el lote',
   `period_from`          date          NOT NULL                            COMMENT 'Fecha de inicio del período que cubre el lote de liquidación',
   `period_to`            date          NOT NULL                            COMMENT 'Fecha de fin del período que cubre el lote de liquidación',
+  `currency`             char(3)       NOT NULL DEFAULT 'ARS'              COMMENT 'Moneda de la liquidación en formato ISO 4217 (ARS=Peso Argentino, CLP=Peso Chileno, COP=Peso Colombiano, etc.)',
   `status`               enum('borrador','armado','presentado','pagado_parcial','pagado_total','en_disputa','anulado') NOT NULL DEFAULT 'borrador' COMMENT 'Estado del lote: borrador=en preparación, armado=cerrado listo para presentar, presentado=enviado al financiador, pagado_parcial=pago incompleto, pagado_total=liquidado completo, en_disputa=con débitos o rechazos, anulado=cancelado',
   `total_items`          int(11)       NOT NULL DEFAULT 0                  COMMENT 'Cantidad total de ítems incluidos en el lote (denormalizado para consultas rápidas)',
   `total_amount`         decimal(14,2) NOT NULL DEFAULT 0.00               COMMENT 'Monto total facturado presentado en el lote',
@@ -166,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `covl_settlement_batches` (
   `payment_date`         date          DEFAULT NULL                        COMMENT 'Fecha en que el financiador realizó el pago',
   `payment_reference`    varchar(100)  DEFAULT NULL                        COMMENT 'Número de transferencia, cheque o referencia del pago del financiador',
   `dispute_notes`        text          DEFAULT NULL                        COMMENT 'Detalle de débitos, rechazos parciales o notas de la disputa',
-  `created_by`           bigint(20)    DEFAULT NULL                        COMMENT 'FK → users.id — usuario que creó el lote',
+  `created_by`           int(11)       DEFAULT NULL                        COMMENT 'FK → users.id — usuario que creó el lote',
   `created_at`           datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP  COMMENT 'Fecha y hora de creación del lote',
   `updated_at`           datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha y hora de última modificación',
   PRIMARY KEY (`id`),
@@ -179,28 +194,36 @@ CREATE TABLE IF NOT EXISTS `covl_settlement_batches` (
 
 -- ---------------------------------------------------------------------------
 -- 8. covl_settlement_items — Ítems individuales de un lote de liquidación
+-- Correcciones:
+--   - id, batch_id, pid, encounter_id, authorization_id usan int(11)
+--   - Nuevo campo currency char(3) ISO 4217
+--   - Nuevo campo attempt_number tinyint(3): permite re-presentar ítems rechazados
+--     en un lote posterior sin romper la UNIQUE KEY
+--   - UNIQUE KEY incluye attempt_number: (batch_id, billing_id, attempt_number)
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `covl_settlement_items` (
-  `id`               bigint(20)    NOT NULL AUTO_INCREMENT                  COMMENT 'Clave primaria autoincremental',
-  `batch_id`         bigint(20)    NOT NULL                                 COMMENT 'FK → covl_settlement_batches.id — lote al que pertenece el ítem',
+  `id`               int(11)       NOT NULL AUTO_INCREMENT                  COMMENT 'Clave primaria autoincremental',
+  `batch_id`         int(11)       NOT NULL                                 COMMENT 'FK → covl_settlement_batches.id — lote al que pertenece el ítem',
   `billing_id`       int(11)       NOT NULL                                 COMMENT 'FK → billing.id — prestación facturada del encuentro',
-  `pid`              bigint(20)    NOT NULL                                 COMMENT 'FK → patient_data.pid — paciente de la prestación (denormalizado)',
-  `encounter_id`     bigint(20)    NOT NULL                                 COMMENT 'FK → form_encounter.encounter — encuentro clínico al que pertenece la prestación',
-  `authorization_id` bigint(20)    DEFAULT NULL                             COMMENT 'FK → covl_authorizations.id — autorización vinculada a la prestación (NULL si no requería autorización)',
+  `pid`              int(11)       NOT NULL                                 COMMENT 'FK → patient_data.pid — paciente de la prestación (denormalizado)',
+  `encounter_id`     int(11)       NOT NULL                                 COMMENT 'FK → form_encounter.encounter — encuentro clínico al que pertenece la prestación',
+  `authorization_id` int(11)       DEFAULT NULL                             COMMENT 'FK → covl_authorizations.id — autorización vinculada a la prestación (NULL si no requería autorización)',
   `code_type`        varchar(15)   NOT NULL                                 COMMENT 'Tipo de código presentado en el lote (ct_key)',
   `code`             varchar(25)   NOT NULL                                 COMMENT 'Código de la práctica presentada',
   `fee`              decimal(12,2) NOT NULL                                 COMMENT 'Monto facturado de esta línea presentada al financiador',
+  `currency`         char(3)       NOT NULL DEFAULT 'ARS'                   COMMENT 'Moneda del ítem en formato ISO 4217 — debe coincidir con la moneda del lote',
+  `attempt_number`   tinyint(3)    NOT NULL DEFAULT 1                       COMMENT 'Número de intento de presentación del ítem (1=primera presentación, 2=re-presentación tras rechazo, etc.)',
   `item_status`      enum('incluido','aprobado','rechazado','debitado') NOT NULL DEFAULT 'incluido' COMMENT 'Estado del ítem dentro del lote: incluido=en proceso, aprobado=aceptado por financiador, rechazado=no reconocido, debitado=aceptado con descuento',
   `debit_reason`     varchar(255)  DEFAULT NULL                             COMMENT 'Motivo del débito o rechazo informado por el financiador',
   `debit_amount`     decimal(12,2) DEFAULT NULL                             COMMENT 'Monto debitado por el financiador sobre este ítem (NULL si no hay débito)',
   `created_at`       datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP       COMMENT 'Fecha y hora de inclusión del ítem en el lote',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_covl_items_batch_billing` (`batch_id`, `billing_id`),
+  UNIQUE KEY `uq_covl_items_batch_billing` (`batch_id`, `billing_id`, `attempt_number`),
   KEY `idx_covl_items_pid`           (`pid`),
   KEY `idx_covl_items_encounter`     (`encounter_id`),
   KEY `idx_covl_items_authorization` (`authorization_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
-  COMMENT='Prestaciones individuales incluidas en un lote de liquidación periódica; cada ítem de billing puede pertenecer a un solo lote';
+  COMMENT='Prestaciones individuales incluidas en un lote de liquidación; un ítem rechazado puede re-presentarse en un lote posterior incrementando attempt_number';
 
 -- ---------------------------------------------------------------------------
 -- 9. covl_adapters — Catálogo de adaptadores de integración plugables
@@ -223,13 +246,14 @@ CREATE TABLE IF NOT EXISTS `covl_adapters` (
 
 -- ---------------------------------------------------------------------------
 -- 10. covl_integration_log — Registro de interacciones con sistemas externos
+-- Corrección FK types: id, pid y authorization_id usan int(11)
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `covl_integration_log` (
-  `id`               bigint(20)   NOT NULL AUTO_INCREMENT                  COMMENT 'Clave primaria autoincremental',
+  `id`               int(11)      NOT NULL AUTO_INCREMENT                  COMMENT 'Clave primaria autoincremental',
   `adapter_id`       int(11)      NOT NULL                                 COMMENT 'FK → covl_adapters.id — adaptador que realizó la operación',
   `operation`        varchar(50)  NOT NULL                                 COMMENT 'Tipo de operación ejecutada (ej: verificar_elegibilidad, solicitar_autorizacion, consultar_estado)',
-  `pid`              bigint(20)   DEFAULT NULL                             COMMENT 'FK → patient_data.pid — paciente involucrado en la operación (NULL si no aplica)',
-  `authorization_id` bigint(20)   DEFAULT NULL                             COMMENT 'FK → covl_authorizations.id — autorización involucrada en la operación (NULL si no aplica)',
+  `pid`              int(11)      DEFAULT NULL                             COMMENT 'FK → patient_data.pid — paciente involucrado en la operación (NULL si no aplica)',
+  `authorization_id` int(11)      DEFAULT NULL                             COMMENT 'FK → covl_authorizations.id — autorización involucrada en la operación (NULL si no aplica)',
   `request_payload`  text         DEFAULT NULL                             COMMENT 'Datos enviados al sistema externo en formato JSON',
   `response_payload` text         DEFAULT NULL                             COMMENT 'Datos recibidos del sistema externo en formato JSON',
   `http_status`      int(3)       DEFAULT NULL                             COMMENT 'Código de estado HTTP de la respuesta (NULL si no fue una llamada HTTP)',
@@ -308,14 +332,10 @@ VALUES
   ('AR', 'Argentina — Obras Sociales, Prepagas y ART', '1.0.0', 'NNAR', 0);
 
 -- ---------------------------------------------------------------------------
--- Registro del tipo de código Nomenclador Nacional Argentino en code_types
--- ct_id 200+ para no colisionar con los IDs nativos de OpenEMR (hasta ~114)
+-- NOTA: El tipo de código NNAR (Nomenclador Nacional Argentino) NO se registra
+-- aquí para evitar colisión con ct_id de nomencladores custom preexistentes.
+-- El registro se realiza dinámicamente desde el installer PHP del módulo,
+-- calculando el próximo ct_id libre:
+--   SELECT COALESCE(MAX(ct_id), 100) + 1 FROM code_types
+-- Ver: src/Installer/CodeTypeInstaller.php
 -- ---------------------------------------------------------------------------
-INSERT IGNORE INTO `code_types`
-  (`ct_key`, `ct_id`, `ct_seq`, `ct_mod`, `ct_just`, `ct_mask`, `ct_fee`,
-   `ct_rel`, `ct_nofs`, `ct_diag`, `ct_active`, `ct_label`,
-   `ct_external`, `ct_claim`, `ct_proc`, `ct_term`, `ct_problem`, `ct_drug`)
-VALUES
-  ('NNAR', 200, 200, 0, '', '', 1,
-   0, 0, 0, 1, 'Nomenclador Nacional Argentino',
-   0, 0, 1, 0, 0, 0);

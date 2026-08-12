@@ -57,10 +57,15 @@ class FrequencyCheckService
     /**
      * Valida si una práctica puede realizarse según las reglas de frecuencia configuradas.
      *
-     * Se consultan:
-     * 1. covl_frequency_rules → para obtener el intervalo mínimo y la severidad
-     * 2. billing → para buscar si el paciente ya tiene la práctica en el período
-     * 3. covl_authorizations → como respaldo si la práctica tuvo autorización previa
+     * Fuentes de antecedentes consultadas:
+     *   1. billing              — prestaciones ya facturadas en un encuentro
+     *   2. covl_authorizations  — autorizaciones activas SIN encounter_id
+     *                            (práctica agendada/aprobada pero no realizada aún;
+     *                             también debe contar como antecedente)
+     *
+     * Restricciones evaluadas (independientes):
+     *   A. max_per_year    — conteo en el año calendario de $requestDate
+     *   B. min_interval_days — ventana de intervalo mínimo desde la última ocurrencia
      *
      * @param int    $pid          ID del paciente
      * @param int    $insCompanyId ID del financiador
@@ -89,12 +94,32 @@ class FrequencyCheckService
 
         $intervalDays = (int) $rule['min_interval_days'];
         $severity     = $rule['severity'];
+        $maxPerYear   = $rule['max_per_year'] !== null ? (int) $rule['max_per_year'] : null;
 
-        // 2. Calcular la ventana: desde cuándo hay que buscar
+        // 2. Restricción A: max_per_year — conteo en el año calendario de $requestDate
+        if ($maxPerYear !== null) {
+            $yearCount = $this->countInYear($pid, $codeType, $code, $requestDate);
+            if ($yearCount >= $maxPerYear) {
+                $year    = substr($requestDate, 0, 4);
+                $message = "La práctica {$code} ya fue realizada {$yearCount} vez/veces en {$year}. "
+                         . "El máximo permitido por año calendario es {$maxPerYear}.";
+                $allowed = ($severity === 'alerta');
+                return new FrequencyCheckResult(
+                    allowed:           $allowed,
+                    violation:         true,
+                    severity:          $severity,
+                    message:           $message,
+                    lastPerformedDate: null,
+                    daysRemaining:     null,
+                );
+            }
+        }
+
+        // 3. Restricción B: min_interval_days — buscar antecedente en la ventana temporal
         $windowStart = date('Y-m-d', strtotime($requestDate . " -{$intervalDays} days"));
 
-        // 3. Buscar la última práctica igual dentro de la ventana en billing
-        $lastDate = $this->findLastBillingDate($pid, $codeType, $code, $windowStart, $requestDate);
+        // Consultar billing + covl_authorizations y tomar la fecha más reciente
+        $lastDate = $this->findLastRelevantDate($pid, $codeType, $code, $windowStart, $requestDate);
 
         if ($lastDate === null) {
             return FrequencyCheckResult::ok(
@@ -102,12 +127,12 @@ class FrequencyCheckService
             );
         }
 
-        // 4. Hay violación: calcular días restantes
+        // 4. Hay violación de intervalo: calcular días restantes
         $nextAllowed   = date('Y-m-d', strtotime($lastDate . " +{$intervalDays} days"));
         $daysRemaining = (int) ceil((strtotime($nextAllowed) - strtotime($requestDate)) / 86400);
         $daysRemaining = max(0, $daysRemaining);
 
-        $message = "La práctica {$code} ya fue realizada el {$lastDate}. "
+        $message = "La práctica {$code} ya tiene un antecedente del {$lastDate}. "
             . "El intervalo mínimo es de {$intervalDays} días. "
             . "Próxima fecha habilitada: {$nextAllowed}.";
 
@@ -124,7 +149,7 @@ class FrequencyCheckService
     }
 
     /**
-     * Busca la regla de frecuencia más específica para la combinación.
+     * Busca la regla de frecuencia más específica para la combinación financiador+código.
      *
      * @return array|null
      */
@@ -143,27 +168,106 @@ class FrequencyCheckService
     }
 
     /**
-     * Busca en billing la última fecha de la práctica para el paciente en la ventana indicada.
+     * Cuenta cuántas veces se realizó (o autorizó activamente) la práctica
+     * en el año calendario de $requestDate.
      *
-     * @return string|null  Fecha Y-m-d de la última realización, o null
+     * Combina dos fuentes para evitar doble conteo:
+     *   - billing: prestaciones ya facturadas en un encounter
+     *   - covl_authorizations: autorizaciones activas SIN encounter_id
+     *     (las que tienen encounter_id ya están en billing)
+     *
+     * @param int    $pid         ID del paciente
+     * @param string $codeType    Tipo de código
+     * @param string $code        Código de la práctica
+     * @param string $requestDate Fecha de referencia para extraer el año (Y-m-d)
+     *
+     * @return int Suma de ocurrencias en el año
      */
-    private function findLastBillingDate(
+    private function countInYear(int $pid, string $codeType, string $code, string $requestDate): int
+    {
+        $year = (int) substr($requestDate, 0, 4);
+
+        // Fuente 1: billing — prácticas ya facturadas en encounters
+        $sqlBilling = "SELECT COUNT(*) AS total
+                       FROM billing b
+                       JOIN form_encounter fe ON fe.encounter = b.encounter AND fe.pid = b.pid
+                       WHERE b.pid       = ?
+                         AND b.code_type = ?
+                         AND b.code      = ?
+                         AND b.activity  = 1
+                         AND YEAR(fe.date) = ?";
+        $rowB        = ($this->dbQuery)($sqlBilling, [$pid, $codeType, $code, $year]);
+        $fromBilling = isset($rowB['total']) ? (int) $rowB['total'] : 0;
+
+        // Fuente 2: autorizaciones activas SIN encounter_id para no contar doble con billing
+        $sqlAuth  = "SELECT COUNT(*) AS total
+                     FROM covl_authorizations
+                     WHERE pid          = ?
+                       AND code_type    = ?
+                       AND code         = ?
+                       AND status       IN ('pendiente', 'en_auditoria', 'aprobada')
+                       AND encounter_id IS NULL
+                       AND YEAR(request_date) = ?";
+        $rowA     = ($this->dbQuery)($sqlAuth, [$pid, $codeType, $code, $year]);
+        $fromAuth = isset($rowA['total']) ? (int) $rowA['total'] : 0;
+
+        return $fromBilling + $fromAuth;
+    }
+
+    /**
+     * Devuelve la fecha más reciente (Y-m-d) entre billing y covl_authorizations
+     * dentro de la ventana temporal indicada.
+     *
+     * Fuente 1 (billing): prácticas ya facturadas en un encounter.
+     * Fuente 2 (covl_authorizations): autorizaciones activas SIN encounter_id.
+     *   - Práctica agendada y aprobada pero aún no realizada → igualmente cuenta
+     *     para el intervalo mínimo.
+     *   - Se excluyen las que tienen encounter_id para no contar doble con billing.
+     *
+     * @return string|null  Fecha Y-m-d del antecedente más reciente, o null si no hay
+     */
+    private function findLastRelevantDate(
         int    $pid,
         string $codeType,
         string $code,
         string $windowStart,
         string $windowEnd
     ): ?string {
-        $sql = "SELECT MAX(DATE(fe.date)) AS last_date
-                FROM billing b
-                JOIN form_encounter fe ON fe.encounter = b.encounter AND fe.pid = b.pid
-                WHERE b.pid       = ?
-                  AND b.code_type = ?
-                  AND b.code      = ?
-                  AND b.activity  = 1
-                  AND DATE(fe.date) BETWEEN ? AND ?";
+        // Fuente 1: billing
+        $sqlBilling = "SELECT MAX(DATE(fe.date)) AS last_date
+                       FROM billing b
+                       JOIN form_encounter fe ON fe.encounter = b.encounter AND fe.pid = b.pid
+                       WHERE b.pid       = ?
+                         AND b.code_type = ?
+                         AND b.code      = ?
+                         AND b.activity  = 1
+                         AND DATE(fe.date) BETWEEN ? AND ?";
+        $rowB            = ($this->dbQuery)($sqlBilling, [$pid, $codeType, $code, $windowStart, $windowEnd]);
+        $dateFromBilling = ($rowB && $rowB['last_date']) ? $rowB['last_date'] : null;
 
-        $result = ($this->dbQuery)($sql, [$pid, $codeType, $code, $windowStart, $windowEnd]);
-        return ($result && $result['last_date']) ? $result['last_date'] : null;
+        // Fuente 2: autorizaciones activas SIN encounter_id (agendadas, aún no facturadas)
+        $sqlAuth      = "SELECT MAX(DATE(request_date)) AS last_date
+                         FROM covl_authorizations
+                         WHERE pid          = ?
+                           AND code_type    = ?
+                           AND code         = ?
+                           AND status       IN ('pendiente', 'en_auditoria', 'aprobada')
+                           AND encounter_id IS NULL
+                           AND DATE(request_date) BETWEEN ? AND ?";
+        $rowA         = ($this->dbQuery)($sqlAuth, [$pid, $codeType, $code, $windowStart, $windowEnd]);
+        $dateFromAuth = ($rowA && $rowA['last_date']) ? $rowA['last_date'] : null;
+
+        // Retornar la más reciente de las dos fuentes
+        if ($dateFromBilling === null && $dateFromAuth === null) {
+            return null;
+        }
+        if ($dateFromBilling === null) {
+            return $dateFromAuth;
+        }
+        if ($dateFromAuth === null) {
+            return $dateFromBilling;
+        }
+
+        return max($dateFromBilling, $dateFromAuth);
     }
 }

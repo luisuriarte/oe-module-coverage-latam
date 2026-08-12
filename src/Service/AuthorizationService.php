@@ -112,32 +112,45 @@ class AuthorizationService
         // Delegar al adaptador
         $result = $adapter->requestAuthorization($pid, $insCompanyId, $codeType, $code, $quantity);
 
-        // Determinar estado final (si es automática y el adaptador lo aprobó, aprobar)
+        // Determinar estado final
         $finalStatus = $result->getStatus();
-        if ($authMode['mode'] === 'automatica' && $finalStatus === 'pendiente') {
-            $finalStatus = 'aprobada';
+        if ($authMode['mode'] === 'automatica') {
+            // Si la cantidad solicitada excede el máximo auto-aprobable → escalar a requerida
+            if ($authMode['max_quantity'] !== null && $quantity > $authMode['max_quantity']) {
+                $finalStatus = 'pendiente'; // Requiere revisión manual por exceder el límite automático
+            } elseif ($finalStatus === 'pendiente') {
+                $finalStatus = 'aprobada';  // Auto-aprobación dentro del límite configurado
+            }
         }
 
-        // Persistir en covl_authorizations
-        $authId = $this->repo->createAuthorization([
-            'pid'                  => $pid,
-            'encounter_id'         => $encounterId,
-            'insurance_data_id'    => $insDataId,
-            'insurance_company_id' => $insCompanyId,
-            'code_type'            => $codeType,
-            'code'                 => $code,
-            'code_text'            => $codeText,
-            'quantity'             => $quantity,
-            'status'               => $finalStatus,
-            'auth_number'          => $result->getAuthNumber(),
-            'valid_from'           => $result->getValidFrom(),
-            'valid_until'          => $result->getValidUntil(),
-            'requested_by'         => $requestedBy,
-            'adapter_id'           => $this->repo->getAdapterId($adapter->getAdapterKey()),
-        ]);
+        // Ejecutar dentro de transacción: si logStatusChange falla, se revierte el INSERT
+        sqlBeginTrans();
+        try {
+            $authId = $this->repo->createAuthorization([
+                'pid'                  => $pid,
+                'encounter_id'         => $encounterId,
+                'insurance_data_id'    => $insDataId,
+                'insurance_company_id' => $insCompanyId,
+                'code_type'            => $codeType,
+                'code'                 => $code,
+                'code_text'            => $codeText,
+                'quantity'             => $quantity,
+                'status'               => $finalStatus,
+                'auth_number'          => $result->getAuthNumber(),
+                'valid_from'           => $result->getValidFrom(),
+                'valid_until'          => $result->getValidUntil(),
+                'reject_reason'        => $result->getRejectReason(),
+                'requested_by'         => $requestedBy,
+                'adapter_id'           => $this->repo->getAdapterId($adapter->getAdapterKey()),
+            ]);
 
-        // Registrar en historial
-        $this->repo->logStatusChange($authId, null, $finalStatus, $requestedBy, 'Creación de autorización');
+            // Registrar en historial
+            $this->repo->logStatusChange($authId, null, $finalStatus, $requestedBy, 'Creación de autorización');
+            sqlCommitTrans();
+        } catch (\Throwable $e) {
+            sqlRollbackTrans();
+            throw $e;
+        }
 
         return [
             'authorization_id' => $authId,
