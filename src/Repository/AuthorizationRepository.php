@@ -215,4 +215,27 @@ class AuthorizationRepository
         );
         return $result ? (int) $result['id'] : null;
     }
+
+    /**
+     * Vincula una autorización previa a un encuentro clínico (encounter_id).
+     *
+     * Se invoca cuando una práctica autorizada previamente finaliza su ciclo de vida
+     * y termina facturándose en un encuentro. Al asociar el encounter_id, la autorización
+     * deja de contarse como "pendiente/activa sin encuentro" en el servicio de frecuencia,
+     * evitando doble conteo con los registros de billing.
+     *
+     * @param int $authId      ID de la autorización (covl_authorizations.id)
+     * @param int $encounterId ID del encuentro clínico (form_encounter.encounter)
+     *
+     * @return bool True si la actualización se ejecutó con éxito.
+     */
+    public function linkToEncounter(int $authId, int $encounterId): bool
+    {
+        sqlStatement(
+            "UPDATE covl_authorizations SET encounter_id = ? WHERE id = ?",
+            [$encounterId, $authId]
+        );
+        return true;
+    }
 }
+

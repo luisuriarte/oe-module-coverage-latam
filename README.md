@@ -347,11 +347,14 @@ Orquesta el ciclo completo de una autorización:
 1. Evalúa `covl_auth_rules` para determinar si la práctica es automática, requerida o exenta
 2. Delega al adaptador del financiador
 3. Persiste en `covl_authorizations` y registra el historial
+4. Ofrece `linkToEncounter(authId, encounterId)` para vincular una autorización previa al encuentro clínico una vez que la práctica es facturada.
 
 ### `FrequencyCheckService`
-Valida si una práctica puede realizarse según el intervalo mínimo:
+Valida si una práctica puede realizarse según el intervalo mínimo y consumo anual:
 - Consulta `covl_frequency_rules`
-- Busca en `billing` si ya existe la práctica en el período
+- Combina dos fuentes de antecedentes: `billing` (prácticas facturadas) y `covl_authorizations` (autorizaciones activas sin `encounter_id`, evitando doble conteo).
+- **Filtro de estados:** Solo considera autorizaciones activas (`pendiente`, `en_auditoria`, `aprobada`). Las autorizaciones con estado `vencida`, `rechazada` o `cancelada` se excluyen correctamente ya que no representan una práctica realizada.
+- **Limitación conocida (Bases de fecha heterogéneas):** Para `billing` se utiliza `fe.date` (fecha real del encuentro), mientras que para autorizaciones pendientes (`encounter_id IS NULL`) se utiliza `request_date` (fecha de solicitud). Dado que no hay un campo de fecha programada en autorizaciones pendientes, `request_date` es una aproximación razonable, aunque puede introducir desfasajes temporales si la autorización fue solicitada con mucha antelación a la fecha real del estudio.
 - Retorna `FrequencyCheckResult` con `allowed`, `violation`, `severity`, `daysRemaining`
 
 ### `ProviderCoverageService`

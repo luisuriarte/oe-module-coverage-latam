@@ -58,10 +58,23 @@ class FrequencyCheckService
      * Valida si una práctica puede realizarse según las reglas de frecuencia configuradas.
      *
      * Fuentes de antecedentes consultadas:
-     *   1. billing              — prestaciones ya facturadas en un encuentro
+     *   1. billing              — prestaciones ya facturadas en un encuentro.
      *   2. covl_authorizations  — autorizaciones activas SIN encounter_id
      *                            (práctica agendada/aprobada pero no realizada aún;
-     *                             también debe contar como antecedente)
+     *                             también debe contar como antecedente).
+     *
+     * Criterio de inclusión de estados:
+     *   - Solo se consideran estados activos: ('pendiente', 'en_auditoria', 'aprobada').
+     *   - Las autorizaciones 'vencida', 'rechazada' o 'cancelada' quedan excluidas
+     *     ya que una autorización caducada sin usarse no constituye un antecedente real.
+     *
+     * Limitación conocida (Bases de fecha heterogéneas):
+     *   - Para billing se utiliza fe.date (fecha real del encuentro clínico).
+     *   - Para covl_authorizations pendientes (encounter_id IS NULL) se utiliza request_date
+     *     (fecha de solicitud de la autorización).
+     *   - Dado que no existe una fecha de práctica programada en autorizaciones pendientes,
+     *     request_date es una aproximación razonable, pero puede introducir desfasajes
+     *     si la autorización se solicitó con amplia anticipación respecto a la fecha del estudio.
      *
      * Restricciones evaluadas (independientes):
      *   A. max_per_year    — conteo en el año calendario de $requestDate

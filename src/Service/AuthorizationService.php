@@ -188,4 +188,19 @@ class AuthorizationService
 
         return $updated;
     }
+
+    /**
+     * Vincula una autorización previa existente a un encuentro clínico (encounter_id)
+     * cuando la práctica autorizada finaliza su ciclo de vida y se facturá.
+     *
+     * @param int $authId      ID de la autorización
+     * @param int $encounterId ID del encuentro
+     *
+     * @return bool
+     */
+    public function linkToEncounter(int $authId, int $encounterId): bool
+    {
+        return $this->repo->linkToEncounter($authId, $encounterId);
+    }
 }
+
