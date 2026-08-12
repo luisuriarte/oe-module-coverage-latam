@@ -86,9 +86,12 @@ function oe_module_covlatam_add_menu_item(MenuEvent $event): MenuEvent
     $subMenu->target      = 'covl';
     $subMenu->menu_id     = 'covl_submenu';
     $subMenu->label       = xlt('Coberturas LATAM');
+    $subMenu->children    = [$menuDash, $menuAuth, $menuBatch, $menuProviders, $menuConfig];
+    $subMenu->acl_req     = ['patients', 'demo'];
+
     $inserted = false;
     foreach ($menu as $item) {
-        if ($item->menu_id === 'feeimg' || $item->menu_id === 'service' || strtolower($item->label) === 'services' || strtolower($item->label) === 'servicios') {
+        if ($item->menu_id === 'feeimg' || $item->menu_id === 'service' || strcasecmp($item->label, 'fees') === 0 || strcasecmp($item->label, 'services') === 0 || strcasecmp($item->label, 'servicios') === 0) {
             $item->children[] = $subMenu;
             $inserted = true;
             break;
@@ -104,3 +107,4 @@ function oe_module_covlatam_add_menu_item(MenuEvent $event): MenuEvent
 }
 
 $eventDispatcher->addListener(MenuEvent::MENU_UPDATE, 'oe_module_covlatam_add_menu_item');
+
