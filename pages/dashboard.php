@@ -1418,13 +1418,13 @@ $covlI18n = [
         function openModal(id) {
             var el = document.getElementById(id);
             if (!el) return;
-            if (window.bootstrap && window.bootstrap.Modal) {
-                var modal = window.bootstrap.Modal.getOrCreateInstance(el);
-                if (modal) { modal.show(); return; }
-            }
-            if (window.jQuery && typeof window.jQuery(el).modal === 'function') {
+            if (window.jQuery && window.jQuery(el) && typeof window.jQuery(el).modal === 'function') {
                 window.jQuery(el).modal('show');
                 return;
+            }
+            if (window.bootstrap && window.bootstrap.Modal && typeof window.bootstrap.Modal.getOrCreateInstance === 'function') {
+                var modal = window.bootstrap.Modal.getOrCreateInstance(el);
+                if (modal) { modal.show(); return; }
             }
             el.style.display = 'block';
             el.classList.add('show');
@@ -1434,13 +1434,13 @@ $covlI18n = [
         function closeModal(id) {
             var el = document.getElementById(id);
             if (!el) return;
-            if (window.bootstrap && window.bootstrap.Modal) {
-                var modal = window.bootstrap.Modal.getInstance(el);
-                if (modal) { modal.hide(); return; }
-            }
-            if (window.jQuery && typeof window.jQuery(el).modal === 'function') {
+            if (window.jQuery && window.jQuery(el) && typeof window.jQuery(el).modal === 'function') {
                 window.jQuery(el).modal('hide');
                 return;
+            }
+            if (window.bootstrap && window.bootstrap.Modal && typeof window.bootstrap.Modal.getInstance === 'function') {
+                var modal = window.bootstrap.Modal.getInstance(el);
+                if (modal) { modal.hide(); return; }
             }
             el.style.display = 'none';
             el.classList.remove('show');
