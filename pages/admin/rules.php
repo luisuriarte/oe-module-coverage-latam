@@ -90,7 +90,7 @@ foreach ($countryPacks as $p) {
     <title><?= xlt('Reglas de Configuración') ?> — Coberturas LATAM</title>
     <meta name="description" content="<?= xla('Gestión CRUD de reglas de autorización y frecuencia por financiador y país') ?>">
 
-    <?php Header::setupHeader(['opener']); ?>
+    <?php Header::setupHeader(['bootstrap', 'fontawesome']); ?>
 
     <!-- flag-icons: Local vendor (lipis/flag-icons) -->
     <link rel="stylesheet" href="<?= attr($moduleBase) ?>/assets/vendor/flag-icons/css/flag-icons.min.css">
@@ -506,6 +506,7 @@ const covlConfig = {
     countryPacks: <?= json_encode($countryPacks) ?>,
 };
 </script>
+<script src="<?= attr($moduleBase) ?>/assets/js/modal-helper.js"></script>
 <script src="<?= attr($moduleBase) ?>/assets/js/rules-crud.js"></script>
 
 <!-- Poblar selects de financiadores en los filtros al arrancar -->

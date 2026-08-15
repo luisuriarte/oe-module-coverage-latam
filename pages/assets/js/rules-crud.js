@@ -338,9 +338,13 @@ const COVL = (() => {
             document.getElementById('covl-auth-form').reset();
             document.getElementById('fld-auth-id').value = '';
             FlagSelect.setValue('fld-auth-country', state.activeCountry || '');
-            await populateInsurerSelect(document.getElementById('fld-auth-insurer'), 0);
             Auth.toggleMaxQtyField();
-            $('#covlAuthModal').modal('show');
+            openModal('covlAuthModal');
+            try {
+                await populateInsurerSelect(document.getElementById('fld-auth-insurer'), 0);
+            } catch {
+                toast('No se pudieron cargar los financiadores', 'error');
+            }
         },
 
         async openEdit(id) {
@@ -364,7 +368,7 @@ const COVL = (() => {
 
                 await populateInsurerSelect(document.getElementById('fld-auth-insurer'), data.insurance_company_id);
                 Auth.toggleMaxQtyField();
-                $('#covlAuthModal').modal('show');
+                openModal('covlAuthModal');
             } catch {
                 toast('Error al cargar la regla', 'error');
             }
@@ -414,7 +418,7 @@ const COVL = (() => {
                 const res  = await fetch(url, { method: 'POST', headers: csrfHeaders(), body: JSON.stringify(data) });
                 const json = await res.json();
                 if (json.error) { toast(json.error, 'error'); return; }
-                $('#covlAuthModal').modal('hide');
+                closeModal('covlAuthModal');
                 toast(isEdit ? 'Regla actualizada correctamente' : 'Regla creada correctamente', 'success');
                 Auth.load();
             } catch {
@@ -562,9 +566,13 @@ const COVL = (() => {
             document.getElementById('fld-freq-id').value = '';
             document.getElementById('fld-freq-severity-alerta').checked = true;
             FlagSelect.setValue('fld-freq-country', state.activeCountry || '');
-            await populateInsurerSelect(document.getElementById('fld-freq-insurer'), 0);
             Freq.updateIntervalHint();
-            $('#covlFreqModal').modal('show');
+            openModal('covlFreqModal');
+            try {
+                await populateInsurerSelect(document.getElementById('fld-freq-insurer'), 0);
+            } catch {
+                toast('No se pudieron cargar los financiadores', 'error');
+            }
         },
 
         async openEdit(id) {
@@ -589,7 +597,7 @@ const COVL = (() => {
 
                 await populateInsurerSelect(document.getElementById('fld-freq-insurer'), data.insurance_company_id);
                 Freq.updateIntervalHint();
-                $('#covlFreqModal').modal('show');
+                openModal('covlFreqModal');
             } catch {
                 toast('Error al cargar la regla', 'error');
             }
@@ -640,7 +648,7 @@ const COVL = (() => {
                 const res  = await fetch(url, { method: 'POST', headers: csrfHeaders(), body: JSON.stringify(data) });
                 const json = await res.json();
                 if (json.error) { toast(json.error, 'error'); return; }
-                $('#covlFreqModal').modal('hide');
+                closeModal('covlFreqModal');
                 toast(isEdit ? 'Regla actualizada' : 'Regla creada', 'success');
                 Freq.load();
             } catch {
