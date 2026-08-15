@@ -25,11 +25,9 @@ require_once __DIR__ . '/../../../../../globals.php';
 require_once $GLOBALS['srcdir'] . '/api.inc.php';
 
 use OpenEMR\Common\Acl\AclMain;
-use OpenEMR\Common\Session\SessionWrapperFactory;
 use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Repository\FrequencyRulesRepository;
 
-$session = SessionWrapperFactory::getInstance()->getWrapper();
 if (empty($session->get('authUserID'))) {
     http_response_code(401);
     header('Content-Type: application/json');
