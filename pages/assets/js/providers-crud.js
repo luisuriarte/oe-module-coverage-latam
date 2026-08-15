@@ -203,6 +203,7 @@
             try {
                 const res  = await fetch(apiUrl('providers.php', { action: 'list', ...filters }));
                 const json = await res.json();
+                if (json.error) throw new Error(json.error);
                 Prov.render(json.data ?? [], json.total ?? 0, filters);
             } catch {
                 tbody.innerHTML = `<tr><td colspan="8"><div class="covl-empty"><div class="icon">⚠</div><p>${t('error_loading')}</p></div></td></tr>`;

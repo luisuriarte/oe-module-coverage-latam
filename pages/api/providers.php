@@ -31,11 +31,12 @@ require_once __DIR__ . '/../../../../../globals.php';
 require_once $GLOBALS['srcdir'] . '/api.inc.php';
 
 use OpenEMR\Common\Acl\AclMain;
+use OpenEMR\Common\Session\SessionWrapperFactory;
 use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Repository\ProviderCoverageRepository;
 
-// Seguridad: verificar sesión activa
-if (!isset($_SESSION['authUserID'])) {
+$session = SessionWrapperFactory::getInstance()->getWrapper();
+if (empty($session->get('authUserID'))) {
     http_response_code(401);
     header('Content-Type: application/json');
     echo json_encode(['error' => xl('No autenticado')]);

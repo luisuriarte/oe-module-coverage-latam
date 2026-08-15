@@ -19,7 +19,10 @@ $ignoreAuth = false;
 
 require_once __DIR__ . '/../../../../../globals.php';
 
-if (!isset($_SESSION['authUserID'])) {
+use OpenEMR\Common\Session\SessionWrapperFactory;
+
+$session = SessionWrapperFactory::getInstance()->getWrapper();
+if (empty($session->get('authUserID'))) {
     http_response_code(401);
     header('Content-Type: application/json');
     echo json_encode(['error' => xl('No autenticado')]);

@@ -173,7 +173,12 @@ const COVL = (() => {
         if (state.insurerCache) return state.insurerCache;
         try {
             const res = await fetch(apiUrl('insurers.php'));
-            state.insurerCache = await res.json();
+            const json = await res.json();
+            if (json.error) {
+                console.error('insurers.php:', json.error);
+                return [{ id: 0, name: t('error_loading') }];
+            }
+            state.insurerCache = json;
         } catch {
             state.insurerCache = [{ id: 0, name: '— Error al cargar —' }];
         }
