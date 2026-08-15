@@ -13,7 +13,8 @@
  * @license   https://github.com/openemr/openemr/blob/master/LICENSE GNU General Public License 3
  */
 
-require_once __DIR__ . '/../../../globals.php';
+// Bootstrap OpenEMR — ruta estándar para páginas de módulos custom (5 niveles hasta interface/)
+require_once dirname(__DIR__, 5) . '/globals.php';
 
 use OpenEMR\Common\Acl\AclMain;
 use OpenEMR\Common\Csrf\CsrfUtils;
