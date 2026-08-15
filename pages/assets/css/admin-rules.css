@@ -1,0 +1,439 @@
+/* ============================================================
+   oe-module-coverage-latam — admin-rules.css
+   Estilos para la interfaz CRUD de reglas de configuración.
+   Complementa Bootstrap 4 de OpenEMR sin reemplazarlo.
+   ============================================================ */
+
+/* ---- Variables de color del módulo ---- */
+:root {
+    --covl-primary:    #2563EB;
+    --covl-success:    #16A34A;
+    --covl-warning:    #D97706;
+    --covl-danger:     #DC2626;
+    --covl-muted:      #6B7280;
+    --covl-bg-subtle:  #F8FAFC;
+    --covl-border:     #E2E8F0;
+    --covl-shadow:     0 1px 3px rgba(0,0,0,.10), 0 1px 2px rgba(0,0,0,.06);
+    --covl-radius:     .5rem;
+}
+
+/* ---- Encabezado de página ---- */
+.covl-page-header {
+    background: linear-gradient(135deg, #1E3A5F 0%, #2563EB 100%);
+    color: #fff;
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--covl-radius);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    box-shadow: var(--covl-shadow);
+}
+.covl-page-header h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    color: #fff;
+}
+.covl-page-header .covl-subtitle {
+    font-size: .8rem;
+    opacity: .8;
+    margin-top: .15rem;
+}
+
+/* ---- Selector de país (chips) ---- */
+.covl-country-pills {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+.covl-country-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .35rem .85rem;
+    border-radius: 2rem;
+    border: 2px solid var(--covl-border);
+    background: #fff;
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s ease;
+    color: var(--covl-muted);
+    text-decoration: none;
+}
+.covl-country-pill:hover {
+    border-color: var(--covl-primary);
+    color: var(--covl-primary);
+    text-decoration: none;
+}
+.covl-country-pill.active {
+    background: var(--covl-primary);
+    border-color: var(--covl-primary);
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
+}
+.covl-country-pill .fs-pill-flag {
+    font-size: 1.15rem;
+    line-height: 1;
+    border-radius: 2px;
+}
+
+/* ---- Componente FlagSelect (Select con Banderas) ---- */
+.covl-flag-select {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.covl-flag-select.fs-compact {
+    min-width: 140px;
+}
+.covl-flag-select .fs-trigger {
+    width: 100%;
+    height: 32px;
+    padding: .3rem .55rem;
+    font-size: .82rem;
+    border-radius: .3rem;
+    border: 1px solid var(--covl-border);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+.covl-flag-select .fs-trigger:hover {
+    border-color: #94A3B8;
+}
+.covl-flag-select.open .fs-trigger,
+.covl-flag-select .fs-trigger:focus {
+    outline: none;
+    border-color: var(--covl-primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+.covl-flag-select .fs-flag {
+    font-size: 1.1rem;
+    line-height: 1;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+.covl-flag-select .fs-label {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #1E293B;
+}
+.covl-flag-select .fs-caret {
+    font-size: .75rem;
+    color: var(--covl-muted);
+    transition: transform .15s ease;
+}
+.covl-flag-select.open .fs-caret {
+    transform: rotate(180deg);
+}
+.covl-flag-select .fs-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 1060;
+    background: #fff;
+    border: 1px solid var(--covl-border);
+    border-radius: .375rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    max-height: 220px;
+    overflow-y: auto;
+    padding: .3rem 0;
+}
+.covl-flag-select.open .fs-dropdown {
+    display: block;
+    animation: covl-dropdown-in .15s ease;
+}
+@keyframes covl-dropdown-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.covl-flag-select .fs-option {
+    padding: .45rem .65rem;
+    font-size: .82rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    cursor: pointer;
+    transition: background .12s ease;
+    color: #1E293B;
+}
+.covl-flag-select .fs-option:hover {
+    background: #EFF6FF;
+    color: var(--covl-primary);
+}
+.covl-flag-select .fs-option.selected {
+    background: #DBEAFE;
+    color: var(--covl-primary);
+    font-weight: 600;
+}
+.covl-flag-select .fs-option .fi {
+    font-size: 1.15rem;
+    line-height: 1;
+    border-radius: 2px;
+}
+
+/* ---- Barra de filtros ---- */
+.covl-filters {
+    background: #fff;
+    border: 1px solid var(--covl-border);
+    border-radius: var(--covl-radius);
+    padding: .875rem 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    align-items: flex-end;
+}
+.covl-filters .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    min-width: 130px;
+}
+.covl-filters label {
+    font-size: .7rem;
+    font-weight: 600;
+    color: var(--covl-muted);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin: 0;
+}
+.covl-filters select,
+.covl-filters input[type="text"] {
+    font-size: .82rem;
+    padding: .3rem .5rem;
+    border-radius: .3rem;
+    border: 1px solid var(--covl-border);
+    height: 32px;
+}
+
+/* ---- Tabla de listado ---- */
+.covl-table-wrapper {
+    background: #fff;
+    border-radius: var(--covl-radius);
+    box-shadow: var(--covl-shadow);
+    overflow: hidden;
+}
+.covl-table {
+    width: 100%;
+    font-size: .82rem;
+    border-collapse: collapse;
+}
+.covl-table thead th {
+    background: #F1F5F9;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: #475569;
+    padding: .6rem .75rem;
+    border-bottom: 2px solid var(--covl-border);
+    white-space: nowrap;
+}
+.covl-table tbody tr {
+    border-bottom: 1px solid #F1F5F9;
+    transition: background .1s;
+}
+.covl-table tbody tr:hover {
+    background: #F8FAFC;
+}
+.covl-table td {
+    padding: .55rem .75rem;
+    vertical-align: middle;
+}
+.covl-table .covl-actions {
+    white-space: nowrap;
+    text-align: right;
+}
+.covl-table .covl-actions button {
+    padding: .2rem .45rem;
+    font-size: .75rem;
+    border-radius: .25rem;
+    margin-left: .15rem;
+}
+
+/* ---- Badges ---- */
+.covl-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .2rem;
+    padding: .18rem .55rem;
+    border-radius: 2rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+}
+.covl-badge-automatica   { background: #DCFCE7; color: #15803D; }
+.covl-badge-requerida    { background: #FEF9C3; color: #854D0E; }
+.covl-badge-no_requerida { background: #F1F5F9; color: #475569; }
+.covl-badge-alerta       { background: #FEF3C7; color: #B45309; }
+.covl-badge-bloqueo      { background: #FEE2E2; color: #B91C1C; }
+.covl-badge-active       { background: #DCFCE7; color: #15803D; }
+.covl-badge-inactive     { background: #F1F5F9; color: #9CA3AF; }
+
+/* Badges de país con flag icon */
+.covl-badge-country {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    font-family: monospace;
+    font-size: .75rem;
+    font-weight: 700;
+    padding: .2rem .5rem;
+    border-radius: .3rem;
+    border: 1px solid #DBEAFE;
+}
+.covl-badge-country .fi {
+    font-size: 1rem;
+    line-height: 1;
+    border-radius: 2px;
+}
+
+/* ---- Paginación ---- */
+.covl-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .65rem 1rem;
+    border-top: 1px solid var(--covl-border);
+    font-size: .8rem;
+    color: var(--covl-muted);
+}
+.covl-pagination .page-btns {
+    display: flex;
+    gap: .3rem;
+}
+.covl-pagination button {
+    padding: .2rem .6rem;
+    border-radius: .25rem;
+    border: 1px solid var(--covl-border);
+    background: #fff;
+    font-size: .8rem;
+    cursor: pointer;
+}
+.covl-pagination button:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+.covl-pagination button.current {
+    background: var(--covl-primary);
+    border-color: var(--covl-primary);
+    color: #fff;
+}
+
+/* ---- Loading skeleton ---- */
+.covl-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+    color: var(--covl-muted);
+    gap: .5rem;
+    font-size: .85rem;
+}
+.covl-spinner {
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid var(--covl-border);
+    border-top-color: var(--covl-primary);
+    border-radius: 50%;
+    animation: covl-spin .6s linear infinite;
+}
+@keyframes covl-spin { to { transform: rotate(360deg); } }
+
+/* ---- Toast notificaciones ---- */
+.covl-toast-container {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+.covl-toast {
+    min-width: 280px;
+    max-width: 380px;
+    padding: .75rem 1rem;
+    border-radius: var(--covl-radius);
+    color: #fff;
+    font-size: .85rem;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    animation: covl-slide-in .2s ease;
+}
+.covl-toast.success { background: var(--covl-success); }
+.covl-toast.error   { background: var(--covl-danger);  }
+.covl-toast.info    { background: var(--covl-primary); }
+@keyframes covl-slide-in {
+    from { transform: translateX(120%); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+}
+
+/* ---- Modal ---- */
+.covl-modal-header {
+    background: linear-gradient(135deg, #1E3A5F 0%, #2563EB 100%);
+    color: #fff;
+}
+.covl-modal-header .modal-title { color: #fff; font-weight: 700; }
+.covl-modal-header .close { color: #fff; opacity: .8; }
+.covl-modal-header .close:hover { opacity: 1; }
+
+/* Indicador de días → meses en el formulario de frecuencia */
+.covl-interval-hint {
+    font-size: .75rem;
+    color: var(--covl-muted);
+    margin-top: .2rem;
+    min-height: 1rem;
+}
+
+/* ---- Severity radio group ---- */
+.covl-severity-group {
+    display: flex;
+    gap: .75rem;
+}
+.covl-severity-opt {
+    flex: 1;
+    border: 2px solid var(--covl-border);
+    border-radius: .5rem;
+    padding: .6rem .75rem;
+    cursor: pointer;
+    transition: all .15s;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .85rem;
+}
+.covl-severity-opt:has(input:checked) {
+    border-color: var(--covl-primary);
+    background: #EFF6FF;
+}
+.covl-severity-opt.sev-bloqueo:has(input:checked) {
+    border-color: var(--covl-danger);
+    background: #FEF2F2;
+}
+.covl-severity-opt input[type="radio"] { margin: 0; }
+
+/* ---- Estado vacío ---- */
+.covl-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--covl-muted);
+}
+.covl-empty .icon { font-size: 2.5rem; margin-bottom: .5rem; }
+.covl-empty p { margin: 0; font-size: .9rem; }

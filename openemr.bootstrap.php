@@ -81,12 +81,21 @@ function oe_module_covlatam_add_menu_item(MenuEvent $event): MenuEvent
     $menuConfig->children    = [];
     $menuConfig->acl_req     = ['admin', 'docs'];
 
+    $menuRules = new stdClass();
+    $menuRules->requirement = 0;
+    $menuRules->target      = 'covl';
+    $menuRules->menu_id     = 'covl_rules';
+    $menuRules->label       = xlt('Reglas de Configuración');
+    $menuRules->url         = '/interface/modules/custom_modules/oe-module-coverage-latam/pages/admin/rules.php';
+    $menuRules->children    = [];
+    $menuRules->acl_req     = ['admin', 'docs'];
+
     $subMenu = new stdClass();
     $subMenu->requirement = 0;
     $subMenu->target      = 'covl';
     $subMenu->menu_id     = 'covl_submenu';
     $subMenu->label       = xlt('Coberturas LATAM');
-    $subMenu->children    = [$menuDash, $menuAuth, $menuBatch, $menuProviders, $menuConfig];
+    $subMenu->children    = [$menuDash, $menuAuth, $menuBatch, $menuProviders, $menuRules, $menuConfig];
     $subMenu->acl_req     = ['patients', 'demo'];
 
     $inserted = false;
