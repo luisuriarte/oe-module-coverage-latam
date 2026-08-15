@@ -242,6 +242,7 @@ Al activar el módulo desde el **Module Manager**, se registra la entrada en el 
     ├── 📋 Autorizaciones             (Gestión de solicitudes y estado de trámites)
     ├── 📦 Lotes de Liquidación       (Presentaciones masivas y cobro a obras sociales)
     ├── 👨‍⚕️ Convenios Prestadores     (Vigencia por profesional y financiador)
+    ├── 🌎 Países                     (Catálogo e instalación de paquetes por país)
     └── ⚙️ Configuración              (Reglas de autorización previa y frecuencia)
 ```
 
@@ -465,7 +466,7 @@ No. Solo crea tablas propias con prefijo `covl_`. Las tablas nativas se usan med
 Sí. El `ManualFallbackAdapter` permite operar en modo manual completo: el operador gestiona autorizaciones y actualiza estados desde la interfaz del módulo.
 
 **¿Cómo agrego soporte para otro país?**  
-Creá un archivo `sql/miPais_seed.sql` que registre el tipo de código nacional en `code_types`, inserte en `covl_country_packs` y cargue las reglas de autorización y frecuencia correspondientes.
+Desde el módulo: **Dashboard → Países → Agregar País** se instala un paquete del catálogo incluido (`packs/*.json` — Argentina, Chile, Colombia, México, Perú, Uruguay). Cada paquete registra el nomenclador nacional en `code_types`, da de alta el registro en `covl_country_packs` y carga las reglas base de autorización/frecuencia y equivalencias de códigos. Para un país nuevo: copiá `packs/xx.json`, completá los datos y ajustá `auth_rules`, `frequency_rules` y `code_maps`; luego instalalo desde la pestaña **Países** (o ejecutá `sql/miPais_seed.sql`).
 
 **¿Qué pasa si un financiador tiene reglas distintas por plan?**  
 Usá el campo `plan_pattern` en `covl_auth_rules` con comodines `%`. Ejemplo: `plan_name LIKE 'GOLD%'` → aplica a todos los planes que empiecen con "GOLD".

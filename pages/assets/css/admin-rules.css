@@ -437,3 +437,61 @@
 }
 .covl-empty .icon { font-size: 2.5rem; margin-bottom: .5rem; }
 .covl-empty p { margin: 0; font-size: .9rem; }
+
+/* ---------------------------------------------------------------------------
+   Países — tabla de paquetes instalados y catálogo del modal
+   --------------------------------------------------------------------------- */
+.covl-country-flag { font-size: 1.4rem; line-height: 1; margin-right: .4rem; vertical-align: middle; }
+
+.covl-country-list {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    max-height: 55vh;
+    overflow-y: auto;
+}
+
+.covl-country-item {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    width: 100%;
+    text-align: left;
+    padding: .75rem 1rem;
+    border: 1px solid var(--covl-border, #e5e7eb);
+    border-radius: .5rem;
+    background: #fff;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+.covl-country-item:hover {
+    border-color: var(--covl-primary);
+    box-shadow: 0 0 0 1px var(--covl-primary);
+}
+.covl-country-item.is-installed {
+    background: #F8FAFC;
+}
+
+.covl-country-item .covl-country-body { flex: 1; min-width: 0; }
+.covl-country-item .covl-country-title {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    margin-bottom: .25rem;
+}
+.covl-country-item .covl-country-meta {
+    display: block;
+    font-size: .8rem;
+    color: var(--covl-muted);
+    margin-bottom: .25rem;
+}
+.covl-country-item .covl-country-desc {
+    display: block;
+    font-size: .8rem;
+    color: var(--covl-muted);
+}
+.covl-country-item .covl-country-action {
+    color: var(--covl-primary);
+    font-size: 1.1rem;
+    padding-top: .25rem;
+}

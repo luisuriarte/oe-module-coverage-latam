@@ -1,0 +1,14 @@
+{
+  "country_code": "MX",
+  "name": "México — IMSS, ISSSTE y Seguros Privados",
+  "version": "1.0.0",
+  "description": "Registra el tipo de código NOMEX (Nomenclador México). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "code_type": {
+    "ct_key": "NOMEX",
+    "ct_name": "Nomenclador México",
+    "ct_term": "NOMEX"
+  },
+  "auth_rules": [],
+  "frequency_rules": [],
+  "code_maps": []
+}

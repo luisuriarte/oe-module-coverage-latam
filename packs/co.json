@@ -1,0 +1,14 @@
+{
+  "country_code": "CO",
+  "name": "Colombia — EPS y Planes Complementarios",
+  "version": "1.0.0",
+  "description": "Registra el tipo de código CUPS (Clasificación Única de Procedimientos en Salud). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "code_type": {
+    "ct_key": "CUPS",
+    "ct_name": "Clasificación Única de Procedimientos en Salud",
+    "ct_term": "CUPS"
+  },
+  "auth_rules": [],
+  "frequency_rules": [],
+  "code_maps": []
+}

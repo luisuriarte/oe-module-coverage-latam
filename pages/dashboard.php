@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 }
 
 $activeTab = $_GET['tab'] ?? 'dashboard';
-$allowedTabs = ['dashboard', 'authorizations', 'batches', 'providers', 'config'];
+$allowedTabs = ['dashboard', 'authorizations', 'batches', 'providers', 'countries', 'config'];
 if (!in_array($activeTab, $allowedTabs, true)) {
     $activeTab = 'dashboard';
 }
@@ -260,6 +260,18 @@ $covlI18n = [
     'paid_label'            => xlt('Pagado'),
     'add'                   => xlt('Agregar'),
     'no_billings'           => xlt('No se encontraron prestaciones'),
+    // Países
+    'countries_empty'   => xlt('No hay paquetes de país instalados. Agregá uno desde el catálogo.'),
+    'rules_loaded'      => xlt('Cargadas'),
+    'rules_pending'     => xlt('Sin reglas'),
+    'update'            => xlt('Actualizar'),
+    'installed'         => xlt('Instalado'),
+    'not_installed'     => xlt('No instalado'),
+    'auth_rules_short'  => xlt('aut.'),
+    'freq_rules_short'  => xlt('frec.'),
+    'code_maps_short'   => xlt('mapas'),
+    'country_installed' => xlt('Paquete de país instalado'),
+    'error_install'     => xlt('No se pudo instalar el paquete de país'),
 ];
 
 ?>
@@ -362,6 +374,12 @@ $covlI18n = [
                 <a class="nav-link <?php echo $activeTab === 'providers' ? 'active' : ''; ?>" 
                    href="dashboard.php?tab=providers">
                     <i class="fa-solid fa-user-doctor me-1"></i><?php echo xlt('Convenios Prestadores'); ?>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo $activeTab === 'countries' ? 'active' : ''; ?>" 
+                   href="dashboard.php?tab=countries">
+                    <i class="fa-solid fa-earth-americas me-1"></i><?php echo xlt('Países'); ?>
                 </a>
             </li>
             <li class="nav-item">
@@ -727,6 +745,47 @@ $covlI18n = [
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-2">
                         <span class="text-muted small" id="covl-prov-total"></span>
                         <div class="covl-pagination mb-0" id="covl-prov-pager"></div>
+                    </div>
+                </div>
+            </div>
+
+        <?php elseif ($activeTab === 'countries'): ?>
+
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="fa-solid fa-earth-americas text-primary me-2"></i><?php echo xlt('Paquetes de País'); ?>
+                            </h5>
+                            <button type="button" id="btn-country-open" class="btn btn-sm btn-primary">
+                                <i class="fa-solid fa-plus me-1"></i><?php echo xlt('Agregar País'); ?>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small mb-3">
+                                <?php echo xlt('Los paquetes de país registran el nomenclador nacional (tipo de código), las reglas base de autorización y frecuencia, y las equivalencias de códigos a estándares. Elige un país del catálogo para instalarlo o actualizarlo.'); ?>
+                            </p>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th><?php echo xlt('País'); ?></th>
+                                            <th><?php echo xlt('Nombre'); ?></th>
+                                            <th><?php echo xlt('Nomenclador'); ?></th>
+                                            <th><?php echo xlt('Versión'); ?></th>
+                                            <th><?php echo xlt('Reglas Base'); ?></th>
+                                            <th class="text-end"><?php echo xlt('Acciones'); ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="covl-country-tbody">
+                                        <tr><td colspan="6" class="text-center py-4">
+                                            <div class="covl-spinner spinner-border text-primary"></div>
+                                        </td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1317,6 +1376,31 @@ $covlI18n = [
         </div>
     </div>
 
+    <!-- MODAL: Paquetes de País -->
+    <div class="modal fade" id="covlCountryModal" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-earth-americas text-primary me-2"></i><?php echo xlt('Catálogo de Países'); ?></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('covlCountryModal')"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small"><?php echo xlt('Seleccioná un país del catálogo para instalar o actualizar su paquete.'); ?></p>
+                    <div class="covl-search mb-3">
+                        <label class="form-label small text-muted mb-1"><?php echo xlt('Búsqueda'); ?></label>
+                        <input type="text" class="form-control" id="flt-country-search" placeholder="<?php echo xla('Buscar por nombre o código de país…'); ?>">
+                    </div>
+                    <div id="covl-country-list" class="covl-country-list">
+                        <div class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('covlCountryModal')"><?php echo xlt('Cerrar'); ?></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Configuración JS inyectada desde PHP -->
     <script>
     const covlConfig = {
@@ -1327,6 +1411,7 @@ $covlI18n = [
     </script>
     <script src="<?= attr($moduleBase) ?>/assets/js/providers-crud.js"></script>
     <script src="<?= attr($moduleBase) ?>/assets/js/batches-crud.js"></script>
+    <script src="<?= attr($moduleBase) ?>/assets/js/countries-crud.js"></script>
 
     <!-- Script de soporte universal para modales (Bootstrap 4 / Bootstrap 5 / JS Nativo) -->
     <script>

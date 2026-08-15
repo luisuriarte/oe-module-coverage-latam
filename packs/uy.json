@@ -1,0 +1,14 @@
+{
+  "country_code": "UY",
+  "name": "Uruguay — FONASA y Seguros Privados",
+  "version": "1.0.0",
+  "description": "Registra el tipo de código NOMUY (Nomenclador Uruguay). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "code_type": {
+    "ct_key": "NOMUY",
+    "ct_name": "Nomenclador Uruguay",
+    "ct_term": "NOMUY"
+  },
+  "auth_rules": [],
+  "frequency_rules": [],
+  "code_maps": []
+}

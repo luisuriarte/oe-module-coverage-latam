@@ -1,0 +1,14 @@
+{
+  "country_code": "CL",
+  "name": "Chile — Isapres y Fonasa",
+  "version": "1.0.0",
+  "description": "Registra el tipo de código NNCL (Nomenclador Chile). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "code_type": {
+    "ct_key": "NNCL",
+    "ct_name": "Nomenclador Chile",
+    "ct_term": "Nomenclador Chile"
+  },
+  "auth_rules": [],
+  "frequency_rules": [],
+  "code_maps": []
+}

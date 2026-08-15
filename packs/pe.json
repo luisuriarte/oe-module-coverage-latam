@@ -1,0 +1,14 @@
+{
+  "country_code": "PE",
+  "name": "Perú — EsSalud, SIS y Seguros Privados",
+  "version": "1.0.0",
+  "description": "Registra el tipo de código PERU (Nomenclador Perú). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "code_type": {
+    "ct_key": "PERU",
+    "ct_name": "Nomenclador Perú",
+    "ct_term": "PERU"
+  },
+  "auth_rules": [],
+  "frequency_rules": [],
+  "code_maps": []
+}
