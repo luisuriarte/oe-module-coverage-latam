@@ -22,7 +22,7 @@ require_once __DIR__ . '/../../../../../globals.php';
 if (!isset($_SESSION['authUserID'])) {
     http_response_code(401);
     header('Content-Type: application/json');
-    echo json_encode(['error' => 'No autenticado']);
+    echo json_encode(['error' => xl('No autenticado')]);
     exit;
 }
 
@@ -39,7 +39,7 @@ $sql = "SELECT id, name, cms_id, ins_type_code
         LIMIT 500";
 
 $res     = sqlStatement($sql);
-$results = [['id' => 0, 'name' => '— Todos los financiadores (0 = genérico) —', 'cms_id' => '', 'ins_type_code' => '']];
+$results = [['id' => 0, 'name' => xl('— Todos los financiadores (0 = genérico) —'), 'cms_id' => '', 'ins_type_code' => '']];
 
 while ($row = sqlFetchArray($res)) {
     $results[] = [

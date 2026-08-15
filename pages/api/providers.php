@@ -1,15 +1,17 @@
 <?php
 
 /**
- * oe-module-coverage-latam — API: Reglas de Autorización
+ * oe-module-coverage-latam — API: Convenios de Prestadores
  *
- * Endpoint REST minimalista que sirve JSON para el CRUD de covl_auth_rules.
+ * Endpoint REST minimalista que sirve JSON para el CRUD de covl_provider_coverage.
  * Todas las mutaciones requieren un CSRF token válido de OpenEMR.
  *
  * Acciones:
- *   GET  ?action=list    [&country_code=AR] [&insurance_company_id=0] [&code_type=] [&code=] [&active=1] [&limit=50] [&offset=0]
+ *   GET  ?action=list          [&user_id=] [&insurance_company_id=] [&facility_id=] [&active=1] [&search=] [&limit=50] [&offset=0]
  *   GET  ?action=get&id=N
- *   POST action=create   (body JSON o form-data con los campos de la regla)
+ *   GET  ?action=professionals   → lista de profesionales activos
+ *   GET  ?action=facilities      → lista de sedes activas
+ *   POST action=create   (body JSON o form-data con los campos del convenio)
  *   POST action=update   &id=N
  *   POST action=toggle   &id=N  (alterna active)
  *   POST action=delete   &id=N
@@ -30,7 +32,7 @@ require_once $GLOBALS['srcdir'] . '/api.inc.php';
 
 use OpenEMR\Common\Acl\AclMain;
 use OpenEMR\Modules\CoverageLatam\CsrfCompat;
-use OpenEMR\Modules\CoverageLatam\Repository\AuthRulesRepository;
+use OpenEMR\Modules\CoverageLatam\Repository\ProviderCoverageRepository;
 
 // Seguridad: verificar sesión activa
 if (!isset($_SESSION['authUserID'])) {
@@ -44,7 +46,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $action = $_REQUEST['action'] ?? '';
-$repo   = new AuthRulesRepository();
+$repo   = new ProviderCoverageRepository();
 
 // ---------------------------------------------------------------------------
 // Helper: salida JSON y fin
@@ -64,9 +66,9 @@ if (in_array($action, ['create', 'update', 'toggle', 'delete'], true)) {
     if (!CsrfCompat::verifyCsrfToken($token)) {
         covl_json(['error' => xl('Token CSRF inválido')], 403);
     }
-    // ACL: solo admins pueden modificar reglas
+    // ACL: solo admins pueden modificar convenios
     if (!AclMain::aclCheckCore('admin', 'docs')) {
-        covl_json(['error' => xl('Sin permisos para modificar reglas')], 403);
+        covl_json(['error' => xl('Sin permisos para modificar convenios')], 403);
     }
 }
 
@@ -79,12 +81,12 @@ try {
         // -----------------------------------------------------------------------
         case 'list':
             $filters = [
-                'country_code'         => $_GET['country_code']         ?? '',
+                'user_id'              => $_GET['user_id']              ?? '',
                 'insurance_company_id' => $_GET['insurance_company_id'] ?? '',
-                'code_type'            => $_GET['code_type']            ?? '',
-                'code'                 => $_GET['code']                 ?? '',
+                'facility_id'          => $_GET['facility_id']          ?? '',
                 'active'               => $_GET['active']               ?? '',
-                'limit'                => min((int) ($_GET['limit']  ?? 50), 500),
+                'search'               => $_GET['search']               ?? '',
+                'limit'                => min((int) ($_GET['limit']  ?? 100), 500),
                 'offset'               => max((int) ($_GET['offset'] ?? 0), 0),
             ];
             $rows  = $repo->list($filters);
@@ -96,21 +98,28 @@ try {
             $id  = (int) ($_GET['id'] ?? 0);
             $row = $repo->findById($id);
             if ($row === null) {
-                covl_json(['error' => xl('Regla no encontrada')], 404);
+                covl_json(['error' => xl('Convenio no encontrado')], 404);
             }
             covl_json($row);
 
         // -----------------------------------------------------------------------
+        case 'professionals':
+            covl_json(['data' => $repo->listProfessionals()]);
+
+        // -----------------------------------------------------------------------
+        case 'facilities':
+            covl_json(['data' => $repo->listFacilities()]);
+
+        // -----------------------------------------------------------------------
         case 'create':
             $data = array_merge($_POST, []); // form-data o JSON
-            // Aceptar también body JSON
-            if (empty($data) || !isset($data['code_type'])) {
+            if (empty($data) || !isset($data['user_id'])) {
                 $body = file_get_contents('php://input');
                 $data = json_decode($body, true) ?: [];
             }
             // Validación mínima
-            if (empty($data['code_type']) || empty($data['auth_mode']) || empty($data['insurance_company_id'])) {
-                covl_json(['error' => xl('Campos requeridos: insurance_company_id, code_type, auth_mode')], 422);
+            if (empty($data['user_id']) || empty($data['insurance_company_id']) || empty($data['date_from'])) {
+                covl_json(['error' => xl('Campos requeridos: user_id, insurance_company_id, date_from')], 422);
             }
             $newId = $repo->create($data);
             covl_json(['success' => true, 'id' => $newId], 201);
@@ -120,15 +129,15 @@ try {
             $id  = (int) ($_GET['id'] ?? $_POST['id'] ?? 0);
             $row = $repo->findById($id);
             if ($row === null) {
-                covl_json(['error' => xl('Regla no encontrada')], 404);
+                covl_json(['error' => xl('Convenio no encontrado')], 404);
             }
             $data = array_merge($_POST, []);
-            if (empty($data) || !isset($data['code_type'])) {
+            if (empty($data) || !isset($data['user_id'])) {
                 $body = file_get_contents('php://input');
                 $data = json_decode($body, true) ?: [];
             }
-            if (empty($data['code_type']) || empty($data['auth_mode']) || empty($data['insurance_company_id'])) {
-                covl_json(['error' => xl('Campos requeridos: insurance_company_id, code_type, auth_mode')], 422);
+            if (empty($data['user_id']) || empty($data['insurance_company_id']) || empty($data['date_from'])) {
+                covl_json(['error' => xl('Campos requeridos: user_id, insurance_company_id, date_from')], 422);
             }
             $repo->update($id, $data);
             covl_json(['success' => true]);
@@ -143,7 +152,7 @@ try {
         case 'delete':
             $id = (int) ($_GET['id'] ?? $_POST['id'] ?? 0);
             if (!$repo->findById($id)) {
-                covl_json(['error' => xl('Regla no encontrada')], 404);
+                covl_json(['error' => xl('Convenio no encontrado')], 404);
             }
             $repo->delete($id);
             covl_json(['success' => true]);
@@ -153,6 +162,6 @@ try {
             covl_json(['error' => xl('Acción desconocida')], 400);
     }
 } catch (\Throwable $e) {
-    error_log('[covl] api/auth_rules.php error: ' . $e->getMessage());
+    error_log('[covl] api/providers.php error: ' . $e->getMessage());
     covl_json(['error' => xl('Error interno del servidor')], 500);
 }

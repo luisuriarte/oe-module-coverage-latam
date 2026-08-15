@@ -21,6 +21,7 @@ require_once $GLOBALS['srcdir'] . '/formatting.inc.php';
 
 use OpenEMR\Core\Header;
 use OpenEMR\Common\Acl\AclMain;
+use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -167,6 +168,100 @@ while ($rIns = sqlFetchArray($resIns)) {
     $insurersList[] = $rIns;
 }
 
+// Token CSRF y URL base del módulo (para los CRUD de Convenios y Lotes)
+$csrfToken  = CsrfCompat::collectCsrfToken();
+$moduleBase = $GLOBALS['webroot'] . '/interface/modules/custom_modules/oe-module-coverage-latam/pages';
+
+// Profesionales y sedes para los filtros y formularios de Convenios / Lotes
+$professionalsList = [];
+$resProf = sqlStatement("SELECT u.id, u.username, u.fname, u.lname, u.specialty FROM users u WHERE u.username IS NOT NULL AND u.username != '' ORDER BY u.lname, u.fname");
+while ($rProf = sqlFetchArray($resProf)) {
+    $professionalsList[] = $rProf;
+}
+
+$facilitiesList = [];
+$resFac = sqlStatement("SELECT id, name FROM facility ORDER BY name ASC");
+while ($rFac = sqlFetchArray($resFac)) {
+    $facilitiesList[] = $rFac;
+}
+
+// Traducciones inyectadas en covlConfig.i18n (usadas por providers-crud.js y batches-crud.js)
+$covlI18n = [
+    // Comunes
+    'loading'         => xlt('Cargando…'),
+    'error_loading'   => xlt('Error al cargar los datos'),
+    'records'         => xlt('registros'),
+    'no_results'      => xlt('No se encontraron resultados'),
+    'showing'         => xlt('Mostrando'),
+    'of'              => xlt('de'),
+    'edit'            => xlt('Editar'),
+    'delete'          => xlt('Eliminar'),
+    'error_fetch'     => xlt('Error al obtener el registro'),
+    'error_save'      => xlt('Error al guardar'),
+    'required_fields' => xlt('Complete los campos obligatorios'),
+    'updated'         => xlt('Guardado correctamente'),
+    'created'         => xlt('Creado correctamente'),
+    'confirm_delete'  => xlt('¿Eliminar este registro?'),
+    'deleted'         => xlt('Eliminado correctamente'),
+    // Convenios
+    'active'          => xlt('Activo'),
+    'inactive'        => xlt('Inactivo'),
+    'activated'       => xlt('Convenio activado'),
+    'deactivated'     => xlt('Convenio desactivado'),
+    'no_expiry'       => xlt('Sin vencimiento'),
+    'expired'         => xlt('Vencido'),
+    'expiring'        => xlt('Por vencer'),
+    'current'         => xlt('Vigente'),
+    'all_facilities'  => xlt('Todas las sedes'),
+    'new_provider'    => xlt('Nuevo Convenio'),
+    'edit_provider'   => xlt('Editar Convenio'),
+    // Lotes: estados
+    'status_borrador'       => xlt('Borrador'),
+    'status_armado'         => xlt('Armado'),
+    'status_presentado'     => xlt('Presentado'),
+    'status_pagado_parcial' => xlt('Pagado parcial'),
+    'status_pagado_total'   => xlt('Pagado total'),
+    'status_en_disputa'     => xlt('En disputa'),
+    'status_anulado'        => xlt('Anulado'),
+    'item_incluido'         => xlt('Incluido'),
+    'item_aprobado'         => xlt('Aprobado'),
+    'item_rechazado'        => xlt('Rechazado'),
+    'item_debitado'         => xlt('Debitado'),
+    // Lotes: general
+    'new_batch'             => xlt('Nuevo Lote'),
+    'edit_batch'            => xlt('Editar Lote'),
+    'batch'                 => xlt('Lote'),
+    'items'                 => xlt('ítems'),
+    'no_items'              => xlt('Sin prestaciones en el lote'),
+    'attempt'               => xlt('Intento'),
+    'approve'               => xlt('Aprobar'),
+    'debit'                 => xlt('Debitar'),
+    'reject'                => xlt('Rechazar'),
+    'remove'                => xlt('Quitar'),
+    'arm'                   => xlt('Armar'),
+    'annul'                 => xlt('Anular'),
+    'present'               => xlt('Presentar'),
+    'register_payment'      => xlt('Registrar pago'),
+    'dispute'               => xlt('Disputa'),
+    'actions'               => xlt('Acciones'),
+    'billing_added'         => xlt('Prestación agregada al lote'),
+    'confirm_remove_item'   => xlt('¿Quitar esta prestación del lote?'),
+    'item_updated'          => xlt('Ítem actualizado'),
+    'prompt_reject_reason'  => xlt('Motivo del rechazo:'),
+    'prompt_debit_reason'   => xlt('Motivo del débito:'),
+    'prompt_debit_amount'   => xlt('Monto a debitar (0 para el monto total):'),
+    'confirm_annul'         => xlt('¿Anular este lote? Esta acción no se puede revertir.'),
+    'transition_armado'         => xlt('Lote armado'),
+    'transition_presentado'     => xlt('Lote presentado'),
+    'transition_anulado'        => xlt('Lote anulado'),
+    'transition_pagado_parcial' => xlt('Pago parcial registrado'),
+    'transition_pagado_total'   => xlt('Pago total registrado'),
+    'transition_en_disputa'     => xlt('Lote marcado en disputa'),
+    'paid_label'            => xlt('Pagado'),
+    'add'                   => xlt('Agregar'),
+    'no_billings'           => xlt('No se encontraron prestaciones'),
+];
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -174,6 +269,8 @@ while ($rIns = sqlFetchArray($resIns)) {
     <meta charset="utf-8">
     <title><?php echo xlt('Coberturas LATAM — Gestión'); ?></title>
     <?php Header::setupHeader(['bootstrap', 'fontawesome']); ?>
+    <link rel="stylesheet" href="<?php echo $moduleBase; ?>/assets/css/admin-rules.css">
+    <link rel="stylesheet" href="<?php echo $moduleBase; ?>/assets/css/dashboard.css">
     <style>
         .covl-header-banner {
             background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
@@ -472,27 +569,165 @@ while ($rIns = sqlFetchArray($resIns)) {
 
         <?php elseif ($activeTab === 'batches'): ?>
 
+            <div class="covl-tab-header">
+                <h5><i class="fa-solid fa-boxes-stacked text-primary me-2"></i><?php echo xlt('Lotes de Liquidación'); ?></h5>
+                <button class="btn btn-sm btn-primary" onclick="window.__COVL_Batch.openCreate()">
+                    <i class="fa-solid fa-plus me-1"></i><?php echo xlt('Nuevo Lote'); ?>
+                </button>
+            </div>
+
             <div class="card shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold"><i class="fa-solid fa-boxes-stacked text-primary me-2"></i><?php echo xlt('Lotes de Liquidación Periódica'); ?></h5>
-                </div>
                 <div class="card-body">
-                    <p class="text-muted"><?php echo xlt('Presentaciones mensuales por lote hacia obras sociales y prepagas.'); ?></p>
-                    <div class="alert alert-info d-flex align-items-center">
-                        <i class="fa-solid fa-info-circle me-2 fa-lg"></i>
-                        <div><?php echo xlt('El módulo de liquidación por lotes permite agrupar prestaciones para cobro consolidado.'); ?></div>
+                    <div class="covl-filters">
+                        <div>
+                            <label class="form-label small text-muted mb-1"><?php echo xlt('Financiador'); ?></label>
+                            <select class="form-select" id="flt-batch-insurer" data-covl-filter-batch>
+                                <option value=""><?php echo xlt('— Todos —'); ?></option>
+                                <?php foreach ($insurersList as $ins): ?>
+                                    <option value="<?php echo attr($ins['id']); ?>"><?php echo text($ins['name']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label small text-muted mb-1"><?php echo xlt('Sede'); ?></label>
+                            <select class="form-select" id="flt-batch-facility" data-covl-filter-batch>
+                                <option value=""><?php echo xlt('— Todas —'); ?></option>
+                                <option value="0"><?php echo xlt('Todas las sedes'); ?></option>
+                                <?php foreach ($facilitiesList as $fac): ?>
+                                    <option value="<?php echo attr($fac['id']); ?>"><?php echo text($fac['name']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label small text-muted mb-1"><?php echo xlt('Estado'); ?></label>
+                            <select class="form-select" id="flt-batch-status" data-covl-filter-batch>
+                                <option value=""><?php echo xlt('— Todos —'); ?></option>
+                                <option value="borrador"><?php echo xlt('Borrador'); ?></option>
+                                <option value="armado"><?php echo xlt('Armado'); ?></option>
+                                <option value="presentado"><?php echo xlt('Presentado'); ?></option>
+                                <option value="pagado_parcial"><?php echo xlt('Pagado parcial'); ?></option>
+                                <option value="pagado_total"><?php echo xlt('Pagado total'); ?></option>
+                                <option value="en_disputa"><?php echo xlt('En disputa'); ?></option>
+                                <option value="anulado"><?php echo xlt('Anulado'); ?></option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label small text-muted mb-1"><?php echo xlt('Período desde'); ?></label>
+                            <input type="date" class="form-control" id="flt-batch-from" data-covl-filter-batch>
+                        </div>
+                        <div>
+                            <label class="form-label small text-muted mb-1"><?php echo xlt('Período hasta'); ?></label>
+                            <input type="date" class="form-control" id="flt-batch-to" data-covl-filter-batch>
+                        </div>
+                        <div class="covl-search">
+                            <label class="form-label small text-muted mb-1"><?php echo xlt('Búsqueda'); ?></label>
+                            <input type="text" class="form-control" id="flt-batch-search" data-covl-filter-batch placeholder="<?php echo xla('N° de lote'); ?>">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="covl-table">
+                            <thead>
+                                <tr>
+                                    <th><?php echo xlt('N° Lote'); ?></th>
+                                    <th><?php echo xlt('Financiador'); ?></th>
+                                    <th><?php echo xlt('Sede'); ?></th>
+                                    <th><?php echo xlt('Período'); ?></th>
+                                    <th><?php echo xlt('Estado'); ?></th>
+                                    <th class="text-center"><?php echo xlt('Ítems'); ?></th>
+                                    <th class="text-end"><?php echo xlt('Total'); ?></th>
+                                    <th class="text-end"><?php echo xlt('Acciones'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody id="covl-batch-tbody">
+                                <tr><td colspan="8"><div class="covl-loading"><div class="covl-spinner"></div></div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-2">
+                        <span class="text-muted small" id="covl-batch-total"></span>
+                        <div class="covl-pagination mb-0" id="covl-batch-pager"></div>
                     </div>
                 </div>
             </div>
 
         <?php elseif ($activeTab === 'providers'): ?>
 
+            <div class="covl-tab-header">
+                <h5><i class="fa-solid fa-user-doctor text-primary me-2"></i><?php echo xlt('Convenios de Prestadores'); ?></h5>
+                <button class="btn btn-sm btn-primary" onclick="window.__COVL_Prov.openCreate()">
+                    <i class="fa-solid fa-plus me-1"></i><?php echo xlt('Nuevo Convenio'); ?>
+                </button>
+            </div>
+
             <div class="card shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold"><i class="fa-solid fa-user-doctor text-primary me-2"></i><?php echo xlt('Convenios Prestadores × Financiador'); ?></h5>
-                </div>
                 <div class="card-body">
-                    <p class="text-muted"><?php echo xlt('Control de vigencia temporal de convenios por profesional y financiador.'); ?></p>
+                    <div class="covl-filters">
+                        <div>
+                            <label class="form-label small text-muted mb-1"><?php echo xlt('Profesional'); ?></label>
+                            <select class="form-select" id="flt-prov-user" data-covl-filter-prov>
+                                <option value=""><?php echo xlt('— Todos —'); ?></option>
+                                <?php foreach ($professionalsList as $prof): ?>
+                                    <option value="<?php echo attr($prof['id']); ?>"><?php echo text($prof['lname'] . ', ' . $prof['fname']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label small text-muted mb-1"><?php echo xlt('Financiador'); ?></label>
+                            <select class="form-select" id="flt-prov-insurer" data-covl-filter-prov>
+                                <option value=""><?php echo xlt('— Todos —'); ?></option>
+                                <?php foreach ($insurersList as $ins): ?>
+                                    <option value="<?php echo attr($ins['id']); ?>"><?php echo text($ins['name']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label small text-muted mb-1"><?php echo xlt('Sede'); ?></label>
+                            <select class="form-select" id="flt-prov-facility" data-covl-filter-prov>
+                                <option value=""><?php echo xlt('— Todas —'); ?></option>
+                                <option value="0"><?php echo xlt('Todas las sedes'); ?></option>
+                                <?php foreach ($facilitiesList as $fac): ?>
+                                    <option value="<?php echo attr($fac['id']); ?>"><?php echo text($fac['name']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label small text-muted mb-1"><?php echo xlt('Estado'); ?></label>
+                            <select class="form-select" id="flt-prov-active" data-covl-filter-prov>
+                                <option value=""><?php echo xlt('— Todos —'); ?></option>
+                                <option value="1"><?php echo xlt('Activo'); ?></option>
+                                <option value="0"><?php echo xlt('Inactivo'); ?></option>
+                            </select>
+                        </div>
+                        <div class="covl-search">
+                            <label class="form-label small text-muted mb-1"><?php echo xlt('Búsqueda'); ?></label>
+                            <input type="text" class="form-control" id="flt-prov-search" data-covl-filter-prov placeholder="<?php echo xla('Profesional, n° de prestador o especialidad'); ?>">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="covl-table">
+                            <thead>
+                                <tr>
+                                    <th><?php echo xlt('Profesional'); ?></th>
+                                    <th><?php echo xlt('Financiador'); ?></th>
+                                    <th><?php echo xlt('Sede'); ?></th>
+                                    <th><?php echo xlt('N° Prestador'); ?></th>
+                                    <th><?php echo xlt('Vigencia'); ?></th>
+                                    <th><?php echo xlt('Especialidades'); ?></th>
+                                    <th><?php echo xlt('Estado'); ?></th>
+                                    <th class="text-end"><?php echo xlt('Acciones'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody id="covl-prov-tbody">
+                                <tr><td colspan="8"><div class="covl-loading"><div class="covl-spinner"></div></div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-2">
+                        <span class="text-muted small" id="covl-prov-total"></span>
+                        <div class="covl-pagination mb-0" id="covl-prov-pager"></div>
+                    </div>
                 </div>
             </div>
 
@@ -823,6 +1058,275 @@ while ($rIns = sqlFetchArray($resIns)) {
         <?php endif; ?>
 
     </div>
+
+    <!-- MODAL: Convenio de Prestador -->
+    <div class="modal fade" id="covlProvModal" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="covl-prov-form">
+                    <input type="hidden" id="fld-prov-id">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="covlProvModalLabel"><i class="fa-solid fa-handshake text-primary me-2"></i><?php echo xlt('Convenio de Prestador'); ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('covlProvModal')"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><?php echo xlt('Profesional'); ?> *</label>
+                                <select id="fld-prov-user" class="form-select" required>
+                                    <option value=""><?php echo xlt('-- Seleccionar --'); ?></option>
+                                    <?php foreach ($professionalsList as $prof): ?>
+                                        <option value="<?php echo attr($prof['id']); ?>"><?php echo text($prof['lname'] . ', ' . $prof['fname'] . ($prof['username'] ? ' (' . $prof['username'] . ')' : '')); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><?php echo xlt('Financiador / Obra Social'); ?> *</label>
+                                <select id="fld-prov-insurer" class="form-select" required>
+                                    <option value=""><?php echo xlt('-- Seleccionar --'); ?></option>
+                                    <?php foreach ($insurersList as $ins): ?>
+                                        <option value="<?php echo attr($ins['id']); ?>"><?php echo text($ins['name']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><?php echo xlt('Sede'); ?></label>
+                                <select id="fld-prov-facility" class="form-select">
+                                    <option value="0"><?php echo xlt('Todas las sedes'); ?></option>
+                                    <?php foreach ($facilitiesList as $fac): ?>
+                                        <option value="<?php echo attr($fac['id']); ?>"><?php echo text($fac['name']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><?php echo xlt('N° Prestador'); ?></label>
+                                <input type="text" id="fld-prov-number" class="form-control" placeholder="Ej: MAT-12345">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><?php echo xlt('Vigencia desde'); ?></label>
+                                <input type="date" id="fld-prov-from" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><?php echo xlt('Vigencia hasta'); ?> <span class="text-muted small">(<?php echo xlt('vacío = sin vencimiento'); ?>)</span></label>
+                                <input type="date" id="fld-prov-to" class="form-control">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold"><?php echo xlt('Especialidades'); ?></label>
+                                <input type="text" id="fld-prov-specialties" class="form-control" placeholder="Ej: Cardiología, Clínica Médica">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold"><?php echo xlt('Notas'); ?></label>
+                                <textarea id="fld-prov-notes" class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="fld-prov-active" checked>
+                                    <label class="form-check-label" for="fld-prov-active"><?php echo xlt('Convenio activo'); ?></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('covlProvModal')"><?php echo xlt('Cancelar'); ?></button>
+                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save me-1"></i><?php echo xlt('Guardar'); ?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Lote de Liquidación -->
+    <div class="modal fade" id="covlBatchModal" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="covl-batch-form">
+                    <input type="hidden" id="fld-batch-id">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="covlBatchModalLabel"><i class="fa-solid fa-boxes-stacked text-primary me-2"></i><?php echo xlt('Lote de Liquidación'); ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('covlBatchModal')"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><?php echo xlt('Financiador / Obra Social'); ?> *</label>
+                                <select id="fld-batch-insurer" class="form-select" required></select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><?php echo xlt('Sede'); ?></label>
+                                <select id="fld-batch-facility" class="form-select">
+                                    <option value="0"><?php echo xlt('Todas las sedes'); ?></option>
+                                    <?php foreach ($facilitiesList as $fac): ?>
+                                        <option value="<?php echo attr($fac['id']); ?>"><?php echo text($fac['name']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><?php echo xlt('Período desde'); ?> *</label>
+                                <input type="date" id="fld-batch-from" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><?php echo xlt('Período hasta'); ?> *</label>
+                                <input type="date" id="fld-batch-to" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><?php echo xlt('Moneda'); ?></label>
+                                <select id="fld-batch-currency" class="form-select">
+                                    <option value="ARS">ARS — <?php echo xlt('Peso argentino'); ?></option>
+                                    <option value="USD">USD — <?php echo xlt('Dólar'); ?></option>
+                                    <option value="EUR">EUR — <?php echo xlt('Euro'); ?></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('covlBatchModal')"><?php echo xlt('Cancelar'); ?></button>
+                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save me-1"></i><?php echo xlt('Guardar'); ?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Ítems del Lote -->
+    <div class="modal fade" id="covlBatchItemsModal" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="covlBatchItemsTitle"><i class="fa-solid fa-list-check text-primary me-2"></i><?php echo xlt('Lote'); ?></h5>
+                    <span id="covl-batch-items-status" class="ms-auto"></span>
+                    <button type="button" class="btn-close ms-2" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('covlBatchItemsModal')"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                        <strong id="covl-batch-items-total"></strong>
+                        <button class="btn btn-sm btn-primary" id="btn-batch-add-billing">
+                            <i class="fa-solid fa-plus me-1"></i><?php echo xlt('Agregar prestación'); ?>
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="covl-table">
+                            <thead>
+                                <tr>
+                                    <th><?php echo xlt('Paciente'); ?></th>
+                                    <th><?php echo xlt('Práctica'); ?></th>
+                                    <th><?php echo xlt('Encuentro'); ?></th>
+                                    <th class="text-end"><?php echo xlt('Monto'); ?></th>
+                                    <th><?php echo xlt('Estado'); ?></th>
+                                    <th class="text-center"><?php echo xlt('Intento'); ?></th>
+                                    <th class="text-end"><?php echo xlt('Acciones'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody id="covl-items-tbody"></tbody>
+                        </table>
+                    </div>
+                    <div id="covl-batch-transitions" class="mt-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('covlBatchItemsModal')"><?php echo xlt('Cerrar'); ?></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Agregar prestación al lote -->
+    <div class="modal fade" id="covlBillingModal" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-receipt text-primary me-2"></i><?php echo xlt('Agregar prestación al lote'); ?></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('covlBillingModal')"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="flt-billing-q" placeholder="<?php echo xla('Buscar por paciente, código o n° de factura…'); ?>">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="covl-table">
+                            <thead>
+                                <tr>
+                                    <th><?php echo xlt('Paciente'); ?></th>
+                                    <th><?php echo xlt('Práctica'); ?></th>
+                                    <th><?php echo xlt('Fecha'); ?></th>
+                                    <th><?php echo xlt('Encuentro'); ?></th>
+                                    <th class="text-end"><?php echo xlt('Monto'); ?></th>
+                                    <th class="text-end"><?php echo xlt('Acción'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody id="covl-billing-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('covlBillingModal')"><?php echo xlt('Cerrar'); ?></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Registrar Pago -->
+    <div class="modal fade" id="covlPayModal" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="covl-pay-form">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold"><i class="fa-solid fa-money-bill-wave text-success me-2"></i><?php echo xlt('Registrar Pago'); ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('covlPayModal')"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold"><?php echo xlt('Monto'); ?> *</label>
+                            <input type="number" step="0.01" min="0" id="fld-pay-amount" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold"><?php echo xlt('Fecha de pago'); ?> *</label>
+                            <input type="date" id="fld-pay-date" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold"><?php echo xlt('Referencia'); ?></label>
+                            <input type="text" id="fld-pay-reference" class="form-control" placeholder="Ej: Transferencia N° 12345">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('covlPayModal')"><?php echo xlt('Cancelar'); ?></button>
+                        <button type="submit" class="btn btn-success"><i class="fa-solid fa-check me-1"></i><?php echo xlt('Confirmar Pago'); ?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Marcar en disputa -->
+    <div class="modal fade" id="covlDisputeModal" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="covl-dispute-form">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold"><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i><?php echo xlt('Marcar lote en disputa'); ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('covlDisputeModal')"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label class="form-label fw-bold"><?php echo xlt('Motivo de la disputa'); ?></label>
+                        <textarea id="fld-dispute-notes" class="form-control" rows="3" required placeholder="<?php echo xla('Detalle el motivo de la disputa'); ?>"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('covlDisputeModal')"><?php echo xlt('Cancelar'); ?></button>
+                        <button type="submit" class="btn btn-warning"><i class="fa-solid fa-check me-1"></i><?php echo xlt('Confirmar Disputa'); ?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuración JS inyectada desde PHP -->
+    <script>
+    const covlConfig = {
+        csrfToken:    <?= json_encode($csrfToken) ?>,
+        baseApiUrl:   <?= json_encode($moduleBase . '/api') ?>,
+        i18n:         <?= json_encode($covlI18n, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>,
+    };
+    </script>
+    <script src="<?= attr($moduleBase) ?>/assets/js/providers-crud.js"></script>
+    <script src="<?= attr($moduleBase) ?>/assets/js/batches-crud.js"></script>
 
     <!-- Script de soporte universal para modales (Bootstrap 4 / Bootstrap 5 / JS Nativo) -->
     <script>

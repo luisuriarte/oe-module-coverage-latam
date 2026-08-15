@@ -31,7 +31,7 @@ use OpenEMR\Modules\CoverageLatam\Repository\FrequencyRulesRepository;
 if (!isset($_SESSION['authUserID'])) {
     http_response_code(401);
     header('Content-Type: application/json');
-    echo json_encode(['error' => 'No autenticado']);
+    echo json_encode(['error' => xl('No autenticado')]);
     exit;
 }
 
@@ -50,10 +50,10 @@ function covl_freq_json(mixed $data, int $status = 200): void
 if (in_array($action, ['create', 'update', 'toggle', 'delete'], true)) {
     $token = $_POST['csrf_token'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
     if (!CsrfCompat::verifyCsrfToken($token)) {
-        covl_freq_json(['error' => 'Token CSRF inválido'], 403);
+        covl_freq_json(['error' => xl('Token CSRF inválido')], 403);
     }
     if (!AclMain::aclCheckCore('admin', 'docs')) {
-        covl_freq_json(['error' => 'Sin permisos para modificar reglas'], 403);
+        covl_freq_json(['error' => xl('Sin permisos para modificar reglas')], 403);
     }
 }
 
@@ -79,7 +79,7 @@ try {
             $id  = (int) ($_GET['id'] ?? 0);
             $row = $repo->findById($id);
             if ($row === null) {
-                covl_freq_json(['error' => "Regla {$id} no encontrada"], 404);
+                covl_freq_json(['error' => xl('Regla no encontrada')], 404);
             }
             covl_freq_json($row);
 
@@ -90,7 +90,7 @@ try {
                 $data = json_decode($body, true) ?: [];
             }
             if (empty($data['code_type']) || empty($data['code']) || empty($data['insurance_company_id']) || !isset($data['min_interval_days'])) {
-                covl_freq_json(['error' => 'Campos requeridos: insurance_company_id, code_type, code, min_interval_days'], 422);
+                covl_freq_json(['error' => xl('Campos requeridos: insurance_company_id, code_type, code, min_interval_days')], 422);
             }
             $newId = $repo->create($data);
             covl_freq_json(['success' => true, 'id' => $newId], 201);
@@ -99,7 +99,7 @@ try {
             $id  = (int) ($_GET['id'] ?? $_POST['id'] ?? 0);
             $row = $repo->findById($id);
             if ($row === null) {
-                covl_freq_json(['error' => "Regla {$id} no encontrada"], 404);
+                covl_freq_json(['error' => xl('Regla no encontrada')], 404);
             }
             $data = array_merge($_POST, []);
             if (empty($data) || !isset($data['code_type'])) {
@@ -107,7 +107,7 @@ try {
                 $data = json_decode($body, true) ?: [];
             }
             if (empty($data['code_type']) || empty($data['code']) || empty($data['insurance_company_id']) || !isset($data['min_interval_days'])) {
-                covl_freq_json(['error' => 'Campos requeridos: insurance_company_id, code_type, code, min_interval_days'], 422);
+                covl_freq_json(['error' => xl('Campos requeridos: insurance_company_id, code_type, code, min_interval_days')], 422);
             }
             $repo->update($id, $data);
             covl_freq_json(['success' => true]);
@@ -120,15 +120,15 @@ try {
         case 'delete':
             $id = (int) ($_GET['id'] ?? $_POST['id'] ?? 0);
             if (!$repo->findById($id)) {
-                covl_freq_json(['error' => "Regla {$id} no encontrada"], 404);
+                covl_freq_json(['error' => xl('Regla no encontrada')], 404);
             }
             $repo->delete($id);
             covl_freq_json(['success' => true]);
 
         default:
-            covl_freq_json(['error' => "Acción desconocida: {$action}"], 400);
+            covl_freq_json(['error' => xl('Acción desconocida')], 400);
     }
 } catch (\Throwable $e) {
     error_log('[covl] api/frequency_rules.php error: ' . $e->getMessage());
-    covl_freq_json(['error' => 'Error interno del servidor'], 500);
+    covl_freq_json(['error' => xl('Error interno del servidor')], 500);
 }

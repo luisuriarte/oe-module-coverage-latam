@@ -46,7 +46,7 @@ final class ProviderCoverageResult
             providerNumber: null,
             specialties:    null,
             dateEnd:        null,
-            message:        "El profesional (ID: {$userId}) no tiene convenio registrado con el financiador (ID: {$insCompanyId})"
+            message:        xl('El profesional') . " (ID: {$userId}) " . xl('no tiene convenio registrado con el financiador') . " (ID: {$insCompanyId})"
         );
     }
 }
