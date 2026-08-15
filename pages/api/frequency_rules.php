@@ -21,11 +21,11 @@
 
 $ignoreAuth = false;
 
-require_once __DIR__ . '/../../../../globals.php';
+require_once __DIR__ . '/../../../../../globals.php';
 require_once $GLOBALS['srcdir'] . '/api.inc.php';
 
 use OpenEMR\Common\Acl\AclMain;
-use OpenEMR\Common\Csrf\CsrfUtils;
+use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Repository\FrequencyRulesRepository;
 
 if (!isset($_SESSION['authUserID'])) {
@@ -49,7 +49,7 @@ function covl_freq_json(mixed $data, int $status = 200): void
 
 if (in_array($action, ['create', 'update', 'toggle', 'delete'], true)) {
     $token = $_POST['csrf_token'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
-    if (!CsrfUtils::verifyCsrfToken($token)) {
+    if (!CsrfCompat::verifyCsrfToken($token)) {
         covl_freq_json(['error' => 'Token CSRF inválido'], 403);
     }
     if (!AclMain::aclCheckCore('admin', 'docs')) {

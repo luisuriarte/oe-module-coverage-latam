@@ -17,8 +17,8 @@
 require_once dirname(__DIR__, 5) . '/globals.php';
 
 use OpenEMR\Common\Acl\AclMain;
-use OpenEMR\Common\Csrf\CsrfUtils;
 use OpenEMR\Core\Header;
+use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 
 if (!AclMain::aclCheckCore('admin', 'docs')) {
     die(xlt('Acceso denegado'));
@@ -38,7 +38,7 @@ while ($row = sqlFetchArray($res2)) {
     $codeTypes[] = $row;
 }
 
-$csrfToken  = CsrfUtils::collectCsrfToken('default');
+$csrfToken  = CsrfCompat::collectCsrfToken();
 $moduleBase = $GLOBALS['webroot'] . '/interface/modules/custom_modules/oe-module-coverage-latam/pages';
 
 // ---------------------------------------------------------------------------

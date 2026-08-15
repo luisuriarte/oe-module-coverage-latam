@@ -17,7 +17,7 @@
 
 $ignoreAuth = false;
 
-require_once __DIR__ . '/../../../../globals.php';
+require_once __DIR__ . '/../../../../../globals.php';
 
 if (!isset($_SESSION['authUserID'])) {
     http_response_code(401);

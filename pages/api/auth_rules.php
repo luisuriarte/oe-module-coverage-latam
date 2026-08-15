@@ -25,11 +25,11 @@
 // ---------------------------------------------------------------------------
 $ignoreAuth = false; // Requiere sesión activa
 
-require_once __DIR__ . '/../../../../globals.php';
+require_once __DIR__ . '/../../../../../globals.php';
 require_once $GLOBALS['srcdir'] . '/api.inc.php';
 
 use OpenEMR\Common\Acl\AclMain;
-use OpenEMR\Common\Csrf\CsrfUtils;
+use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Repository\AuthRulesRepository;
 
 // Seguridad: verificar sesión activa
@@ -61,7 +61,7 @@ function covl_json(mixed $data, int $status = 200): void
 // ---------------------------------------------------------------------------
 if (in_array($action, ['create', 'update', 'toggle', 'delete'], true)) {
     $token = $_POST['csrf_token'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
-    if (!CsrfUtils::verifyCsrfToken($token)) {
+    if (!CsrfCompat::verifyCsrfToken($token)) {
         covl_json(['error' => 'Token CSRF inválido'], 403);
     }
     // ACL: solo admins pueden modificar reglas
