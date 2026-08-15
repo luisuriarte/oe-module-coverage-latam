@@ -1,0 +1,14 @@
+{
+  "country_code": "EC",
+  "name": "Ecuador — IESS y Seguros",
+  "version": "1.0.0",
+  "description": "Registra el tipo de código NOMEC (Nomenclador Ecuador). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "code_type": {
+    "ct_key": "NOMEC",
+    "ct_name": "Nomenclador Ecuador",
+    "ct_term": "NOMEC"
+  },
+  "auth_rules": [],
+  "frequency_rules": [],
+  "code_maps": []
+}

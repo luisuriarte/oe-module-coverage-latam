@@ -1,0 +1,14 @@
+{
+  "country_code": "DO",
+  "name": "República Dominicana — SENASA y ARS",
+  "version": "1.0.0",
+  "description": "Registra el tipo de código NOMDO (Nomenclador República Dominicana). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "code_type": {
+    "ct_key": "NOMDO",
+    "ct_name": "Nomenclador República Dominicana",
+    "ct_term": "NOMDO"
+  },
+  "auth_rules": [],
+  "frequency_rules": [],
+  "code_maps": []
+}

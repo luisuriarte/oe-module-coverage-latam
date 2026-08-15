@@ -1,0 +1,14 @@
+{
+  "country_code": "PY",
+  "name": "Paraguay — IPS y Seguros",
+  "version": "1.0.0",
+  "description": "Registra el tipo de código NOMPY (Nomenclador Paraguay). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "code_type": {
+    "ct_key": "NOMPY",
+    "ct_name": "Nomenclador Paraguay",
+    "ct_term": "NOMPY"
+  },
+  "auth_rules": [],
+  "frequency_rules": [],
+  "code_maps": []
+}

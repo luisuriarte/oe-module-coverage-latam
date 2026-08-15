@@ -1,0 +1,14 @@
+{
+  "country_code": "BR",
+  "name": "Brasil — SUS e Operadoras de Saúde",
+  "version": "1.0.0",
+  "description": "Registra el tipo de código SIGTAP (Tabela de Procedimentos do SUS). Las reglas de autorización y frecuencia se cargan desde Configuração & Regras.",
+  "code_type": {
+    "ct_key": "SIGTAP",
+    "ct_name": "SIGTAP — Sistema de Gerenciamento da Tabela de Procedimentos",
+    "ct_term": "SIGTAP"
+  },
+  "auth_rules": [],
+  "frequency_rules": [],
+  "code_maps": []
+}

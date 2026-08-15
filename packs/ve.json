@@ -1,0 +1,14 @@
+{
+  "country_code": "VE",
+  "name": "Venezuela — Sistema Público y Seguros",
+  "version": "1.0.0",
+  "description": "Registra el tipo de código NOMVE (Nomenclador Venezuela). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "code_type": {
+    "ct_key": "NOMVE",
+    "ct_name": "Nomenclador Venezuela",
+    "ct_term": "NOMVE"
+  },
+  "auth_rules": [],
+  "frequency_rules": [],
+  "code_maps": []
+}

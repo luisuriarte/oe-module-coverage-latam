@@ -1,0 +1,14 @@
+{
+  "country_code": "BO",
+  "name": "Bolivia — SUS y Seguros",
+  "version": "1.0.0",
+  "description": "Registra el tipo de código NOMBO (Nomenclador Bolivia). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "code_type": {
+    "ct_key": "NOMBO",
+    "ct_name": "Nomenclador Bolivia",
+    "ct_term": "NOMBO"
+  },
+  "auth_rules": [],
+  "frequency_rules": [],
+  "code_maps": []
+}
