@@ -414,7 +414,7 @@
     };
 
     // API pública global (para atributos onclick inline)
-    window.__COVL_Prov = { openEdit: Prov.openEdit, toggle: Prov.toggle, del: Prov.del, goPage: Prov.goPage };
+    window.__COVL_Prov = { openCreate: Prov.openCreate, openEdit: Prov.openEdit, toggle: Prov.toggle, del: Prov.del, goPage: Prov.goPage };
 
     // -----------------------------------------------------------------------
     // Inicialización

@@ -678,6 +678,7 @@
 
     // API pública global (para atributos onclick inline)
     window.__COVL_Batch = {
+        openCreate: Batch.openCreate,
         viewItems: Batch.viewItems,
         openEdit:  Batch.openEdit,
         del:       Batch.del,

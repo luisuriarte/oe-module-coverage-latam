@@ -174,7 +174,7 @@ $moduleBase = $GLOBALS['webroot'] . '/interface/modules/custom_modules/oe-module
 
 // Profesionales y sedes para los filtros y formularios de Convenios / Lotes
 $professionalsList = [];
-$resProf = sqlStatement("SELECT u.id, u.username, u.fname, u.lname, u.specialty FROM users u WHERE u.username IS NOT NULL AND u.username != '' ORDER BY u.lname, u.fname");
+$resProf = sqlStatement("SELECT u.id, u.username, u.fname, u.lname, u.specialty FROM users u WHERE u.authorized = 1 AND u.username IS NOT NULL AND u.username != '' ORDER BY u.lname, u.fname");
 while ($rProf = sqlFetchArray($resProf)) {
     $professionalsList[] = $rProf;
 }
