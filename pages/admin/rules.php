@@ -38,7 +38,7 @@ while ($row = sqlFetchArray($res2)) {
     $codeTypes[] = $row;
 }
 
-$csrfToken  = CsrfUtils::collectCsrfToken();
+$csrfToken  = CsrfUtils::collectCsrfToken('default');
 $moduleBase = $GLOBALS['webroot'] . '/interface/modules/custom_modules/oe-module-coverage-latam/pages';
 
 // ---------------------------------------------------------------------------
