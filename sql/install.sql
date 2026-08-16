@@ -277,6 +277,9 @@ CREATE TABLE IF NOT EXISTS `covl_country_packs` (
   `name`                  varchar(100) NOT NULL                            COMMENT 'Nombre descriptivo del paquete de país (ej: Argentina — Obras Sociales y Prepagas)',
   `version`               varchar(20)  NOT NULL DEFAULT '1.0.0'            COMMENT 'Versión del paquete de configuración de país instalado',
   `code_type_key`         varchar(15)  DEFAULT NULL                        COMMENT 'ct_key del nomenclador nacional que registra este paquete (ej: NNAR para Argentina)',
+  `currency_code`         char(3)      NOT NULL DEFAULT 'USD'              COMMENT 'Moneda por defecto del país en formato ISO 4217 (ej: ARS, CLP, COP)',
+  `currency_name`         varchar(50)  DEFAULT NULL                        COMMENT 'Nombre de la moneda del país (ej: Peso argentino)',
+  `currency_symbol`       varchar(5)   DEFAULT NULL                        COMMENT 'Símbolo de la moneda del país (ej: $, S/, Bs)',
   `default_rules_loaded`  tinyint(1)   NOT NULL DEFAULT 0                  COMMENT 'Indica si ya se cargaron las reglas de autorización y frecuencia por defecto del país (1=sí, 0=no)',
   `installed_at`          datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP  COMMENT 'Fecha y hora de instalación del paquete de país',
   `updated_at`            datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha y hora de última actualización del paquete',
@@ -327,9 +330,9 @@ VALUES
 -- Paquete Argentina
 -- ---------------------------------------------------------------------------
 INSERT IGNORE INTO `covl_country_packs`
-  (`country_code`, `name`, `version`, `code_type_key`, `default_rules_loaded`)
+  (`country_code`, `name`, `version`, `code_type_key`, `currency_code`, `currency_name`, `currency_symbol`, `default_rules_loaded`)
 VALUES
-  ('AR', 'Argentina — Obras Sociales, Prepagas y ART', '1.0.0', 'NNAR', 0);
+  ('AR', 'Argentina — Obras Sociales, Prepagas y ART', '1.0.0', 'NNAR', 'ARS', 'Peso argentino', '$', 0);
 
 -- ---------------------------------------------------------------------------
 -- NOTA: El tipo de código NNAR (Nomenclador Nacional Argentino) NO se registra

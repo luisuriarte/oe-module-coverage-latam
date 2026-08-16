@@ -19,7 +19,7 @@ $module_config = 1;
 
 <div id="covl-module-config">
     <iframe
-        src="<?php echo $web_root; ?>/interface/modules/custom_modules/oe-module-coverage-latam/pages/dashboard.php?tab=config"
+        src="<?php echo $web_root; ?>/interface/modules/custom_modules/oe-module-coverage-latam/pages/dashboard.php?tab=auth_rules"
         style="border:none; height:100vh; width:100%;">
     </iframe>
 </div>

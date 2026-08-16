@@ -1,6 +1,11 @@
 {
   "country_code": "VE",
   "name": "Venezuela — Sistema Público y Seguros",
+    "currency": {
+    "code": "VES",
+    "name": "Bolívar venezolano",
+    "symbol": "Bs"
+  },
   "version": "1.0.0",
   "description": "Registra el tipo de código NOMVE (Nomenclador Venezuela). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
   "code_type": {

@@ -1,6 +1,11 @@
 {
   "country_code": "DO",
   "name": "República Dominicana — SENASA y ARS",
+    "currency": {
+    "code": "DOP",
+    "name": "Peso dominicano",
+    "symbol": "RD$"
+  },
   "version": "1.0.0",
   "description": "Registra el tipo de código NOMDO (Nomenclador República Dominicana). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
   "code_type": {

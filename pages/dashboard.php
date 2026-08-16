@@ -27,108 +27,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ---------------------------------------------------------------------------
-// Procesamiento de Acciones POST (CRUD)
-// ---------------------------------------------------------------------------
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    $action = $_POST['action'];
-
-    // 1. Crear Regla de Autorización
-    if ($action === 'add_auth_rule') {
-        $insCompanyId = (int) ($_POST['insurance_company_id'] ?? 0);
-        $planPattern  = trim($_POST['plan_pattern'] ?? '0');
-        if ($planPattern === '') { $planPattern = '0'; }
-        $codeType     = trim($_POST['code_type'] ?? 'NNAR');
-        $code         = trim($_POST['code'] ?? '0');
-        if ($code === '') { $code = '0'; }
-        $authMode     = $_POST['auth_mode'] ?? 'requerida';
-        $maxQty       = isset($_POST['max_quantity']) && $_POST['max_quantity'] !== '' ? (int)$_POST['max_quantity'] : null;
-        $priority     = (int) ($_POST['priority'] ?? 100);
-        $notes        = trim($_POST['notes'] ?? '');
-
-        if ($insCompanyId > 0) {
-            sqlStatement(
-                "INSERT INTO covl_auth_rules 
-                    (insurance_company_id, plan_pattern, code_type, code, auth_mode, max_quantity, priority, notes)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                [$insCompanyId, $planPattern, $codeType, $code, $authMode, $maxQty, $priority, $notes]
-            );
-            $_SESSION['covl_msg'] = ['type' => 'success', 'text' => xlt('Regla de autorización creada exitosamente.')];
-        }
-        header('Location: dashboard.php?tab=config');
-        exit;
-    }
-
-    // 2. Activar / Inactivar Regla de Autorización
-    if ($action === 'toggle_auth_rule') {
-        $ruleId = (int) ($_POST['rule_id'] ?? 0);
-        if ($ruleId > 0) {
-            sqlStatement("UPDATE covl_auth_rules SET active = 1 - active WHERE id = ?", [$ruleId]);
-            $_SESSION['covl_msg'] = ['type' => 'info', 'text' => xlt('Estado de la regla de autorización actualizado.')];
-        }
-        header('Location: dashboard.php?tab=config');
-        exit;
-    }
-
-    // 3. Eliminar Regla de Autorización
-    if ($action === 'delete_auth_rule') {
-        $ruleId = (int) ($_POST['rule_id'] ?? 0);
-        if ($ruleId > 0) {
-            sqlStatement("DELETE FROM covl_auth_rules WHERE id = ?", [$ruleId]);
-            $_SESSION['covl_msg'] = ['type' => 'warning', 'text' => xlt('Regla de autorización eliminada.')];
-        }
-        header('Location: dashboard.php?tab=config');
-        exit;
-    }
-
-    // 4. Crear Regla de Frecuencia
-    if ($action === 'add_freq_rule') {
-        $insCompanyId = (int) ($_POST['insurance_company_id'] ?? 0);
-        $codeType     = trim($_POST['code_type'] ?? 'NNAR');
-        $code         = trim($_POST['code'] ?? '');
-        $minInterval  = (int) ($_POST['min_interval_days'] ?? 0);
-        $maxPerYear   = isset($_POST['max_per_year']) && $_POST['max_per_year'] !== '' ? (int)$_POST['max_per_year'] : null;
-        $severity     = $_POST['severity'] ?? 'alerta';
-        $notes        = trim($_POST['notes'] ?? '');
-
-        if ($insCompanyId > 0 && $code !== '' && $minInterval > 0) {
-            sqlStatement(
-                "INSERT INTO covl_frequency_rules 
-                    (insurance_company_id, code_type, code, min_interval_days, max_per_year, severity, notes)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)",
-                [$insCompanyId, $codeType, $code, $minInterval, $maxPerYear, $severity, $notes]
-            );
-            $_SESSION['covl_msg'] = ['type' => 'success', 'text' => xlt('Regla de frecuencia creada exitosamente.')];
-        }
-        header('Location: dashboard.php?tab=config');
-        exit;
-    }
-
-    // 5. Activar / Inactivar Regla de Frecuencia
-    if ($action === 'toggle_freq_rule') {
-        $ruleId = (int) ($_POST['rule_id'] ?? 0);
-        if ($ruleId > 0) {
-            sqlStatement("UPDATE covl_frequency_rules SET active = 1 - active WHERE id = ?", [$ruleId]);
-            $_SESSION['covl_msg'] = ['type' => 'info', 'text' => xlt('Estado de la regla de frecuencia actualizado.')];
-        }
-        header('Location: dashboard.php?tab=config');
-        exit;
-    }
-
-    // 6. Eliminar Regla de Frecuencia
-    if ($action === 'delete_freq_rule') {
-        $ruleId = (int) ($_POST['rule_id'] ?? 0);
-        if ($ruleId > 0) {
-            sqlStatement("DELETE FROM covl_frequency_rules WHERE id = ?", [$ruleId]);
-            $_SESSION['covl_msg'] = ['type' => 'warning', 'text' => xlt('Regla de frecuencia eliminada.')];
-        }
-        header('Location: dashboard.php?tab=config');
-        exit;
-    }
-}
-
 $activeTab = $_GET['tab'] ?? 'dashboard';
-$allowedTabs = ['dashboard', 'authorizations', 'batches', 'providers', 'countries', 'config'];
+$allowedTabs = ['dashboard', 'authorizations', 'batches', 'providers', 'countries', 'auth_rules', 'freq_rules'];
 if (!in_array($activeTab, $allowedTabs, true)) {
     $activeTab = 'dashboard';
 }
@@ -183,6 +83,78 @@ $facilitiesList = [];
 $resFac = sqlStatement("SELECT id, name FROM facility ORDER BY name ASC");
 while ($rFac = sqlFetchArray($resFac)) {
     $facilitiesList[] = $rFac;
+}
+
+// Cargar paquetes de país instalados (para pills, FlagSelects y moneda por país)
+$countryPacks = [];
+$resPk = sqlStatement("SELECT country_code, name, currency_code, currency_name, currency_symbol FROM covl_country_packs ORDER BY name");
+while ($rowPk = sqlFetchArray($resPk)) {
+    $countryPacks[] = $rowPk;
+}
+
+// Cargar tipos de código disponibles (para los formularios de reglas)
+$codeTypes = [];
+$resCt = sqlStatement("SELECT ct_key, ct_label FROM code_types WHERE ct_active = 1 ORDER BY ct_label");
+while ($rowCt = sqlFetchArray($resCt)) {
+    $codeTypes[] = $rowCt;
+}
+
+// Moneda activa de la configuración (para precargar el lote)
+$activeCountryCode = 'AR';
+$resConf = sqlQuery("SELECT country_code FROM covl_config WHERE facility_id = 0 LIMIT 1");
+if ($resConf && !empty($resConf['country_code'])) {
+    $activeCountryCode = $resConf['country_code'];
+}
+$activeCurrency = [
+    'code'   => 'USD',
+    'name'   => 'Dólar',
+    'symbol' => '$',
+];
+$resCur = sqlQuery(
+    "SELECT currency_code, currency_name, currency_symbol FROM covl_country_packs WHERE country_code = ? LIMIT 1",
+    [$activeCountryCode]
+);
+if ($resCur && !empty($resCur['currency_code'])) {
+    $activeCurrency = [
+        'code'   => $resCur['currency_code'],
+        'name'   => $resCur['currency_name'] ?? $resCur['currency_code'],
+        'symbol' => $resCur['currency_symbol'] ?? '',
+    ];
+}
+
+// ---------------------------------------------------------------------------
+// Helper: genera el markup de un FlagSelect personalizado con banderas.
+// ---------------------------------------------------------------------------
+function covl_flag_select(string $inputId, array $options, bool $required = false, string $extraClass = ''): string
+{
+    $html  = '<div class="covl-flag-select' . ($extraClass ? ' ' . $extraClass : '') . '" data-input-id="' . attr($inputId) . '">';
+    $html .= '<button type="button" class="fs-trigger" aria-haspopup="listbox" aria-expanded="false">';
+    $html .= '<span class="fs-flag fi"></span>';
+    $html .= '<span class="fs-label text-muted">' . xlt('Seleccioná...') . '</span>';
+    $html .= '<span class="fs-caret">▾</span>';
+    $html .= '</button>';
+    $html .= '<div class="fs-dropdown" role="listbox">';
+    foreach ($options as $opt) {
+        $code    = $opt['code'] ?? '';
+        $fiClass = $code ? 'fi fi-' . strtolower($code) : 'fi';
+        $html   .= '<div class="fs-option" role="option" data-value="' . attr($opt['value']) . '" data-code="' . attr($code) . '">';
+        $html   .= '<span class="' . attr($fiClass) . '"></span>';
+        $html   .= '<span class="fs-option-label">' . text($opt['label']) . '</span>';
+        $html   .= '</div>';
+    }
+    $html .= '</div>';
+    $html .= '<input type="hidden" id="' . attr($inputId) . '" value=""' . ($required ? ' data-required="1"' : '') . '>';
+    $html .= '</div>';
+    return $html;
+}
+
+// Opciones de país para los selects
+$allCountryOpts = [['value' => '', 'label' => xlt('— Todos los países —'), 'code' => '']];
+$reqCountryOpts = [['value' => '', 'label' => xlt('— Seleccioná —'),       'code' => '']];
+foreach ($countryPacks as $p) {
+    $opt = ['value' => $p['country_code'], 'label' => $p['country_code'] . ' — ' . $p['name'], 'code' => $p['country_code']];
+    $allCountryOpts[] = $opt;
+    $reqCountryOpts[] = $opt;
 }
 
 // Traducciones inyectadas en covlConfig.i18n (usadas por providers-crud.js y batches-crud.js)
@@ -281,7 +253,8 @@ $covlI18n = [
     <meta charset="utf-8">
     <title><?php echo xlt('Coberturas LATAM — Gestión'); ?></title>
     <?php Header::setupHeader(['bootstrap', 'fontawesome']); ?>
-    <link rel="stylesheet" href="<?php echo $moduleBase; ?>/assets/css/admin-rules.css">
+<link rel="stylesheet" href="<?php echo $moduleBase; ?>/assets/css/admin-rules.css">
+    <link rel="stylesheet" href="<?php echo $moduleBase; ?>/assets/css/vendor/flag-icons/css/flag-icons.min.css">
     <link rel="stylesheet" href="<?php echo $moduleBase; ?>/assets/css/dashboard.css">
     <style>
         .covl-header-banner {
@@ -383,9 +356,15 @@ $covlI18n = [
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?php echo $activeTab === 'config' ? 'active' : ''; ?>" 
-                   href="dashboard.php?tab=config">
-                    <i class="fa-solid fa-sliders me-1"></i><?php echo xlt('Configuración & Reglas'); ?>
+                <a class="nav-link <?php echo $activeTab === 'auth_rules' ? 'active' : ''; ?>" 
+                   href="dashboard.php?tab=auth_rules">
+                    <i class="fa-solid fa-shield-halved me-1"></i><?php echo xlt('Autorizaciones'); ?>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo $activeTab === 'freq_rules' ? 'active' : ''; ?>" 
+                   href="dashboard.php?tab=freq_rules">
+                    <i class="fa-solid fa-clock-rotate-left me-1"></i><?php echo xlt('Frecuencia'); ?>
                 </a>
             </li>
         </ul>
@@ -774,12 +753,13 @@ $covlI18n = [
                                             <th><?php echo xlt('Nombre'); ?></th>
                                             <th><?php echo xlt('Nomenclador'); ?></th>
                                             <th><?php echo xlt('Versión'); ?></th>
+                                            <th><?php echo xlt('Moneda'); ?></th>
                                             <th><?php echo xlt('Reglas Base'); ?></th>
                                             <th class="text-end"><?php echo xlt('Acciones'); ?></th>
                                         </tr>
                                     </thead>
                                     <tbody id="covl-country-tbody">
-                                        <tr><td colspan="6" class="text-center py-4">
+                                        <tr><td colspan="7" class="text-center py-4">
                                             <div class="covl-spinner spinner-border text-primary"></div>
                                         </td></tr>
                                     </tbody>
@@ -790,326 +770,182 @@ $covlI18n = [
                 </div>
             </div>
 
-        <?php elseif ($activeTab === 'config'): ?>
+        <?php elseif ($activeTab === 'auth_rules'): ?>
 
-            <div class="row g-4">
-                <!-- Seccion 1: Reglas de Autorizacion Previa -->
-                <div class="col-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
-                            <h5 class="mb-0 fw-bold">
-                                <i class="fa-solid fa-shield-halved text-primary me-2"></i><?php echo xlt('Reglas de Autorización Previa'); ?>
-                            </h5>
-                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalNewAuthRule" data-toggle="modal" data-target="#modalNewAuthRule" onclick="openModal('modalNewAuthRule')">
-                                <i class="fa-solid fa-plus me-1"></i><?php echo xlt('Nueva Regla de Autorización'); ?>
-                            </button>
+            <div class="covl-tab-header">
+                <h5><i class="fa-solid fa-shield-halved text-primary me-2"></i><?php echo xlt('Reglas de Autorización'); ?></h5>
+                <button class="btn btn-sm btn-primary" onclick="COVL.Auth.openCreate()">
+                    <i class="fa-solid fa-plus me-1"></i><?php echo xlt('Nueva Regla'); ?>
+                </button>
+            </div>
+
+            <?php if (!empty($countryPacks)): ?>
+            <div class="covl-country-pills" id="covl-country-pills">
+                <a href="#" class="covl-country-pill active" data-covl-country="">
+                    🌎 <?= xlt('Todos') ?>
+                </a>
+                <?php foreach ($countryPacks as $pack):
+                    $code = $pack['country_code'];
+                ?>
+                <a href="#" class="covl-country-pill" data-covl-country="<?= attr($code) ?>">
+                    <span class="fi fi-<?= strtolower(attr($code)) ?> fs-pill-flag"></span>
+                    <?= text($code) ?>
+                </a>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="covl-filters">
+                        <div class="filter-group">
+                            <label><?php echo xlt('País'); ?></label>
+                            <?= covl_flag_select('flt-auth-country', $allCountryOpts, false, 'fs-compact') ?>
                         </div>
-                        <div class="card-body">
-                            <p class="text-muted small mb-3">
-                                <?php echo xlt('Determina si una práctica solicitada ante un financiador requiere autorización previa (requerida), se aprueba automáticamente (automatica) o no la requiere (no_requerida). Evaluadas por prioridad (menor valor = mayor relevancia).'); ?>
-                            </p>
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th># ID</th>
-                                            <th><?php echo xlt('Financiador'); ?></th>
-                                            <th><?php echo xlt('Patrón de Plan'); ?></th>
-                                            <th><?php echo xlt('Tipo Código'); ?></th>
-                                            <th><?php echo xlt('Código Práctica'); ?></th>
-                                            <th><?php echo xlt('Modo'); ?></th>
-                                            <th><?php echo xlt('Máx. Auto'); ?></th>
-                                            <th><?php echo xlt('Prioridad'); ?></th>
-                                            <th><?php echo xlt('Estado'); ?></th>
-                                            <th><?php echo xlt('Acciones'); ?></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $resAuthRules = sqlStatement(
-                                            "SELECT r.*, ic.name AS insurer_name
-                                             FROM covl_auth_rules r
-                                             LEFT JOIN insurance_companies ic ON ic.id = r.insurance_company_id
-                                             ORDER BY r.priority ASC, r.id ASC"
-                                        );
-                                        $hasAuthRules = false;
-                                        while ($r = sqlFetchArray($resAuthRules)) {
-                                            $hasAuthRules = true;
-                                            $modeBadge = match ($r['auth_mode']) {
-                                                'automatica'   => 'bg-success',
-                                                'requerida'    => 'bg-warning text-dark',
-                                                'no_requerida' => 'bg-secondary',
-                                                default        => 'bg-light text-dark',
-                                            };
-                                            $planLabel = ($r['plan_pattern'] === '0' || $r['plan_pattern'] === null) ? '<em>Todos los planes</em>' : text($r['plan_pattern']);
-                                            $codeLabel = ($r['code'] === '0' || $r['code'] === null) ? '<em>Todos los códigos</em>' : text($r['code']);
-                                            ?>
-                                            <tr>
-                                                <td>#<?php echo text($r['id']); ?></td>
-                                                <td><strong><?php echo text($r['insurer_name'] ?? 'Financiador ID ' . $r['insurance_company_id']); ?></strong></td>
-                                                <td><code><?php echo $planLabel; ?></code></td>
-                                                <td><span class="badge bg-light text-dark border"><?php echo text($r['code_type']); ?></span></td>
-                                                <td><code><?php echo $codeLabel; ?></code></td>
-                                                <td><span class="badge <?php echo $modeBadge; ?>"><?php echo text(strtoupper($r['auth_mode'])); ?></span></td>
-                                                <td><?php echo $r['max_quantity'] !== null ? text($r['max_quantity']) : '-'; ?></td>
-                                                <td><span class="badge bg-outline-secondary border text-dark"><?php echo text($r['priority']); ?></span></td>
-                                                <td>
-                                                    <?php if ((int)$r['active'] === 1): ?>
-                                                        <span class="badge bg-success bg-opacity-10 text-success border border-success"><?php echo xlt('Activa'); ?></span>
-                                                    <?php else: ?>
-                                                        <span class="badge bg-secondary"><?php echo xlt('Inactiva'); ?></span>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex gap-1">
-                                                        <form method="post" action="dashboard.php?tab=config" class="d-inline">
-                                                            <input type="hidden" name="action" value="toggle_auth_rule">
-                                                            <input type="hidden" name="rule_id" value="<?php echo text($r['id']); ?>">
-                                                            <button type="submit" class="btn btn-sm btn-outline-secondary" title="<?php echo xlt('Activar/Inactivar'); ?>">
-                                                                <i class="fa-solid fa-power-off"></i>
-                                                            </button>
-                                                        </form>
-                                                        <form method="post" action="dashboard.php?tab=config" class="d-inline" onsubmit="return confirm('<?php echo xlt('¿Eliminar esta regla?'); ?>');">
-                                                            <input type="hidden" name="action" value="delete_auth_rule">
-                                                            <input type="hidden" name="rule_id" value="<?php echo text($r['id']); ?>">
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="<?php echo xlt('Eliminar'); ?>">
-                                                                <i class="fa-solid fa-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <?php
-                                        }
-                                        if (!$hasAuthRules): ?>
-                                            <tr>
-                                                <td colspan="10" class="text-center py-4 text-muted">
-                                                    <i class="fa-regular fa-folder-open fa-2x mb-2 d-block"></i>
-                                                    <?php echo xlt('No hay reglas de autorización configuradas en la base de datos.'); ?>
-                                                </td>
-                                            </tr>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="filter-group" style="min-width:200px">
+                            <label><?php echo xlt('Financiador'); ?></label>
+                            <select id="flt-auth-insurer" class="form-control form-control-sm" data-covl-filter-auth>
+                                <option value=""><?php echo xlt('— Todos —'); ?></option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label><?php echo xlt('Tipo cód.'); ?></label>
+                            <select id="flt-auth-codetype" class="form-control form-control-sm" data-covl-filter-auth>
+                                <option value=""><?php echo xlt('— Todos —'); ?></option>
+                                <?php foreach ($codeTypes as $ct): ?>
+                                <option value="<?php echo attr($ct['ct_key']); ?>"><?php echo text($ct['ct_key']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label><?php echo xlt('Código'); ?></label>
+                            <input type="text" id="flt-auth-code" data-covl-filter-auth
+                                   placeholder="<?php echo xla('ej: 380601'); ?>" style="width:110px">
+                        </div>
+                        <div class="filter-group">
+                            <label><?php echo xlt('Estado'); ?></label>
+                            <select id="flt-auth-active" class="form-control form-control-sm" data-covl-filter-auth>
+                                <option value=""><?php echo xlt('— Todos —'); ?></option>
+                                <option value="1"><?php echo xlt('Activas'); ?></option>
+                                <option value="0"><?php echo xlt('Inactivas'); ?></option>
+                            </select>
                         </div>
                     </div>
-                </div>
 
-                <!-- Seccion 2: Reglas de Frecuencia y Periodicidad -->
-                <div class="col-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
-                            <h5 class="mb-0 fw-bold">
-                                <i class="fa-solid fa-clock-rotate-left text-primary me-2"></i><?php echo xlt('Reglas de Frecuencia y Periodicidad'); ?>
-                            </h5>
-                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalNewFreqRule" data-toggle="modal" data-target="#modalNewFreqRule" onclick="openModal('modalNewFreqRule')">
-                                <i class="fa-solid fa-plus me-1"></i><?php echo xlt('Nueva Regla de Frecuencia'); ?>
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <p class="text-muted small mb-3">
-                                <?php echo xlt('Valida si una práctica puede realizarse evaluando la fecha de facturación previa en billing y solicitudes activas en covl_authorizations dentro del intervalo mínimo configurado.'); ?>
-                            </p>
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th># ID</th>
-                                            <th><?php echo xlt('Financiador'); ?></th>
-                                            <th><?php echo xlt('Tipo Código'); ?></th>
-                                            <th><?php echo xlt('Código Práctica'); ?></th>
-                                            <th><?php echo xlt('Intervalo Mínimo'); ?></th>
-                                            <th><?php echo xlt('Máx. Anual'); ?></th>
-                                            <th><?php echo xlt('Severidad'); ?></th>
-                                            <th><?php echo xlt('Estado'); ?></th>
-                                            <th><?php echo xlt('Acciones'); ?></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $resFreqRules = sqlStatement(
-                                            "SELECT f.*, ic.name AS insurer_name
-                                             FROM covl_frequency_rules f
-                                             LEFT JOIN insurance_companies ic ON ic.id = f.insurance_company_id
-                                             ORDER BY f.id ASC"
-                                        );
-                                        $hasFreqRules = false;
-                                        while ($f = sqlFetchArray($resFreqRules)) {
-                                            $hasFreqRules = true;
-                                            $sevBadge = ($f['severity'] === 'bloqueo') ? 'bg-danger' : 'bg-warning text-dark';
-                                            ?>
-                                            <tr>
-                                                <td>#<?php echo text($f['id']); ?></td>
-                                                <td><strong><?php echo text($f['insurer_name'] ?? 'Financiador ID ' . $f['insurance_company_id']); ?></strong></td>
-                                                <td><span class="badge bg-light text-dark border"><?php echo text($f['code_type']); ?></span></td>
-                                                <td><code><?php echo text($f['code']); ?></code></td>
-                                                <td><strong><?php echo text($f['min_interval_days']); ?> <?php echo xlt('días'); ?></strong></td>
-                                                <td><?php echo $f['max_per_year'] !== null ? text($f['max_per_year']) . ' / año' : '<em>Sin límite</em>'; ?></td>
-                                                <td><span class="badge <?php echo $sevBadge; ?>"><?php echo text(strtoupper($f['severity'])); ?></span></td>
-                                                <td>
-                                                    <?php if ((int)$f['active'] === 1): ?>
-                                                        <span class="badge bg-success bg-opacity-10 text-success border border-success"><?php echo xlt('Activa'); ?></span>
-                                                    <?php else: ?>
-                                                        <span class="badge bg-secondary"><?php echo xlt('Inactiva'); ?></span>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex gap-1">
-                                                        <form method="post" action="dashboard.php?tab=config" class="d-inline">
-                                                            <input type="hidden" name="action" value="toggle_freq_rule">
-                                                            <input type="hidden" name="rule_id" value="<?php echo text($f['id']); ?>">
-                                                            <button type="submit" class="btn btn-sm btn-outline-secondary" title="<?php echo xlt('Activar/Inactivar'); ?>">
-                                                                <i class="fa-solid fa-power-off"></i>
-                                                            </button>
-                                                        </form>
-                                                        <form method="post" action="dashboard.php?tab=config" class="d-inline" onsubmit="return confirm('<?php echo xlt('¿Eliminar esta regla?'); ?>');">
-                                                            <input type="hidden" name="action" value="delete_freq_rule">
-                                                            <input type="hidden" name="rule_id" value="<?php echo text($f['id']); ?>">
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="<?php echo xlt('Eliminar'); ?>">
-                                                                <i class="fa-solid fa-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <?php
-                                        }
-                                        if (!$hasFreqRules): ?>
-                                            <tr>
-                                                <td colspan="9" class="text-center py-4 text-muted">
-                                                    <i class="fa-regular fa-folder-open fa-2x mb-2 d-block"></i>
-                                                    <?php echo xlt('No hay reglas de frecuencia configuradas en la base de datos.'); ?>
-                                                </td>
-                                            </tr>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                    <div class="covl-table-wrapper">
+                        <table class="covl-table">
+                            <thead>
+                                <tr>
+                                    <th><?php echo xlt('País'); ?></th>
+                                    <th><?php echo xlt('Financiador'); ?></th>
+                                    <th><?php echo xlt('Patrón de plan'); ?></th>
+                                    <th><?php echo xlt('Tipo cód.'); ?></th>
+                                    <th><?php echo xlt('Código'); ?></th>
+                                    <th><?php echo xlt('Modo'); ?></th>
+                                    <th><?php echo xlt('Máx. cant.'); ?></th>
+                                    <th><?php echo xlt('Estado'); ?></th>
+                                    <th><?php echo xlt('Acciones'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody id="covl-auth-tbody">
+                                <tr><td colspan="9"><div class="covl-loading"><div class="covl-spinner"></div> <?php echo xlt('Cargando...'); ?></div></td></tr>
+                            </tbody>
+                        </table>
+                        <div class="covl-pagination" id="covl-auth-pager"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- MODAL: Nueva Regla de Autorizacion -->
-            <div class="modal fade" id="modalNewAuthRule" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <form method="post" action="dashboard.php?tab=config">
-                            <input type="hidden" name="action" value="add_auth_rule">
-                            <div class="modal-header">
-                                <h5 class="modal-title fw-bold"><i class="fa-solid fa-shield-halved text-primary me-2"></i><?php echo xlt('Nueva Regla de Autorización'); ?></h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close" onclick="closeModal('modalNewAuthRule')"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold"><?php echo xlt('Financiador / Obra Social'); ?></label>
-                                        <select name="insurance_company_id" class="form-select" required>
-                                            <option value=""><?php echo xlt('-- Seleccionar Financiador --'); ?></option>
-                                            <?php foreach ($insurersList as $ins): ?>
-                                                <option value="<?php echo text($ins['id']); ?>"><?php echo text($ins['name']); ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold"><?php echo xlt('Modo de Autorización'); ?></label>
-                                        <select name="auth_mode" class="form-select" required>
-                                            <option value="requerida"><?php echo xlt('Requerida (Trámite pendiente)'); ?></option>
-                                            <option value="automatica"><?php echo xlt('Automática (Auto-aprobación)'); ?></option>
-                                            <option value="no_requerida"><?php echo xlt('No Requerida (Exenta)'); ?></option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold"><?php echo xlt('Patrón de Plan (0 = Todos los planes)'); ?></label>
-                                        <input type="text" name="plan_pattern" class="form-control" value="0" placeholder="0 o ej: GOLD%">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold"><?php echo xlt('Tipo de Código'); ?></label>
-                                        <input type="text" name="code_type" class="form-control" value="NNAR" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold"><?php echo xlt('Código de la Práctica (0 = Todos)'); ?></label>
-                                        <input type="text" name="code" class="form-control" value="0" placeholder="0 o ej: 380601">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label fw-bold"><?php echo xlt('Máx. Cant. Auto'); ?></label>
-                                        <input type="number" name="max_quantity" class="form-control" placeholder="Ej: 2">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label fw-bold"><?php echo xlt('Prioridad (Menor = Más Alta)'); ?></label>
-                                        <input type="number" name="priority" class="form-control" value="100" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label fw-bold"><?php echo xlt('Notas / Descripción'); ?></label>
-                                        <input type="text" name="notes" class="form-control" placeholder="Justificación o normativa aplicable">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal" onclick="closeModal('modalNewAuthRule')"><?php echo xlt('Cancelar'); ?></button>
-                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save me-1"></i><?php echo xlt('Guardar Regla'); ?></button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+        <?php elseif ($activeTab === 'freq_rules'): ?>
+
+            <div class="covl-tab-header">
+                <h5><i class="fa-solid fa-clock-rotate-left text-primary me-2"></i><?php echo xlt('Reglas de Frecuencia'); ?></h5>
+                <button class="btn btn-sm btn-primary" onclick="COVL.Freq.openCreate()">
+                    <i class="fa-solid fa-plus me-1"></i><?php echo xlt('Nueva Regla'); ?>
+                </button>
             </div>
 
-            <!-- MODAL: Nueva Regla de Frecuencia -->
-            <div class="modal fade" id="modalNewFreqRule" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <form method="post" action="dashboard.php?tab=config">
-                            <input type="hidden" name="action" value="add_freq_rule">
-                            <div class="modal-header">
-                                <h5 class="modal-title fw-bold"><i class="fa-solid fa-clock-rotate-left text-primary me-2"></i><?php echo xlt('Nueva Regla de Frecuencia'); ?></h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close" onclick="closeModal('modalNewFreqRule')"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold"><?php echo xlt('Financiador / Obra Social'); ?></label>
-                                        <select name="insurance_company_id" class="form-select" required>
-                                            <option value=""><?php echo xlt('-- Seleccionar Financiador --'); ?></option>
-                                            <?php foreach ($insurersList as $ins): ?>
-                                                <option value="<?php echo text($ins['id']); ?>"><?php echo text($ins['name']); ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold"><?php echo xlt('Severidad de Restricción'); ?></label>
-                                        <select name="severity" class="form-select" required>
-                                            <option value="alerta"><?php echo xlt('Alerta (Emite advertencia, permite continuar)'); ?></option>
-                                            <option value="bloqueo"><?php echo xlt('Bloqueo (Impide generar la orden)'); ?></option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold"><?php echo xlt('Tipo de Código'); ?></label>
-                                        <input type="text" name="code_type" class="form-control" value="NNAR" required>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <label class="form-label fw-bold"><?php echo xlt('Código Práctica'); ?></label>
-                                        <input type="text" name="code" class="form-control" placeholder="Ej: 380601" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold"><?php echo xlt('Intervalo Mínimo (Días)'); ?></label>
-                                        <input type="number" name="min_interval_days" class="form-control" placeholder="Ej: 180" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold"><?php echo xlt('Máximo de Veces por Año (Opcional)'); ?></label>
-                                        <input type="number" name="max_per_year" class="form-control" placeholder="Ej: 2 (dejar vacío si es sin límite)">
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label fw-bold"><?php echo xlt('Notas / Referencia Normativa'); ?></label>
-                                        <input type="text" name="notes" class="form-control" placeholder="Ej: Resolución o norma de frecuencia">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal" onclick="closeModal('modalNewFreqRule')"><?php echo xlt('Cancelar'); ?></button>
-                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save me-1"></i><?php echo xlt('Guardar Regla'); ?></button>
-                            </div>
-                        </form>
+            <?php if (!empty($countryPacks)): ?>
+            <div class="covl-country-pills" id="covl-country-pills">
+                <a href="#" class="covl-country-pill active" data-covl-country="">
+                    🌎 <?= xlt('Todos') ?>
+                </a>
+                <?php foreach ($countryPacks as $pack):
+                    $code = $pack['country_code'];
+                ?>
+                <a href="#" class="covl-country-pill" data-covl-country="<?= attr($code) ?>">
+                    <span class="fi fi-<?= strtolower(attr($code)) ?> fs-pill-flag"></span>
+                    <?= text($code) ?>
+                </a>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="covl-filters">
+                        <div class="filter-group">
+                            <label><?php echo xlt('País'); ?></label>
+                            <?= covl_flag_select('flt-freq-country', $allCountryOpts, false, 'fs-compact') ?>
+                        </div>
+                        <div class="filter-group" style="min-width:200px">
+                            <label><?php echo xlt('Financiador'); ?></label>
+                            <select id="flt-freq-insurer" class="form-control form-control-sm" data-covl-filter-freq>
+                                <option value=""><?php echo xlt('— Todos —'); ?></option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label><?php echo xlt('Tipo cód.'); ?></label>
+                            <select id="flt-freq-codetype" class="form-control form-control-sm" data-covl-filter-freq>
+                                <option value=""><?php echo xlt('— Todos —'); ?></option>
+                                <?php foreach ($codeTypes as $ct): ?>
+                                <option value="<?php echo attr($ct['ct_key']); ?>"><?php echo text($ct['ct_key']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label><?php echo xlt('Código'); ?></label>
+                            <input type="text" id="flt-freq-code" data-covl-filter-freq
+                                   placeholder="<?php echo xla('ej: 380601'); ?>" style="width:110px">
+                        </div>
+                        <div class="filter-group">
+                            <label><?php echo xlt('Severidad'); ?></label>
+                            <select id="flt-freq-severity" class="form-control form-control-sm" data-covl-filter-freq>
+                                <option value=""><?php echo xlt('— Todas —'); ?></option>
+                                <option value="alerta"><?php echo xlt('Alerta'); ?></option>
+                                <option value="bloqueo"><?php echo xlt('Bloqueo'); ?></option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label><?php echo xlt('Estado'); ?></label>
+                            <select id="flt-freq-active" class="form-control form-control-sm" data-covl-filter-freq>
+                                <option value=""><?php echo xlt('— Todos —'); ?></option>
+                                <option value="1"><?php echo xlt('Activas'); ?></option>
+                                <option value="0"><?php echo xlt('Inactivas'); ?></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="covl-table-wrapper">
+                        <table class="covl-table">
+                            <thead>
+                                <tr>
+                                    <th><?php echo xlt('País'); ?></th>
+                                    <th><?php echo xlt('Financiador'); ?></th>
+                                    <th><?php echo xlt('Tipo cód.'); ?></th>
+                                    <th><?php echo xlt('Código'); ?></th>
+                                    <th><?php echo xlt('Intervalo mín.'); ?></th>
+                                    <th><?php echo xlt('Máx/año'); ?></th>
+                                    <th><?php echo xlt('Severidad'); ?></th>
+                                    <th><?php echo xlt('Estado'); ?></th>
+                                    <th><?php echo xlt('Acciones'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody id="covl-freq-tbody">
+                                <tr><td colspan="9"><div class="covl-loading"><div class="covl-spinner"></div> <?php echo xlt('Cargando...'); ?></div></td></tr>
+                            </tbody>
+                        </table>
+                        <div class="covl-pagination" id="covl-freq-pager"></div>
                     </div>
                 </div>
             </div>
@@ -1230,9 +1066,22 @@ $covlI18n = [
                             <div class="col-md-6">
                                 <label class="form-label fw-bold"><?php echo xlt('Moneda'); ?></label>
                                 <select id="fld-batch-currency" class="form-select">
-                                    <option value="ARS">ARS — <?php echo xlt('Peso argentino'); ?></option>
-                                    <option value="USD">USD — <?php echo xlt('Dólar'); ?></option>
-                                    <option value="EUR">EUR — <?php echo xlt('Euro'); ?></option>
+                                    <?php
+                                    $batchCurrencies = [];
+                                    foreach ($countryPacks as $p) {
+                                        if (!empty($p['currency_code']) && !isset($batchCurrencies[$p['currency_code']])) {
+                                            $batchCurrencies[$p['currency_code']] = $p['currency_name'] ?? $p['currency_code'];
+                                        }
+                                    }
+                                    foreach ($batchCurrencies as $code => $cname): ?>
+                                        <option value="<?php echo attr($code); ?>"><?php echo text($code); ?> — <?php echo text($cname); ?></option>
+                                    <?php endforeach; ?>
+                                    <?php if (!isset($batchCurrencies['USD'])): ?>
+                                        <option value="USD">USD — <?php echo xlt('Dólar'); ?></option>
+                                    <?php endif; ?>
+                                    <?php if (!isset($batchCurrencies['EUR'])): ?>
+                                        <option value="EUR">EUR — <?php echo xlt('Euro'); ?></option>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                         </div>
@@ -1401,17 +1250,229 @@ $covlI18n = [
         </div>
     </div>
 
+    <!-- MODAL: Regla de Autorización -->
+    <div class="modal fade" id="covlAuthModal" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-shield-halved text-primary me-2"></i><?php echo xlt('Regla de Autorización'); ?></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('covlAuthModal')"></button>
+                </div>
+                <form id="covl-auth-form" onsubmit="event.preventDefault(); COVL.Auth.save();">
+                    <div class="modal-body">
+                        <input type="hidden" id="fld-auth-id">
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold"><?php echo xlt('País'); ?> *</label>
+                                <?= covl_flag_select('fld-auth-country', $reqCountryOpts, true, 'w-100') ?>
+                                <small class="text-muted"><?php echo xlt('País del paquete de configuración'); ?></small>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold"><?php echo xlt('Financiador'); ?> *</label>
+                                <select class="form-control form-control-sm" id="fld-auth-insurer" required>
+                                    <option value=""><?php echo xlt('Cargando...'); ?></option>
+                                </select>
+                                <small class="text-muted"><?php echo xlt('Seleccioná "Todos" (0) para regla genérica del país'); ?></small>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold"><?php echo xlt('Patrón de plan'); ?></label>
+                                <input type="text" class="form-control form-control-sm" id="fld-auth-plan-pattern"
+                                       placeholder="<?php echo xla('Vacío = todos los planes; soporta %'); ?>">
+                                <small class="text-muted"><?php echo xlt('Dejalo vacío para aplicar a todos los planes (se guarda como 0)'); ?></small>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold"><?php echo xlt('Tipo de código'); ?> *</label>
+                                <select class="form-control form-control-sm" id="fld-auth-codetype" required>
+                                    <option value=""><?php echo xlt('— Seleccioná —'); ?></option>
+                                    <?php foreach ($codeTypes as $ct): ?>
+                                    <option value="<?php echo attr($ct['ct_key']); ?>"><?php echo text($ct['ct_key']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold"><?php echo xlt('Código'); ?></label>
+                                <input type="text" class="form-control form-control-sm" id="fld-auth-code"
+                                       placeholder="<?php echo xla('Vacío = todos'); ?>">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold"><?php echo xlt('Modo de autorización'); ?> *</label>
+                                <select class="form-control form-control-sm" id="fld-auth-mode" required>
+                                    <option value="requerida"><?php echo xlt('Requerida'); ?></option>
+                                    <option value="automatica"><?php echo xlt('Automática'); ?></option>
+                                    <option value="no_requerida"><?php echo xlt('No requerida'); ?></option>
+                                </select>
+                            </div>
+                            <div class="col-md-3" id="grp-auth-max-qty" style="display:none">
+                                <label class="form-label fw-bold"><?php echo xlt('Cant. máxima automática'); ?></label>
+                                <input type="number" class="form-control form-control-sm" id="fld-auth-max-qty"
+                                       min="1" placeholder="<?php echo xla('ej: 6'); ?>">
+                                <small class="text-muted"><?php echo xlt('Si se supera → escala a requerida'); ?></small>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold"><?php echo xlt('Prioridad'); ?></label>
+                                <input type="number" class="form-control form-control-sm" id="fld-auth-priority"
+                                       min="1" max="999" value="100">
+                                <small class="text-muted"><?php echo xlt('Menor = más prioritario'); ?></small>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="fld-auth-active" checked>
+                                    <label class="form-check-label" for="fld-auth-active"><?php echo xlt('Regla activa'); ?></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold"><?php echo xlt('Notas / Justificación'); ?></label>
+                            <textarea class="form-control form-control-sm" id="fld-auth-notes" rows="2"
+                                      placeholder="<?php echo xla('Ej: TAC de cráneo — requiere autorización previa según RES. 925/2000'); ?>"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="closeModal('covlAuthModal')"><?php echo xlt('Cancelar'); ?></button>
+                        <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-floppy-disk me-1"></i><?php echo xlt('Guardar regla'); ?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Regla de Frecuencia -->
+    <div class="modal fade" id="covlFreqModal" tabindex="-1" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-clock-rotate-left text-primary me-2"></i><?php echo xlt('Regla de Frecuencia'); ?></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('covlFreqModal')"></button>
+                </div>
+                <form id="covl-freq-form" onsubmit="event.preventDefault(); COVL.Freq.save();">
+                    <div class="modal-body">
+                        <input type="hidden" id="fld-freq-id">
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold"><?php echo xlt('País'); ?> *</label>
+                                <?= covl_flag_select('fld-freq-country', $reqCountryOpts, true, 'w-100') ?>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold"><?php echo xlt('Financiador'); ?> *</label>
+                                <select class="form-control form-control-sm" id="fld-freq-insurer" required>
+                                    <option value=""><?php echo xlt('Cargando...'); ?></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold"><?php echo xlt('Tipo de código'); ?> *</label>
+                                <select class="form-control form-control-sm" id="fld-freq-codetype" required>
+                                    <option value=""><?php echo xlt('— Seleccioná —'); ?></option>
+                                    <?php foreach ($codeTypes as $ct): ?>
+                                    <option value="<?php echo attr($ct['ct_key']); ?>"><?php echo text($ct['ct_key']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold"><?php echo xlt('Código'); ?> *</label>
+                                <input type="text" class="form-control form-control-sm" id="fld-freq-code"
+                                       required placeholder="<?php echo xla('ej: 380601'); ?>">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold"><?php echo xlt('Máximo por año'); ?></label>
+                                <input type="number" class="form-control form-control-sm" id="fld-freq-max-year"
+                                       min="1" placeholder="<?php echo xla('Vacío = sin límite anual'); ?>">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold"><?php echo xlt('Intervalo mínimo (días)'); ?> *</label>
+                                <input type="number" class="form-control form-control-sm" id="fld-freq-interval"
+                                       required min="1" placeholder="<?php echo xla('ej: 180'); ?>">
+                                <div class="covl-interval-hint" id="freq-interval-hint"></div>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold"><?php echo xlt('Severidad al detectar violación'); ?> *</label>
+                                <div class="covl-severity-group">
+                                    <label class="covl-severity-opt sev-alerta">
+                                        <input type="radio" name="fld-freq-severity" id="fld-freq-severity-alerta" value="alerta" checked>
+                                        <span>⚠️ <?php echo xlt('Alerta'); ?></span>
+                                        <small class="d-block text-muted" style="font-size:.7rem"><?php echo xlt('Avisa pero permite continuar'); ?></small>
+                                    </label>
+                                    <label class="covl-severity-opt sev-bloqueo">
+                                        <input type="radio" name="fld-freq-severity" id="fld-freq-severity-bloqueo" value="bloqueo">
+                                        <span>🚫 <?php echo xlt('Bloqueo'); ?></span>
+                                        <small class="d-block text-muted" style="font-size:.7rem"><?php echo xlt('Impide generar la orden'); ?></small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-9">
+                                <label class="form-label fw-bold"><?php echo xlt('Notas / Referencia normativa'); ?></label>
+                                <textarea class="form-control form-control-sm" id="fld-freq-notes" rows="2"
+                                          placeholder="<?php echo xla('Ej: TAC de cráneo — intervalo mínimo 180 días según normativa PAMI'); ?>"></textarea>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="fld-freq-active" checked>
+                                    <label class="form-check-label" for="fld-freq-active"><?php echo xlt('Regla activa'); ?></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="closeModal('covlFreqModal')"><?php echo xlt('Cancelar'); ?></button>
+                        <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-floppy-disk me-1"></i><?php echo xlt('Guardar regla'); ?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Configuración JS inyectada desde PHP -->
     <script>
     const covlConfig = {
         csrfToken:    <?= json_encode($csrfToken) ?>,
         baseApiUrl:   <?= json_encode($moduleBase . '/api') ?>,
         i18n:         <?= json_encode($covlI18n, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>,
+        countryPacks: <?= json_encode($countryPacks) ?>,
+        activeCurrency: <?= json_encode($activeCurrency, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>,
     };
     </script>
     <script src="<?= attr($moduleBase) ?>/assets/js/providers-crud.js"></script>
     <script src="<?= attr($moduleBase) ?>/assets/js/batches-crud.js"></script>
     <script src="<?= attr($moduleBase) ?>/assets/js/countries-crud.js"></script>
+    <script src="<?= attr($moduleBase) ?>/assets/js/rules-crud.js"></script>
+
+    <!-- Poblar selects de financiadores en los filtros al arrancar -->
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const res      = await fetch(covlConfig.baseApiUrl + '/insurers.php');
+        const insurers = await res.json();
+        if (!insurers) return;
+
+        ['flt-auth-insurer', 'flt-freq-insurer'].forEach(id => {
+            const sel = document.getElementById(id);
+            if (!sel) return;
+            sel.innerHTML = '<option value=""><?= xlt("— Todos —") ?></option>';
+            insurers.filter(i => i.id !== 0).forEach(ins => {
+                const opt      = document.createElement('option');
+                opt.value      = ins.id;
+                opt.textContent = `[${ins.id}] ${ins.name}`;
+                sel.appendChild(opt);
+            });
+        });
+    });
+    </script>
 
     <!-- Script de soporte universal para modales (Bootstrap 4 / Bootstrap 5 / JS Nativo) -->
     <script>

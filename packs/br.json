@@ -1,6 +1,11 @@
 {
   "country_code": "BR",
   "name": "Brasil — SUS e Operadoras de Saúde",
+    "currency": {
+    "code": "BRL",
+    "name": "Real brasileño",
+    "symbol": "R$"
+  },
   "version": "1.0.0",
   "description": "Registra el tipo de código SIGTAP (Tabela de Procedimentos do SUS). Las reglas de autorización y frecuencia se cargan desde Configuração & Regras.",
   "code_type": {

@@ -1,6 +1,11 @@
 {
   "country_code": "PY",
   "name": "Paraguay — IPS y Seguros",
+    "currency": {
+    "code": "PYG",
+    "name": "Guaraní paraguayo",
+    "symbol": "₲"
+  },
   "version": "1.0.0",
   "description": "Registra el tipo de código NOMPY (Nomenclador Paraguay). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
   "code_type": {

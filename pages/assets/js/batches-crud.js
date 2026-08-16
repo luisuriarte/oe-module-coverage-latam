@@ -282,6 +282,13 @@
             populateSelect(document.getElementById('fld-batch-facility'),
                 state.facilities.map(f => ({ value: f.id, label: f.name })), '');
 
+            const curEl = document.getElementById('fld-batch-currency');
+            if (curEl) {
+                curEl.value = (covlConfig.activeCurrency && covlConfig.activeCurrency.code)
+                    ? covlConfig.activeCurrency.code
+                    : 'ARS';
+            }
+
             showModal('covlBatchModal');
         },
 

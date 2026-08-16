@@ -704,10 +704,18 @@ const COVL = (() => {
         // Inicializar componentes FlagSelect
         FlagSelect.init();
 
-        // Cargar tab activo al iniciar
-        Auth.load();
+        // Detectar qué tab está presente en la página (rules.php usa tabs internas;
+        // dashboard.php renderiza una sola tab por URL).
+        const hasAuth = !!document.getElementById('covl-auth-tbody');
+        const hasFreq = !!document.getElementById('covl-freq-tbody');
+        if (hasAuth && !hasFreq) state.activeTab = 'auth';
+        if (hasFreq && !hasAuth) state.activeTab = 'freq';
 
-        // Tab switch
+        // Cargar la(s) tabla(s) presente(s) al iniciar
+        if (hasAuth) Auth.load();
+        if (hasFreq) Freq.load();
+
+        // Tab switch (solo en rules.php con tabs internas)
         document.querySelectorAll('[data-covl-tab]').forEach(el => {
             el.addEventListener('click', () => {
                 state.activeTab = el.dataset.covlTab;
@@ -741,8 +749,8 @@ const COVL = (() => {
                 FlagSelect.setValue('flt-auth-country', country);
                 FlagSelect.setValue('flt-freq-country', country);
 
-                if (state.activeTab === 'auth') Auth.load();
-                else Freq.load();
+                if (hasAuth) Auth.load();
+                if (hasFreq) Freq.load();
             });
         });
 

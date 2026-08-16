@@ -1,6 +1,11 @@
 {
   "country_code": "UY",
   "name": "Uruguay — FONASA y Seguros Privados",
+    "currency": {
+    "code": "UYU",
+    "name": "Peso uruguayo",
+    "symbol": "$U"
+  },
   "version": "1.0.0",
   "description": "Registra el tipo de código NOMUY (Nomenclador Uruguay). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
   "code_type": {

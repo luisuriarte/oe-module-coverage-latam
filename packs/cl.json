@@ -1,6 +1,11 @@
 {
   "country_code": "CL",
   "name": "Chile — Isapres y Fonasa",
+    "currency": {
+    "code": "CLP",
+    "name": "Peso chileno",
+    "symbol": "$"
+  },
   "version": "1.0.0",
   "description": "Registra el tipo de código NNCL (Nomenclador Chile). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
   "code_type": {

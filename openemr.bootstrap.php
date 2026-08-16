@@ -72,30 +72,30 @@ function oe_module_covlatam_add_menu_item(MenuEvent $event): MenuEvent
     $menuProviders->children    = [];
     $menuProviders->acl_req     = ['admin', 'docs'];
 
-    $menuConfig = new stdClass();
-    $menuConfig->requirement = 0;
-    $menuConfig->target      = 'covl';
-    $menuConfig->menu_id     = 'covl_config';
-    $menuConfig->label       = xlt('Configuración');
-    $menuConfig->url         = $base . '?tab=config';
-    $menuConfig->children    = [];
-    $menuConfig->acl_req     = ['admin', 'docs'];
+    $menuAuthRules = new stdClass();
+    $menuAuthRules->requirement = 0;
+    $menuAuthRules->target      = 'covl';
+    $menuAuthRules->menu_id     = 'covl_auth_rules';
+    $menuAuthRules->label       = xlt('Reglas de Autorización');
+    $menuAuthRules->url         = $base . '?tab=auth_rules';
+    $menuAuthRules->children    = [];
+    $menuAuthRules->acl_req     = ['admin', 'docs'];
 
-    $menuRules = new stdClass();
-    $menuRules->requirement = 0;
-    $menuRules->target      = 'covl';
-    $menuRules->menu_id     = 'covl_rules';
-    $menuRules->label       = xlt('Reglas de Configuración');
-    $menuRules->url         = '/interface/modules/custom_modules/oe-module-coverage-latam/pages/admin/rules.php';
-    $menuRules->children    = [];
-    $menuRules->acl_req     = ['admin', 'docs'];
+    $menuFreqRules = new stdClass();
+    $menuFreqRules->requirement = 0;
+    $menuFreqRules->target      = 'covl';
+    $menuFreqRules->menu_id     = 'covl_freq_rules';
+    $menuFreqRules->label       = xlt('Reglas de Frecuencia');
+    $menuFreqRules->url         = $base . '?tab=freq_rules';
+    $menuFreqRules->children    = [];
+    $menuFreqRules->acl_req     = ['admin', 'docs'];
 
     $subMenu = new stdClass();
     $subMenu->requirement = 0;
     $subMenu->target      = 'covl';
     $subMenu->menu_id     = 'covl_submenu';
     $subMenu->label       = xlt('Coberturas LATAM');
-    $subMenu->children    = [$menuDash, $menuAuth, $menuBatch, $menuProviders, $menuRules, $menuConfig];
+    $subMenu->children    = [$menuDash, $menuAuth, $menuBatch, $menuProviders, $menuAuthRules, $menuFreqRules];
     $subMenu->acl_req     = ['patients', 'demo'];
 
     $inserted = false;

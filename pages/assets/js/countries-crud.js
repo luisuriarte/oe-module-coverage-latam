@@ -110,7 +110,7 @@
         if (!tbody) return;
 
         if (!rows.length) {
-            tbody.innerHTML = `<tr><td colspan="6"><div class="covl-empty">
+            tbody.innerHTML = `<tr><td colspan="7"><div class="covl-empty">
                 <div class="icon">🌎</div><p>${escHtml(t('countries_empty'))}</p>
             </div></td></tr>`;
             return;
@@ -119,6 +119,8 @@
         tbody.innerHTML = rows.map((r) => {
             const code = escHtml(r.country_code);
             const loaded = r.default_rules_loaded == 1;
+            const curSymbol = escHtml(r.currency_symbol ?? '');
+            const curName   = escHtml(r.currency_name  ?? r.currency_code ?? '');
             return `<tr>
                 <td>
                     <span class="covl-country-flag">${flagEmoji(r.country_code)}</span>
@@ -127,6 +129,9 @@
                 <td>${escHtml(r.name)}</td>
                 <td><code>${escHtml(r.code_type_key ?? '—')}</code></td>
                 <td>${escHtml(r.version)}</td>
+                <td>
+                    <span class="covl-currency"><strong>${curSymbol}</strong> ${curName}</span>
+                </td>
                 <td>
                     ${loaded
                         ? `<span class="covl-badge covl-badge-active">${escHtml(t('rules_loaded'))}</span>`
@@ -146,7 +151,7 @@
     const loadInstalled = async () => {
         const tbody = document.getElementById('covl-country-tbody');
         if (!tbody) return;
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4">
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4">
             <div class="covl-spinner spinner-border text-primary"></div></td></tr>`;
         try {
             const res  = await fetch(apiUrl('country_packs.php', { action: 'list' }));
@@ -154,7 +159,7 @@
             if (json.error) throw new Error(json.error);
             renderInstalled(json.data ?? []);
         } catch (e) {
-            tbody.innerHTML = `<tr><td colspan="6"><div class="covl-empty">
+            tbody.innerHTML = `<tr><td colspan="7"><div class="covl-empty">
                 <div class="icon">⚠️</div><p>${escHtml(e.message || t('error_loading'))}</p>
             </div></td></tr>`;
         }

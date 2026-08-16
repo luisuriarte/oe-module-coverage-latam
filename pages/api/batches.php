@@ -153,6 +153,14 @@ try {
             // País activo de la configuración (por defecto AR)
             $conf = sqlQuery("SELECT country_code FROM covl_config WHERE facility_id = 0 LIMIT 1");
             $data['country_code'] = $conf['country_code'] ?? 'AR';
+            // Moneda: autocompletar desde el paquete de país si no viene explícita (default automático, editable desde la UI)
+            if (empty($data['currency'])) {
+                $cur = sqlQuery(
+                    "SELECT currency_code FROM covl_country_packs WHERE country_code = ? LIMIT 1",
+                    [$data['country_code']]
+                );
+                $data['currency'] = $cur['currency_code'] ?? 'ARS';
+            }
             $newId = $repo->create($data);
             covl_json(['success' => true, 'id' => $newId], 201);
 

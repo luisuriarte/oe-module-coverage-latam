@@ -1,6 +1,11 @@
 {
   "country_code": "MX",
   "name": "México — IMSS, ISSSTE y Seguros Privados",
+    "currency": {
+    "code": "MXN",
+    "name": "Peso mexicano",
+    "symbol": "$"
+  },
   "version": "1.0.0",
   "description": "Registra el tipo de código NOMEX (Nomenclador México). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
   "code_type": {

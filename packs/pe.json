@@ -1,6 +1,11 @@
 {
   "country_code": "PE",
   "name": "Perú — EsSalud, SIS y Seguros Privados",
+    "currency": {
+    "code": "PEN",
+    "name": "Sol peruano",
+    "symbol": "S/"
+  },
   "version": "1.0.0",
   "description": "Registra el tipo de código PERU (Nomenclador Perú). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
   "code_type": {

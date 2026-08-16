@@ -1,6 +1,11 @@
 {
   "country_code": "CO",
   "name": "Colombia — EPS y Planes Complementarios",
+    "currency": {
+    "code": "COP",
+    "name": "Peso colombiano",
+    "symbol": "$"
+  },
   "version": "1.0.0",
   "description": "Registra el tipo de código CUPS (Clasificación Única de Procedimientos en Salud). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
   "code_type": {

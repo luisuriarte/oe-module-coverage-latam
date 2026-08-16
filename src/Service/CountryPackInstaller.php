@@ -42,6 +42,7 @@ class CountryPackInstaller
         $name    = (string) ($pack['name'] ?? $countryCode);
         $version = (string) ($pack['version'] ?? '1.0.0');
         $codeType = is_array($pack['code_type'] ?? null) ? $pack['code_type'] : [];
+        $currency = is_array($pack['currency'] ?? null) ? $pack['currency'] : [];
 
         // 1. Nomenclador nacional en code_types
         $codeTypeKey = $codeType['ct_key'] ?? null;
@@ -49,18 +50,33 @@ class CountryPackInstaller
             $this->registerCodeType($codeType);
         }
 
+        // 1b. Garantizar columnas de moneda (soporte de instalaciones previas)
+        $this->ensureCurrencyColumns();
+
         // 2. Paquete en covl_country_packs (upsert)
         $hasRules = !empty($pack['auth_rules']) || !empty($pack['frequency_rules']);
         sqlStatement(
             "INSERT INTO covl_country_packs
-                (country_code, name, version, code_type_key, default_rules_loaded)
-             VALUES (?, ?, ?, ?, ?)
+                (country_code, name, version, code_type_key, currency_code, currency_name, currency_symbol, default_rules_loaded)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
              ON DUPLICATE KEY UPDATE
                 name = VALUES(name),
                 version = VALUES(version),
                 code_type_key = VALUES(code_type_key),
+                currency_code = VALUES(currency_code),
+                currency_name = VALUES(currency_name),
+                currency_symbol = VALUES(currency_symbol),
                 default_rules_loaded = VALUES(default_rules_loaded)",
-            [$countryCode, $name, $version, $codeTypeKey, $hasRules ? 1 : 0]
+            [
+                $countryCode,
+                $name,
+                $version,
+                $codeTypeKey,
+                (string) ($currency['code'] ?? 'USD'),
+                (string) ($currency['name'] ?? ''),
+                (string) ($currency['symbol'] ?? ''),
+                $hasRules ? 1 : 0,
+            ]
         );
 
         // 3. Reglas de autorización base
@@ -81,6 +97,24 @@ class CountryPackInstaller
             'code_maps'         => $mapCount,
             'default_rules'     => $hasRules,
         ];
+    }
+
+    /**
+     * Garantiza la existencia de las columnas de moneda en covl_country_packs
+     * (idempotente, para instalaciones creadas antes de la moneda por país).
+     */
+    private function ensureCurrencyColumns(): void
+    {
+        $cols = $this->tableColumns('covl_country_packs');
+        if (!isset($cols['currency_code'])) {
+            sqlStatement("ALTER TABLE covl_country_packs ADD COLUMN currency_code char(3) NOT NULL DEFAULT 'USD' AFTER code_type_key");
+        }
+        if (!isset($cols['currency_name'])) {
+            sqlStatement("ALTER TABLE covl_country_packs ADD COLUMN currency_name varchar(50) DEFAULT NULL AFTER currency_code");
+        }
+        if (!isset($cols['currency_symbol'])) {
+            sqlStatement("ALTER TABLE covl_country_packs ADD COLUMN currency_symbol varchar(5) DEFAULT NULL AFTER currency_name");
+        }
     }
 
     /**

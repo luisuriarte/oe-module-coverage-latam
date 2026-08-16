@@ -1,6 +1,11 @@
 {
   "country_code": "BO",
   "name": "Bolivia — SUS y Seguros",
+    "currency": {
+    "code": "BOB",
+    "name": "Boliviano boliviano",
+    "symbol": "Bs"
+  },
   "version": "1.0.0",
   "description": "Registra el tipo de código NOMBO (Nomenclador Bolivia). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
   "code_type": {
