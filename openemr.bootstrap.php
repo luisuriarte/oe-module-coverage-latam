@@ -117,3 +117,44 @@ function oe_module_covlatam_add_menu_item(MenuEvent $event): MenuEvent
 
 $eventDispatcher->addListener(MenuEvent::MENU_UPDATE, 'oe_module_covlatam_add_menu_item');
 
+// ---------------------------------------------------------------------------
+// Auto-import del paquete de país por defecto (reemplaza sql/argentina_seed.sql)
+//
+// Corre una única vez por país: si covl_country_packs ya tiene el país con
+// default_rules_loaded = 1 se omite (idempotente). El SELECT por request es
+// barato y evita ejecutar el import en cada carga de página.
+// ---------------------------------------------------------------------------
+function oe_module_covlatam_auto_import_default_pack(): void
+{
+    $defaultCountry = 'AR';
+    try {
+        if (!function_exists('tableExists') || !tableExists('covl_country_packs')) {
+            return; // Tablas aún no creadas (instalación en curso o desinstalado)
+        }
+        $row = sqlQuery(
+            "SELECT default_rules_loaded FROM covl_country_packs WHERE country_code = ? LIMIT 1",
+            [$defaultCountry]
+        );
+        if (!$row || (int) $row['default_rules_loaded'] === 1) {
+            return; // Ya importado o país no definido en el catálogo
+        }
+        $summary = (new \OpenEMR\Modules\CoverageLatam\Service\CountryPackImporter())
+            ->importCountryPack($defaultCountry);
+        error_log(sprintf(
+            'oe-module-coverage-latam: auto-import %s v%s OK (auth +%d/~%d, freq +%d/~%d, maps +%d/~%d)',
+            $summary['country_code'],
+            $summary['version'],
+            $summary['auth_rules']['inserted'],
+            $summary['auth_rules']['updated'],
+            $summary['frequency_rules']['inserted'],
+            $summary['frequency_rules']['updated'],
+            $summary['code_maps']['inserted'],
+            $summary['code_maps']['updated']
+        ));
+    } catch (\Throwable $e) {
+        // No romper el arranque del módulo: registrar el error y seguir
+        error_log('oe-module-coverage-latam: auto-import ' . $defaultCountry . ' falló: ' . $e->getMessage());
+    }
+}
+oe_module_covlatam_auto_import_default_pack();
+

@@ -298,6 +298,8 @@ CREATE TABLE IF NOT EXISTS `covl_country_code_maps` (
   `local_code`         varchar(25) NOT NULL                                 COMMENT 'Código en el nomenclador local',
   `standard_code_type` varchar(15) NOT NULL                                 COMMENT 'ct_key del código estándar de destino (ej: CPT4)',
   `standard_code`      varchar(25) NOT NULL                                 COMMENT 'Código estándar equivalente',
+  `local_desc`         varchar(255) DEFAULT NULL                            COMMENT 'Descripción del código local al momento del mapeo (snapshot)',
+  `standard_desc`      varchar(255) DEFAULT NULL                            COMMENT 'Descripción del código estándar al momento del mapeo (snapshot)',
   `equivalence`        enum('exacta','aproximada','parcial') DEFAULT 'aproximada' COMMENT 'Grado de equivalencia: exacta=idéntica, aproximada=similar clínicamente, parcial=solo parte del procedimiento',
   `active`             tinyint(1)  NOT NULL DEFAULT 1                       COMMENT 'Estado del mapeo (1=activo, 0=obsoleto)',
   PRIMARY KEY (`id`),
@@ -337,8 +339,9 @@ VALUES
 -- ---------------------------------------------------------------------------
 -- NOTA: El tipo de código NNAR (Nomenclador Nacional Argentino) NO se registra
 -- aquí para evitar colisión con ct_id de nomencladores custom preexistentes.
--- El registro se realiza dinámicamente desde el installer PHP del módulo,
+-- El registro se realiza dinámicamente desde el CountryPackImporter (que corre
+-- automáticamente desde openemr.bootstrap.php cuando default_rules_loaded = 0),
 -- calculando el próximo ct_id libre:
 --   SELECT COALESCE(MAX(ct_id), 100) + 1 FROM code_types
--- Ver: src/Installer/CodeTypeInstaller.php
+-- Ver: src/Service/CountryPackImporter.php
 -- ---------------------------------------------------------------------------

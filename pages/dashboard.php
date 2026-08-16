@@ -244,6 +244,10 @@ $covlI18n = [
     'code_maps_short'   => xlt('mapas'),
     'country_installed' => xlt('Paquete de país instalado'),
     'error_install'     => xlt('No se pudo instalar el paquete de país'),
+    'reimport'          => xlt('Reimportar'),
+    'reimport_title'    => xlt('Reimportar paquete de país'),
+    'country_reimported'=> xlt('Paquete de país reimportado'),
+    'error_reimport'    => xlt('No se pudo reimportar el paquete de país'),
 ];
 
 ?>

@@ -208,19 +208,26 @@ cp -r oe-module-coverage-latam interface/modules/custom_modules/
 
 OpenEMR ejecutará automáticamente `sql/install.sql`.
 
-### Paso 3 — Cargar datos del paquete Argentina (opcional)
+### Paso 3 — Cargar datos del paquete Argentina (automático)
 
-Si vas a usar el módulo con Argentina como país base:
+El paquete base **AR** (Argentina) se importa automáticamente al primer acceso
+con el módulo activo: `openemr.bootstrap.php` invoca `CountryPackImporter`
+(lee `packs/ar.json`) cuando `covl_country_packs` tiene el país con
+`default_rules_loaded = 0`. Es idempotente: tras importarlo se marca
+`default_rules_loaded = 1` y no se vuelve a ejecutar.
 
-```sql
--- Desde la consola de MySQL o phpMyAdmin
-SOURCE /path/to/oe-module-coverage-latam/sql/argentina_seed.sql;
-```
-
-Esto carga:
+Esto carga (desde `packs/ar.json`):
 - ✅ Tipo de código **NNAR** (Nomenclador Nacional Argentino) en `code_types`
-- ✅ Reglas de autorización base (TAC, RMN, consultas ambulatorias)
-- ✅ Reglas de frecuencia base (intervalos mínimos comunes)
+- ✅ Paquete de país en `covl_country_packs` (versión + moneda)
+- ✅ Reglas de autorización base (`covl_auth_rules`, upsert idempotente)
+- ✅ Reglas de frecuencia base (`covl_frequency_rules`)
+- ✅ Equivalencias de códigos → CPT4 (`covl_country_code_maps`)
+
+Para reimportar a mano (por ejemplo tras editar `packs/ar.json`): ir a
+**Dashboard → Países → Reimportar paquete de país**.
+
+> El viejo script `sql/argentina_seed.sql` quedó archivado en
+> `sql/legacy/argentina_seed.sql.bak` como referencia histórica.
 
 ### Desinstalación
 
@@ -406,7 +413,12 @@ oe-module-coverage-latam/
 ├── 📂 sql/
 │   ├── 📄 install.sql             ← 12 tablas covl_* + datos iniciales
 │   ├── 📄 uninstall.sql           ← DROP en orden FK-seguro
-│   └── 📄 argentina_seed.sql      ← Reglas y semillas para Argentina 🇦🇷
+│   └── 📂 legacy/
+│       └── 📄 argentina_seed.sql.bak ← Seed histórico (reemplazado por CountryPackImporter)
+│
+├── 📂 packs/
+│   └── 📄 ar.json, bo.json, br.json, cl.json, co.json, do.json,   ← Paquetes de país
+│       ec.json, mx.json, pe.json, py.json, uy.json, ve.json          (reglas + moneda)
 │
 └── 📂 src/
     ├── 📂 Contracts/              ← Interfaces del contrato (estables)
@@ -425,6 +437,9 @@ oe-module-coverage-latam/
     │   ├── AuthorizationService.php
     │   ├── FrequencyCheckService.php
     │   ├── ProviderCoverageService.php
+    │   ├── CountryPackCatalog.php ← Lee packs/*.json (catálogo para el tab Países)
+    │   ├── CountryPackImporter.php← Upsert idempotente de packs/*.json → covl_* (transacción)
+    │   ├── CountryPackInstaller.php ← Capa de compatibilidad sobre el importer
     │   └── AdapterRegistry.php
     │
     └── 📂 Repository/             ← Acceso a datos (sqlStatement nativo)
@@ -466,7 +481,7 @@ No. Solo crea tablas propias con prefijo `covl_`. Las tablas nativas se usan med
 Sí. El `ManualFallbackAdapter` permite operar en modo manual completo: el operador gestiona autorizaciones y actualiza estados desde la interfaz del módulo.
 
 **¿Cómo agrego soporte para otro país?**  
-Desde el módulo: **Dashboard → Países → Agregar País** se instala un paquete del catálogo incluido (`packs/*.json` — Argentina, Chile, Colombia, México, Perú, Uruguay). Cada paquete registra el nomenclador nacional en `code_types`, da de alta el registro en `covl_country_packs` y carga las reglas base de autorización/frecuencia y equivalencias de códigos. Para un país nuevo: copiá `packs/xx.json`, completá los datos y ajustá `auth_rules`, `frequency_rules` y `code_maps`; luego instalalo desde la pestaña **Países** (o ejecutá `sql/miPais_seed.sql`).
+Desde el módulo: **Dashboard → Países → Agregar País** se instala un paquete del catálogo incluido (`packs/*.json` — Argentina, Chile, Colombia, México, Perú, Uruguay). Cada paquete registra el nomenclador nacional en `code_types`, da de alta el registro en `covl_country_packs` y carga las reglas base de autorización/frecuencia y equivalencias de códigos (upsert idempotente vía `CountryPackImporter`, en una transacción). Para un país nuevo: copiá `packs/xx.json`, completá los datos y ajustá `auth_rules`, `frequency_rules` y `code_maps`; luego instalalo desde la pestaña **Países** (o reimportalo si el país ya existe).
 
 **¿Qué pasa si un financiador tiene reglas distintas por plan?**  
 Usá el campo `plan_pattern` en `covl_auth_rules` con comodines `%`. Ejemplo: `plan_name LIKE 'GOLD%'` → aplica a todos los planes que empiecen con "GOLD".

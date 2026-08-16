@@ -138,6 +138,12 @@
                         : `<span class="covl-badge covl-badge-inactive">${escHtml(t('rules_pending'))}</span>`}
                 </td>
                 <td class="text-end covl-actions">
+                    <button type="button" class="btn btn-sm btn-outline-secondary me-1"
+                            data-code="${code}"
+                            title="${escHtml(t('reimport_title'))}"
+                            onclick="window.__COVL_Countries.reimport('${code}')">
+                        <i class="fa-solid fa-arrows-rotate me-1"></i>${escHtml(t('reimport'))}
+                    </button>
                     <button type="button" class="btn btn-sm btn-outline-primary"
                             data-code="${code}"
                             onclick="window.__COVL_Countries.openInstall('${code}')">
@@ -251,6 +257,24 @@
         }
     };
 
+    // Reimporta (re-sincroniza) el paquete de un país ya instalado desde packs/*.json
+    const reimport = async (code) => {
+        if (!window.confirm(`${t('reimport')}: ${code}?`)) return;
+        try {
+            const res = await fetch(apiUrl('country_packs.php', { action: 'reimport' }), {
+                method: 'POST',
+                headers: csrfHeaders(),
+                body: JSON.stringify({ country_code: code }),
+            });
+            const json = await res.json();
+            if (!res.ok || json.error) throw new Error(json.error || t('error_reimport'));
+            toast(`${t('country_reimported')}: ${code}`, 'success');
+            await loadInstalled();
+        } catch (e) {
+            toast(e.message || t('error_reimport'), 'error');
+        }
+    };
+
     // -----------------------------------------------------------------------
     // Inicialización
     // -----------------------------------------------------------------------
@@ -289,7 +313,7 @@
     };
 
     // Exponer API usada por los botones HTML
-    window.__COVL_Countries = { openInstall, install };
+    window.__COVL_Countries = { openInstall, install, reimport };
 
     init();
 })();

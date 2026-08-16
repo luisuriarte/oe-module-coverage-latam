@@ -26,7 +26,7 @@ require_once $GLOBALS['srcdir'] . '/api.inc.php';
 
 use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Service\CountryPackCatalog;
-use OpenEMR\Modules\CoverageLatam\Service\CountryPackInstaller;
+use OpenEMR\Modules\CoverageLatam\Service\CountryPackImporter;
 
 if (empty($session->get('authUserID'))) {
     http_response_code(401);
@@ -40,7 +40,7 @@ header('Content-Type: application/json; charset=utf-8');
 $action = $_REQUEST['action'] ?? '';
 
 // Seguridad: verificar CSRF en mutaciones
-if ($action === 'install') {
+if ($action === 'install' || $action === 'reimport') {
     $csrfToken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? ($_POST['csrf_token'] ?? '');
     if (!CsrfCompat::verifyCsrfToken($csrfToken)) {
         http_response_code(403);
@@ -83,19 +83,18 @@ if ($action === 'catalog') {
         $rows[] = $row;
     }
     covl_json(['data' => $rows]);
-} elseif ($action === 'install') {
+} elseif ($action === 'install' || $action === 'reimport') {
     // Soporta form-data y body JSON (como las demás APIs del módulo)
     $data  = array_merge($_POST, []);
     if (empty($data)) {
         $data = json_decode((string) file_get_contents('php://input'), true) ?: [];
     }
     $code = strtoupper(trim((string) ($data['country_code'] ?? '')));
-    $pack = $catalog->get($code);
-    if (!$pack) {
+    if ($catalog->get($code) === null) {
         covl_json(['error' => xl('Paquete no encontrado en el catálogo')], 404);
     }
     try {
-        $result = (new CountryPackInstaller())->install($pack);
+        $result = (new CountryPackImporter())->importCountryPack($code);
         covl_json(['ok' => true, 'data' => $result]);
     } catch (\Throwable $e) {
         covl_json(['error' => $e->getMessage()], 500);
