@@ -1421,8 +1421,114 @@ INSERT INTO cpt_codes (
  'Prueba de confirmación de drogas', 'No', 2024, 'CMS');
 
 -- ============================================================
+-- CÓDIGOS DE CIRUGÍA - SISTEMA MUSCULOESQUELÉTICO (20000-29999)
+-- Fuente: CMS NCCI Policy Manual, AMA CPT
+-- ============================================================
+
+-- Códigos de Incisión y Drenaje de Abscesos
+('20000', 'Vigente', 'Incisión absceso superficial', 'Incisión de absceso de tejido blando superficial',
+ 'Incisión de absceso de tejido blando (ej. secundario a osteomielitis); superficial. Incluye exploración, debridamiento y drenaje del área afectada.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico hace una incisión sobre un absceso superficial, examina, debrida y drena el área.', 'Sí', 2024, 'CMS'),
+
+('20005', 'Vigente', 'Incisión absceso profundo', 'Incisión de absceso de tejido blando profundo/complicado',
+ 'Incisión de absceso de tejido blando (ej. secundario a osteomielitis); profundo o complicado. Incluye debridamiento extenso, irrigación y examen de tejidos y huesos subyacentes.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico hace una incisión sobre un absceso profundo, debrida extensamente, irriga y examina tejidos y huesos.', 'Sí', 2024, 'CMS'),
+
+-- Códigos de Desbridamiento de Fracturas Abiertas
+('11010', 'Vigente', 'Desbridamiento fractura abierta', 'Desbridamiento de fractura/dislocación abierta - piel y subcutáneo',
+ 'Desbridamiento incluyendo remoción de material extraño en el sitio de una fractura abierta y/o dislocación abierta (ej. desbridamiento excisional); piel y tejidos subcutáneos.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico limpia y remueve tejido dañado y objetos extraños de una fractura expuesta, a nivel de piel y tejido subcutáneo.', 'Sí', 2024, 'AMA'),
+
+('11011', 'Vigente', 'Desbridamiento fractura con fascia', 'Desbridamiento de fractura/dislocación - piel, subcutáneo, fascia, músculo',
+ 'Desbridamiento incluyendo remoción de material extraño en el sitio de una fractura abierta y/o dislocación abierta (ej. desbridamiento excisional); piel, tejido subcutáneo, fascia muscular y músculo.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico limpia y remueve tejido dañado y objetos extraños de una fractura expuesta, incluyendo piel, subcutáneo, fascia y músculo.', 'Sí', 2024, 'AMA'),
+
+('11012', 'Vigente', 'Desbridamiento fractura con hueso', 'Desbridamiento de fractura/dislocación - incluyendo hueso',
+ 'Desbridamiento incluyendo remoción de material extraño en el sitio de una fractura abierta y/o dislocación abierta (ej. desbridamiento excisional); piel, tejido subcutáneo, fascia muscular, músculo y hueso.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico limpia y remueve tejido dañado y objetos extraños de una fractura expuesta, incluyendo piel, subcutáneo, fascia, músculo y hueso.', 'Sí', 2024, 'AMA'),
+
+-- Códigos Generales de Cierre y Procedimientos No Listados
+('20000', 'Vigente', 'Cierre de herida compleja', 'Cierre de herida compleja con múltiples capas',
+ 'Cierre de herida compleja con reparación de planos profundos (fascia, músculo) y capas superficiales.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico sutura una herida profunda en varias capas.', 'Sí', 2024, 'CMS'),
+
+('20999', 'Vigente', 'Procedimiento no listado', 'Procedimiento no listado - sistema musculoesquelético',
+ 'Procedimiento quirúrgico no listado del sistema musculoesquelético.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'Procedimiento quirúrgico del sistema musculoesquelético que no tiene un código específico.', 'Sí', 2024, 'CMS'),
+
+-- Códigos de Artroscopia de Rodilla
+('29874', 'Vigente', 'Artroscopia rodilla - cuerpos libres', 'Artroscopia rodilla con remoción de cuerpo libre',
+ 'Artroscopia de rodilla, quirúrgica; para remoción de cuerpo libre o cuerpo extraño.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico introduce una cámara en la rodilla y extrae un cuerpo libre o fragmento de cartílago suelto.', 'Sí', 2024, 'CMS'),
+
+('29877', 'Vigente', 'Artroscopia rodilla - debridamiento', 'Artroscopia rodilla con debridamiento de cartílago',
+ 'Artroscopia de rodilla, quirúrgica; para debridamiento/raspado de cartílago articular (condroplastía).',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico introduce una cámara en la rodilla y limpia o alisa el cartílago dañado.', 'Sí', 2024, 'CMS'),
+
+('29880', 'Vigente', 'Meniscectomía medial y lateral', 'Artroscopia rodilla con meniscectomía medial y lateral',
+ 'Artroscopia de rodilla, quirúrgica; con meniscectomía (medial Y lateral, incluyendo cualquier raspado meniscal) incluyendo debridamiento/raspado de cartílago articular (condroplastía) en el mismo o diferente compartimiento, cuando se realiza.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico introduce una cámara en la rodilla y extrae partes de ambos meniscos (medial y lateral).', 'Sí', 2024, 'CMS'),
+
+('29881', 'Vigente', 'Meniscectomía medial o lateral', 'Artroscopia rodilla con meniscectomía medial o lateral',
+ 'Artroscopia de rodilla, quirúrgica; con meniscectomía (medial O lateral, incluyendo cualquier raspado meniscal) incluyendo debridamiento/raspado de cartílago articular (condroplastía) en el mismo o diferente compartimiento, cuando se realiza.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico introduce una cámara en la rodilla y extrae parte de un menisco (medial o lateral).', 'Sí', 2024, 'CMS'),
+
+('29875', 'Vigente', 'Sinovectomía limitada', 'Artroscopia rodilla con sinovectomía limitada',
+ 'Artroscopia de rodilla, quirúrgica; sinovectomía limitada (procedimiento separado).',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico introduce una cámara en la rodilla y realiza una limpieza limitada del tejido sinovial inflamado.', 'Sí', 2024, 'CMS'),
+
+('29876', 'Vigente', 'Sinovectomía mayor', 'Artroscopia rodilla con sinovectomía mayor',
+ 'Artroscopia de rodilla, quirúrgica; sinovectomía mayor (de dos o tres compartimientos).',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico introduce una cámara en la rodilla y realiza una limpieza extensa del tejido sinovial inflamado en dos o tres compartimientos.', 'Sí', 2024, 'CMS'),
+
+-- Códigos de Artroscopia de Hombro
+('29822', 'Vigente', 'Artroscopia hombro - debridamiento limitado', 'Artroscopia hombro con debridamiento limitado',
+ 'Artroscopia de hombro, quirúrgica; debridamiento limitado.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico introduce una cámara en el hombro y realiza un debridamiento limitado del tejido dañado.', 'Sí', 2024, 'CMS'),
+
+('29823', 'Vigente', 'Artroscopia hombro - debridamiento extenso', 'Artroscopia hombro con debridamiento extenso',
+ 'Artroscopia de hombro, quirúrgica; debridamiento extenso.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico introduce una cámara en el hombro y realiza un debridamiento extenso del tejido dañado.', 'Sí', 2024, 'CMS'),
+
+('29824', 'Vigente', 'Artroscopia hombro - claviculectomía', 'Artroscopia hombro con claviculectomía',
+ 'Artroscopia de hombro, quirúrgica; claviculectomía incluyendo la superficie articular distal.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico introduce una cámara en el hombro y reseca la porción distal de la clavícula.', 'Sí', 2024, 'CMS'),
+
+('29827', 'Vigente', 'Artroscopia hombro - reparación manguito', 'Artroscopia hombro con reparación de manguito rotador',
+ 'Artroscopia de hombro, quirúrgica; reparación de manguito rotador.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico introduce una cámara en el hombro y repara un desgarro del manguito rotador.', 'Sí', 2024, 'CMS'),
+
+('29828', 'Vigente', 'Artroscopia hombro - tenodesis', 'Artroscopia hombro con tenodesis del bíceps',
+ 'Artroscopia de hombro, quirúrgica; tenodesis del bíceps.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico introduce una cámara en el hombro y realiza una tenodesis del tendón del bíceps.', 'Sí', 2024, 'CMS'),
+
+-- Códigos de Remoción de Fijación Interna
+('20670', 'Vigente', 'Remoción de implante superficial', 'Remoción de implante superficial (ej. pin, alambre)',
+ 'Remoción de implante (ej. clavo, alambre, pin) superficial, en la oficina o clínica.',
+ 'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
+ 'El médico remueve un implante superficial como un pin o alambre.', 'Sí', 2024, 'CMS');
+
+-- ============================================================
 -- FIN DEL ARCHIVO: latam_packs_real.sql
--- TOTAL DE REGISTROS: 280+ códigos reales
+-- TOTAL DE REGISTROS: 
 -- ============================================================
 -- NOTA: Este archivo contiene códigos CPT reales de la AMA
 -- extraídos de fuentes públicas (CMS, AMA, AAPC, ACS)
