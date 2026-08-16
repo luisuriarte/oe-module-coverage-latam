@@ -12,7 +12,7 @@
 CREATE TABLE IF NOT EXISTS cpt_codes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     code VARCHAR(10) NOT NULL UNIQUE,
-    code_status ENUM('Nuevo', 'Revisado', 'Eliminado') DEFAULT 'Vigente',
+    code_status ENUM('Nuevo', 'Revisado', 'Vigente', 'Eliminado') DEFAULT 'Vigente',
     short_description VARCHAR(35) NOT NULL,
     medium_description VARCHAR(48) NOT NULL,
     long_description TEXT NOT NULL,
