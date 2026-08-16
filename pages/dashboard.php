@@ -8,7 +8,9 @@
  * - Tab 2: Autorizaciones Previas
  * - Tab 3: Lotes de Liquidación
  * - Tab 4: Convenios de Prestadores
- * - Tab 5: Reglas de Configuración (CRUD Reglas de Autorización y Frecuencia)
+ * - Tab 5: Pack Paises
+ * - Tab 6: Autorizaciones
+ * - Tab 7: Frecuencias
  *
  * @package   OpenEMR\Modules\CoverageLatam
  * @author    Luis A. Uriarte <luis.uriarte@gmail.com>
