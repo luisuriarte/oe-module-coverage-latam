@@ -28,7 +28,7 @@ use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Service\CountryPackCatalog;
 use OpenEMR\Modules\CoverageLatam\Service\CountryPackImporter;
 
-if (empty($_SESSION['authUserID'])) {
+if (empty($session->get('authUserID'))) {
     http_response_code(401);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['error' => xl('No autenticado')]);
