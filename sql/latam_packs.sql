@@ -1524,7 +1524,204 @@ INSERT INTO cpt_codes (
 ('20670', 'Vigente', 'Remoción de implante superficial', 'Remoción de implante superficial (ej. pin, alambre)',
  'Remoción de implante (ej. clavo, alambre, pin) superficial, en la oficina o clínica.',
  'Cirugía', 'Sistema Musculoesquelético', 0.000, 0.000, 0.000,
- 'El médico remueve un implante superficial como un pin o alambre.', 'Sí', 2024, 'CMS');
+ 'El médico remueve un implante superficial como un pin o alambre.', 'Sí', 2024, 'CMS'),
+
+-- ============================================================
+-- 1.1 EVALUACIÓN Y MANEJO (E/M) - COMPLETAR
+-- Códigos 99217-99499 (Rangos faltantes)
+-- Fuente: CMS, AMA
+-- ============================================================
+
+-- Servicios de Observación Hospitalaria
+('99217', 'Vigente', 'Alta observación', 'Alta de observación hospitalaria',
+ 'Atención de alta de un paciente de observación hospitalaria, incluyendo el tiempo total en la fecha de alta.',
+ 'Medicina', 'Evaluación y Manejo', 1.100, 0.000, 0.000,
+ 'El médico da el alta al paciente que estaba en observación.', 'Sí', 2024, 'CMS/AMA'),
+
+('99218', 'Vigente', 'Observación Nivel 1', 'Atención de observación Nivel 1 (baja complejidad)',
+ 'Atención de un paciente de observación hospitalaria, Nivel 1, de baja complejidad (historia y examen enfocados, toma de decisiones sencilla).',
+ 'Medicina', 'Evaluación y Manejo', 1.100, 0.000, 0.000,
+ 'Atención de baja complejidad para un paciente en observación.', 'Sí', 2024, 'CMS/AMA'),
+
+('99219', 'Vigente', 'Observación Nivel 2', 'Atención de observación Nivel 2 (moderada complejidad)',
+ 'Atención de un paciente de observación hospitalaria, Nivel 2, de complejidad moderada (historia y examen detallados, toma de decisiones de complejidad moderada).',
+ 'Medicina', 'Evaluación y Manejo', 1.700, 0.000, 0.000,
+ 'Atención de complejidad moderada para un paciente en observación.', 'Sí', 2024, 'CMS/AMA'),
+
+('99220', 'Vigente', 'Observación Nivel 3', 'Atención de observación Nivel 3 (alta complejidad)',
+ 'Atención de un paciente de observación hospitalaria, Nivel 3, de alta complejidad (historia y examen exhaustivos, toma de decisiones de alta complejidad).',
+ 'Medicina', 'Evaluación y Manejo', 2.600, 0.000, 0.000,
+ 'Atención de alta complejidad para un paciente en observación.', 'Sí', 2024, 'CMS/AMA'),
+
+-- Servicios de Paciente Hospitalizado (Admisión)
+('99221', 'Vigente', 'Hospitalización Nivel 1', 'Atención hospitalaria inicial Nivel 1 (baja complejidad)',
+ 'Atención inicial de un paciente hospitalizado, Nivel 1, de baja complejidad (historia y examen enfocados, toma de decisiones sencilla).',
+ 'Medicina', 'Evaluación y Manejo', 1.400, 0.000, 0.000,
+ 'Primera atención de baja complejidad para un paciente hospitalizado.', 'Sí', 2024, 'CMS/AMA'),
+
+('99222', 'Vigente', 'Hospitalización Nivel 2', 'Atención hospitalaria inicial Nivel 2 (moderada complejidad)',
+ 'Atención inicial de un paciente hospitalizado, Nivel 2, de complejidad moderada (historia y examen detallados, toma de decisiones de complejidad moderada).',
+ 'Medicina', 'Evaluación y Manejo', 2.100, 0.000, 0.000,
+ 'Primera atención de complejidad moderada para un paciente hospitalizado.', 'Sí', 2024, 'CMS/AMA'),
+
+('99223', 'Vigente', 'Hospitalización Nivel 3', 'Atención hospitalaria inicial Nivel 3 (alta complejidad)',
+ 'Atención inicial de un paciente hospitalizado, Nivel 3, de alta complejidad (historia y examen exhaustivos, toma de decisiones de alta complejidad).',
+ 'Medicina', 'Evaluación y Manejo', 3.000, 0.000, 0.000,
+ 'Primera atención de alta complejidad para un paciente hospitalizado.', 'Sí', 2024, 'CMS/AMA'),
+
+-- Servicios de Paciente Hospitalizado (Subsecuentes)
+('99231', 'Vigente', 'Hospitalización subsec Nivel 1', 'Atención hospitalaria subsecuente Nivel 1 (baja complejidad)',
+ 'Atención subsecuente de un paciente hospitalizado, Nivel 1, de baja complejidad (historia y examen enfocados, toma de decisiones sencilla).',
+ 'Medicina', 'Evaluación y Manejo', 1.000, 0.000, 0.000,
+ 'Atención de seguimiento de baja complejidad para un paciente hospitalizado.', 'Sí', 2024, 'CMS/AMA'),
+
+('99232', 'Vigente', 'Hospitalización subsec Nivel 2', 'Atención hospitalaria subsecuente Nivel 2 (moderada complejidad)',
+ 'Atención subsecuente de un paciente hospitalizado, Nivel 2, de complejidad moderada (historia y examen detallados, toma de decisiones de complejidad moderada).',
+ 'Medicina', 'Evaluación y Manejo', 1.500, 0.000, 0.000,
+ 'Atención de seguimiento de complejidad moderada para un paciente hospitalizado.', 'Sí', 2024, 'CMS/AMA'),
+
+('99233', 'Vigente', 'Hospitalización subsec Nivel 3', 'Atención hospitalaria subsecuente Nivel 3 (alta complejidad)',
+ 'Atención subsecuente de un paciente hospitalizado, Nivel 3, de alta complejidad (historia y examen exhaustivos, toma de decisiones de alta complejidad).',
+ 'Medicina', 'Evaluación y Manejo', 2.200, 0.000, 0.000,
+ 'Atención de seguimiento de alta complejidad para un paciente hospitalizado.', 'Sí', 2024, 'CMS/AMA'),
+
+-- Servicios de Consulta
+('99242', 'Vigente', 'Consulta Nivel 2', 'Consulta ambulatoria Nivel 2 (baja complejidad)',
+ 'Consulta de oficina o ambulatoria para un paciente nuevo, Nivel 2, de baja complejidad.',
+ 'Medicina', 'Evaluación y Manejo', 1.300, 0.000, 0.000,
+ 'Consulta de baja complejidad para un paciente nuevo.', 'Sí', 2024, 'CMS/AMA'),
+
+('99243', 'Vigente', 'Consulta Nivel 3', 'Consulta ambulatoria Nivel 3 (moderada complejidad)',
+ 'Consulta de oficina o ambulatoria para un paciente nuevo, Nivel 3, de complejidad moderada.',
+ 'Medicina', 'Evaluación y Manejo', 1.800, 0.000, 0.000,
+ 'Consulta de complejidad moderada para un paciente nuevo.', 'Sí', 2024, 'CMS/AMA'),
+
+('99244', 'Vigente', 'Consulta Nivel 4', 'Consulta ambulatoria Nivel 4 (alta complejidad)',
+ 'Consulta de oficina o ambulatoria para un paciente nuevo, Nivel 4, de alta complejidad.',
+ 'Medicina', 'Evaluación y Manejo', 2.500, 0.000, 0.000,
+ 'Consulta de alta complejidad para un paciente nuevo.', 'Sí', 2024, 'CMS/AMA'),
+
+('99245', 'Vigente', 'Consulta Nivel 5', 'Consulta ambulatoria Nivel 5 (complejidad muy alta)',
+ 'Consulta de oficina o ambulatoria para un paciente nuevo, Nivel 5, de complejidad muy alta.',
+ 'Medicina', 'Evaluación y Manejo', 3.200, 0.000, 0.000,
+ 'Consulta de complejidad muy alta para un paciente nuevo.', 'Sí', 2024, 'CMS/AMA'),
+
+-- Servicios de Atención Crítica
+('99291', 'Vigente', 'Atención crítica', 'Atención crítica (primera 30-74 minutos)',
+ 'Atención crítica, evaluación y manejo de un paciente con enfermedad o lesión crítica; primeros 30-74 minutos.',
+ 'Medicina', 'Evaluación y Manejo', 4.500, 0.000, 0.000,
+ 'Atención de emergencia para un paciente en estado crítico (30-74 min).', 'Sí', 2024, 'CMS/AMA'),
+
+('99292', 'Vigente', 'Atención crítica adicional', 'Atención crítica (cada 30 minutos adicionales)',
+ 'Atención crítica, evaluación y manejo de un paciente con enfermedad o lesión crítica; cada 30 minutos adicionales (código adicional).',
+ 'Medicina', 'Evaluación y Manejo', 2.250, 0.000, 0.000,
+ 'Atención de emergencia adicional para un paciente en estado crítico (cada 30 min).', 'Sí', 2024, 'CMS/AMA'),
+
+-- Servicios de Neonatología y Cuidados Intensivos
+('99295', 'Vigente', 'Cuidado intensivo neonatal', 'Cuidado intensivo neonatal, bajo peso al nacer',
+ 'Cuidado intensivo neonatal, para recién nacidos con bajo peso al nacer o condiciones críticas.',
+ 'Medicina', 'Evaluación y Manejo', 4.500, 0.000, 0.000,
+ 'Cuidados intensivos para un recién nacido de bajo peso.', 'Sí', 2024, 'CMS/AMA'),
+
+-- Servicios de Hogar de Ancianos
+('99304', 'Vigente', 'Institución Nivel 1', 'Atención inicial en institución Nivel 1 (baja complejidad)',
+ 'Atención inicial en una institución de cuidados (ej. hogar de ancianos), Nivel 1, de baja complejidad.',
+ 'Medicina', 'Evaluación y Manejo', 1.100, 0.000, 0.000,
+ 'Primera atención de baja complejidad para un paciente en una institución.', 'Sí', 2024, 'CMS/AMA'),
+
+-- Servicios de Medicina Preventiva
+('99381', 'Vigente', 'Preventiva niño <1 año', 'Examen preventivo, niño menor de 1 año',
+ 'Examen de medicina preventiva para un niño menor de 1 año, incluyendo historia y examen.',
+ 'Medicina', 'Preventiva', 1.200, 0.000, 0.000,
+ 'Revisión médica preventiva para un bebé menor de 1 año.', 'No', 2024, 'CMS/AMA'),
+
+('99382', 'Vigente', 'Preventiva niño 1-4 años', 'Examen preventivo, niño de 1-4 años',
+ 'Examen de medicina preventiva para un niño de 1 a 4 años.',
+ 'Medicina', 'Preventiva', 1.400, 0.000, 0.000,
+ 'Revisión médica preventiva para un niño de 1 a 4 años.', 'No', 2024, 'CMS/AMA'),
+
+('99383', 'Vigente', 'Preventiva niño 5-11 años', 'Examen preventivo, niño de 5-11 años',
+ 'Examen de medicina preventiva para un niño de 5 a 11 años.',
+ 'Medicina', 'Preventiva', 1.600, 0.000, 0.000,
+ 'Revisión médica preventiva para un niño de 5 a 11 años.', 'No', 2024, 'CMS/AMA'),
+
+('99384', 'Vigente', 'Preventiva adolescente', 'Examen preventivo, adolescente de 12-17 años',
+ 'Examen de medicina preventiva para un adolescente de 12 a 17 años.',
+ 'Medicina', 'Preventiva', 1.800, 0.000, 0.000,
+ 'Revisión médica preventiva para un adolescente de 12 a 17 años.', 'No', 2024, 'CMS/AMA'),
+
+('99385', 'Vigente', 'Preventiva adulto 18-39', 'Examen preventivo, adulto de 18-39 años',
+ 'Examen de medicina preventiva para un adulto de 18 a 39 años.',
+ 'Medicina', 'Preventiva', 2.000, 0.000, 0.000,
+ 'Revisión médica preventiva para un adulto de 18 a 39 años.', 'No', 2024, 'CMS/AMA'),
+
+('99386', 'Vigente', 'Preventiva adulto 40-64', 'Examen preventivo, adulto de 40-64 años',
+ 'Examen de medicina preventiva para un adulto de 40 a 64 años.',
+ 'Medicina', 'Preventiva', 2.200, 0.000, 0.000,
+ 'Revisión médica preventiva para un adulto de 40 a 64 años.', 'No', 2024, 'CMS/AMA'),
+
+('99387', 'Vigente', 'Preventiva adulto 65+', 'Examen preventivo, adulto de 65 años o más',
+ 'Examen de medicina preventiva para un adulto de 65 años o más.',
+ 'Medicina', 'Preventiva', 2.400, 0.000, 0.000,
+ 'Revisión médica preventiva para un adulto de 65 años o más.', 'No', 2024, 'CMS/AMA'),
+
+-- Servicios de Medicina Preventiva (Paciente Establecido)
+('99391', 'Vigente', 'Preventiva establecido <1 año', 'Examen preventivo establecido, niño <1 año',
+ 'Examen de medicina preventiva para un paciente establecido menor de 1 año.',
+ 'Medicina', 'Preventiva', 0.900, 0.000, 0.000,
+ 'Revisión médica preventiva de seguimiento para un bebé menor de 1 año.', 'No', 2024, 'CMS/AMA'),
+
+('99392', 'Vigente', 'Preventiva establecido 1-4', 'Examen preventivo establecido, niño 1-4 años',
+ 'Examen de medicina preventiva para un paciente establecido de 1 a 4 años.',
+ 'Medicina', 'Preventiva', 1.100, 0.000, 0.000,
+ 'Revisión médica preventiva de seguimiento para un niño de 1 a 4 años.', 'No', 2024, 'CMS/AMA'),
+
+('99393', 'Vigente', 'Preventiva establecido 5-11', 'Examen preventivo establecido, niño 5-11 años',
+ 'Examen de medicina preventiva para un paciente establecido de 5 a 11 años.',
+ 'Medicina', 'Preventiva', 1.300, 0.000, 0.000,
+ 'Revisión médica preventiva de seguimiento para un niño de 5 a 11 años.', 'No', 2024, 'CMS/AMA'),
+
+('99394', 'Vigente', 'Preventiva establecido adolescente', 'Examen preventivo establecido, adolescente 12-17',
+ 'Examen de medicina preventiva para un paciente establecido de 12 a 17 años.',
+ 'Medicina', 'Preventiva', 1.500, 0.000, 0.000,
+ 'Revisión médica preventiva de seguimiento para un adolescente de 12 a 17 años.', 'No', 2024, 'CMS/AMA'),
+
+('99395', 'Vigente', 'Preventiva establecido 18-39', 'Examen preventivo establecido, adulto 18-39 años',
+ 'Examen de medicina preventiva para un paciente establecido de 18 a 39 años.',
+ 'Medicina', 'Preventiva', 1.700, 0.000, 0.000,
+ 'Revisión médica preventiva de seguimiento para un adulto de 18 a 39 años.', 'No', 2024, 'CMS/AMA'),
+
+('99396', 'Vigente', 'Preventiva establecido 40-64', 'Examen preventivo establecido, adulto 40-64 años',
+ 'Examen de medicina preventiva para un paciente establecido de 40 a 64 años.',
+ 'Medicina', 'Preventiva', 1.900, 0.000, 0.000,
+ 'Revisión médica preventiva de seguimiento para un adulto de 40 a 64 años.', 'No', 2024, 'CMS/AMA'),
+
+('99397', 'Vigente', 'Preventiva establecido 65+', 'Examen preventivo establecido, adulto 65+ años',
+ 'Examen de medicina preventiva para un paciente establecido de 65 años o más.',
+ 'Medicina', 'Preventiva', 2.100, 0.000, 0.000,
+ 'Revisión médica preventiva de seguimiento para un adulto de 65 años o más.', 'No', 2024, 'CMS/AMA'),
+
+-- Atención de Recién Nacido
+('99460', 'Vigente', 'Atención recién nacido', 'Atención al recién nacido en sala de partos',
+ 'Atención al recién nacido en la sala de partos, incluyendo historia y examen inicial.',
+ 'Medicina', 'Evaluación y Manejo', 2.000, 0.000, 0.000,
+ 'Evaluación inicial del recién nacido en la sala de partos.', 'Sí', 2024, 'CMS/AMA'),
+
+('99461', 'Vigente', 'Atención recién nacido en centro', 'Atención al recién nacido en centro de partos',
+ 'Atención al recién nacido en un centro de partos (no hospitalario).',
+ 'Medicina', 'Evaluación y Manejo', 1.800, 0.000, 0.000,
+ 'Evaluación inicial del recién nacido en un centro de partos.', 'Sí', 2024, 'CMS/AMA'),
+
+('99462', 'Vigente', 'Atención recién nacido en hospital', 'Atención al recién nacido en hospital',
+ 'Atención al recién nacido en el hospital (cuidados posteriores al parto).',
+ 'Medicina', 'Evaluación y Manejo', 1.500, 0.000, 0.000,
+ 'Atención médica al recién nacido durante su estancia en el hospital.', 'Sí', 2024, 'CMS/AMA'),
+
+-- Servicios Especiales
+('99499', 'Vigente', 'Servicio E/M no listado', 'Servicio de evaluación y manejo no listado',
+ 'Servicio de evaluación y manejo no listado. Se utiliza para servicios que no tienen un código específico.',
+ 'Medicina', 'Evaluación y Manejo', 0.000, 0.000, 0.000,
+ 'Servicio de evaluación y manejo que no tiene un código específico.', 'Sí', 2024, 'CMS/AMA');
 
 -- ============================================================
 -- FIN DEL ARCHIVO: latam_packs_real.sql
