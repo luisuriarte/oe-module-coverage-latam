@@ -1,19 +1,265 @@
 {
   "country_code": "MX",
   "name": "México — IMSS, ISSSTE y Seguros Privados",
-    "currency": {
+  "currency": {
     "code": "MXN",
     "name": "Peso mexicano",
     "symbol": "$"
   },
   "version": "1.0.0",
-  "description": "Registra el tipo de código NOMEX (Nomenclador México). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "description": "Nomenclador México basado en la codificación CPT (Current Procedural Terminology) usada en el sector privado, con referencia a CLUES para establecimientos. Incluye reglas base de autorización y frecuencia para prácticas de alta complejidad. Ajustar por contrato con cada financiador desde Configuración & Reglas.",
   "code_type": {
     "ct_key": "NOMEX",
     "ct_name": "Nomenclador México",
     "ct_term": "NOMEX"
   },
-  "auth_rules": [],
-  "frequency_rules": [],
-  "code_maps": []
+  "auth_rules": [
+    {
+      "code": "70450",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografía computarizada de cráneo sin contraste"
+    },
+    {
+      "code": "70460",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografía computarizada de cráneo con contraste"
+    },
+    {
+      "code": "71250",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografía computarizada de tórax sin contraste"
+    },
+    {
+      "code": "70496",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Angiotomografía de cabeza y cuello"
+    },
+    {
+      "code": "70551",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Resonancia magnética de encéfalo sin contraste"
+    },
+    {
+      "code": "70553",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Resonancia magnética de encéfalo con y sin contraste"
+    },
+    {
+      "code": "72141",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Resonancia magnética de columna cervical sin contraste"
+    },
+    {
+      "code": "72148",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Resonancia magnética de columna lumbar sin contraste"
+    },
+    {
+      "code": "71550",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Resonancia magnética de tórax"
+    },
+    {
+      "code": "93880",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ecografía Doppler extracraneal de vasos del cuello"
+    },
+    {
+      "code": "93306",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ecocardiograma transtorácico completo"
+    },
+    {
+      "code": "93350",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ecocardiograma con estrés"
+    },
+    {
+      "code": "93458",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Cateterismo cardíaco izquierdo"
+    },
+    {
+      "code": "92920",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Angioplastia coronaria percutánea"
+    },
+    {
+      "code": "33510",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Bypass aortocoronario (revascularización miocárdica)"
+    },
+    {
+      "code": "22612",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Artrodesis de columna lumbar (cirugía de columna)"
+    }
+  ],
+  "frequency_rules": [
+    {
+      "code": "70450",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Tomografía computarizada"
+    },
+    {
+      "code": "70460",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Tomografía computarizada con contraste"
+    },
+    {
+      "code": "70496",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angiotomografía"
+    },
+    {
+      "code": "70551",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Resonancia magnética"
+    },
+    {
+      "code": "70553",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Resonancia magnética con contraste"
+    },
+    {
+      "code": "72141",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Resonancia magnética de columna"
+    },
+    {
+      "code": "72148",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Resonancia magnética de columna"
+    },
+    {
+      "code": "93880",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Ecografía Doppler"
+    },
+    {
+      "code": "93350",
+      "min_interval_days": 21,
+      "max_per_year": 12,
+      "severity": "alerta",
+      "notes": "Ecocardiograma con estrés"
+    },
+    {
+      "code": "93458",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cateterismo cardíaco"
+    },
+    {
+      "code": "92920",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angioplastia coronaria"
+    },
+    {
+      "code": "33510",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cirugía cardiovascular (bypass)"
+    },
+    {
+      "code": "22612",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cirugía de columna"
+    }
+  ],
+  "code_maps": [
+    {
+      "local_code": "70450",
+      "standard_code_type": "CPT4",
+      "standard_code": "70450",
+      "local_desc": "Tomografía computarizada de cráneo sin contraste",
+      "standard_desc": "CT head without contrast",
+      "equivalence": "exacta"
+    },
+    {
+      "local_code": "70551",
+      "standard_code_type": "CPT4",
+      "standard_code": "70551",
+      "local_desc": "Resonancia magnética de encéfalo sin contraste",
+      "standard_desc": "MRI brain without contrast",
+      "equivalence": "exacta"
+    },
+    {
+      "local_code": "72148",
+      "standard_code_type": "CPT4",
+      "standard_code": "72148",
+      "local_desc": "Resonancia magnética de columna lumbar sin contraste",
+      "standard_desc": "MRI lumbar spine without contrast",
+      "equivalence": "exacta"
+    },
+    {
+      "local_code": "93880",
+      "standard_code_type": "CPT4",
+      "standard_code": "93880",
+      "local_desc": "Ecografía Doppler extracraneal",
+      "standard_desc": "Extracranial doppler",
+      "equivalence": "exacta"
+    },
+    {
+      "local_code": "93458",
+      "standard_code_type": "CPT4",
+      "standard_code": "93458",
+      "local_desc": "Cateterismo cardíaco izquierdo",
+      "standard_desc": "Left heart catheterization",
+      "equivalence": "exacta"
+    }
+  ]
 }

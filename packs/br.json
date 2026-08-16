@@ -1,19 +1,286 @@
 {
   "country_code": "BR",
-  "name": "Brasil — SUS e Operadoras de Saúde",
-    "currency": {
+  "name": "Brasil — Operadoras de Saúde e SUS",
+  "currency": {
     "code": "BRL",
     "name": "Real brasileño",
     "symbol": "R$"
   },
   "version": "1.0.0",
-  "description": "Registra el tipo de código SIGTAP (Tabela de Procedimentos do SUS). Las reglas de autorización y frecuencia se cargan desde Configuração & Regras.",
+  "description": "SIGTAP (Sistema de Gerenciamento da Tabela de Procedimentos, Medicamentos e OPM do SUS). Incluye reglas base de autorización y frecuencia para prácticas de alta complejidad. Ajustar por contrato con cada operadora desde Configuración & Reglas.",
   "code_type": {
     "ct_key": "SIGTAP",
-    "ct_name": "SIGTAP — Sistema de Gerenciamento da Tabela de Procedimentos",
+    "ct_name": "Sistema de Gerenciamento da Tabela de Procedimentos, Medicamentos e OPM do SUS",
     "ct_term": "SIGTAP"
   },
-  "auth_rules": [],
-  "frequency_rules": [],
-  "code_maps": []
+  "auth_rules": [
+    {
+      "code": "0206010079",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografia computadorizada do crânio"
+    },
+    {
+      "code": "0206010010",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografia computadorizada de coluna cervical c/ ou s/ contraste"
+    },
+    {
+      "code": "0206010028",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografia computadorizada de coluna lombo-sacra c/ ou s/ contraste"
+    },
+    {
+      "code": "0206030010",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografia computadorizada de abdômen superior"
+    },
+    {
+      "code": "0206030037",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografia computadorizada de pelve / bacia / abdômen inferior"
+    },
+    {
+      "code": "0207010064",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ressonância magnética de crânio"
+    },
+    {
+      "code": "0207010030",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ressonância magnética de coluna cervical"
+    },
+    {
+      "code": "0207010048",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ressonância magnética de coluna lombo-sacra"
+    },
+    {
+      "code": "0207010056",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ressonância magnética de coluna torácica"
+    },
+    {
+      "code": "0207010013",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Angiorressonância cerebral"
+    },
+    {
+      "code": "0205010032",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ecocardiografia transtorácica"
+    },
+    {
+      "code": "0205010024",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ecocardiografia transesofágica"
+    },
+    {
+      "code": "0205010016",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ecocardiografia de estresse"
+    },
+    {
+      "code": "0205010040",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ultra-sonografia doppler colorido de vasos"
+    },
+    {
+      "code": "0211020010",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Cateterismo cardíaco"
+    },
+    {
+      "code": "0406010943",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Revascularização miocárdica s/ uso de extracorpórea"
+    },
+    {
+      "code": "0406010927",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Revascularização miocárdica c/ uso de extracorpórea"
+    },
+    {
+      "code": "0408030917",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Artrodese cervical / cérvico-torácica posterior quatro níveis"
+    }
+  ],
+  "frequency_rules": [
+    {
+      "code": "0206010079",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Tomografia computadorizada"
+    },
+    {
+      "code": "0206010010",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Tomografia computadorizada de coluna"
+    },
+    {
+      "code": "0206010028",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Tomografia computadorizada de coluna"
+    },
+    {
+      "code": "0207010064",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Ressonância magnética"
+    },
+    {
+      "code": "0207010030",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Ressonância magnética de coluna"
+    },
+    {
+      "code": "0207010048",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Ressonância magnética de coluna"
+    },
+    {
+      "code": "0207010013",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angiorressonância"
+    },
+    {
+      "code": "0205010016",
+      "min_interval_days": 21,
+      "max_per_year": 12,
+      "severity": "alerta",
+      "notes": "Ecocardiografia de estresse"
+    },
+    {
+      "code": "0205010024",
+      "min_interval_days": 21,
+      "max_per_year": 12,
+      "severity": "alerta",
+      "notes": "Ecocardiografia transesofágica"
+    },
+    {
+      "code": "0205010040",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Ultrassonografia doppler"
+    },
+    {
+      "code": "0211020010",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cateterismo cardíaco"
+    },
+    {
+      "code": "0406010943",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Revascularização miocárdica (bypass)"
+    },
+    {
+      "code": "0406010927",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Revascularização miocárdica (bypass)"
+    },
+    {
+      "code": "0408030917",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cirurgia de coluna"
+    }
+  ],
+  "code_maps": [
+    {
+      "local_code": "0206010079",
+      "standard_code_type": "CPT4",
+      "standard_code": "70450",
+      "local_desc": "Tomografia computadorizada do crânio",
+      "standard_desc": "CT head without contrast",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "0207010064",
+      "standard_code_type": "CPT4",
+      "standard_code": "70551",
+      "local_desc": "Ressonância magnética de crânio",
+      "standard_desc": "MRI brain without contrast",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "0207010048",
+      "standard_code_type": "CPT4",
+      "standard_code": "72148",
+      "local_desc": "Ressonância magnética de coluna lombo-sacra",
+      "standard_desc": "MRI lumbar spine without contrast",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "0205010040",
+      "standard_code_type": "CPT4",
+      "standard_code": "93880",
+      "local_desc": "Ultra-sonografia doppler colorido de vasos",
+      "standard_desc": "Extracranial doppler",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "0211020010",
+      "standard_code_type": "CPT4",
+      "standard_code": "93458",
+      "local_desc": "Cateterismo cardíaco",
+      "standard_desc": "Left heart catheterization",
+      "equivalence": "aproximada"
+    }
+  ]
 }

@@ -1,19 +1,293 @@
 {
   "country_code": "CO",
   "name": "Colombia — EPS y Planes Complementarios",
-    "currency": {
+  "currency": {
     "code": "COP",
     "name": "Peso colombiano",
     "symbol": "$"
   },
   "version": "1.0.0",
-  "description": "Registra el tipo de código CUPS (Clasificación Única de Procedimientos en Salud). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "description": "CUPS (Clasificación Única de Procedimientos en Salud). Incluye reglas base de autorización y frecuencia para prácticas de alta complejidad. Ajustar por contrato con cada EPS desde Configuración & Reglas.",
   "code_type": {
     "ct_key": "CUPS",
     "ct_name": "Clasificación Única de Procedimientos en Salud",
     "ct_term": "CUPS"
   },
-  "auth_rules": [],
-  "frequency_rules": [],
-  "code_maps": []
+  "auth_rules": [
+    {
+      "code": "879111",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografía axial computada de cráneo simple"
+    },
+    {
+      "code": "879112",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografía axial computada de cráneo con contraste"
+    },
+    {
+      "code": "879304",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografía computada de tórax de alta resolución (TCAR)"
+    },
+    {
+      "code": "879902",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografía computada de coronarias [AngioTC coronario]"
+    },
+    {
+      "code": "883101",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Resonancia nuclear magnética de cerebro"
+    },
+    {
+      "code": "883104",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Resonancia magnética de cerebro funcional"
+    },
+    {
+      "code": "883230",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Resonancia nuclear magnética de columna lumbosacra simple"
+    },
+    {
+      "code": "883231",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Resonancia nuclear magnética de columna lumbar con contraste"
+    },
+    {
+      "code": "883324",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Resonancia magnética de corazón con valoración funcional"
+    },
+    {
+      "code": "883410",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Angiorresonancia de abdomen"
+    },
+    {
+      "code": "882110",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Doppler de vasos del cuello (carótidas, vertebrales, yugular)"
+    },
+    {
+      "code": "881202",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ecocardiograma transtorácico"
+    },
+    {
+      "code": "881205",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ecocardiograma transesofágico"
+    },
+    {
+      "code": "881210",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ecocardiograma de stress con prueba de esfuerzo o farmacológica"
+    },
+    {
+      "code": "372202",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Cateterismo cardíaco del lado izquierdo del corazón"
+    },
+    {
+      "code": "360101",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Angioplastia coronaria transluminal percutánea uno o dos vasos"
+    },
+    {
+      "code": "361000",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Anastomosis aortocoronaria para revascularización miocárdica"
+    },
+    {
+      "code": "810802",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Artrodesis de la región lumbar o lumbosacra técnica posterior o posterolateral con instrumentación"
+    }
+  ],
+  "frequency_rules": [
+    {
+      "code": "879111",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Tomografía computada"
+    },
+    {
+      "code": "879112",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Tomografía computada con contraste"
+    },
+    {
+      "code": "879304",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Tomografía computada de alta resolución"
+    },
+    {
+      "code": "883101",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Resonancia magnética"
+    },
+    {
+      "code": "883104",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Resonancia magnética funcional"
+    },
+    {
+      "code": "883231",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Resonancia magnética con contraste"
+    },
+    {
+      "code": "882110",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Ecografía Doppler"
+    },
+    {
+      "code": "879902",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angiotomografía coronaria"
+    },
+    {
+      "code": "883410",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angiorresonancia"
+    },
+    {
+      "code": "881210",
+      "min_interval_days": 21,
+      "max_per_year": 12,
+      "severity": "alerta",
+      "notes": "Ecocardiograma con estrés"
+    },
+    {
+      "code": "881205",
+      "min_interval_days": 21,
+      "max_per_year": 12,
+      "severity": "alerta",
+      "notes": "Ecocardiograma transesofágico"
+    },
+    {
+      "code": "372202",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cateterismo cardíaco"
+    },
+    {
+      "code": "360101",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angioplastia coronaria"
+    },
+    {
+      "code": "361000",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cirugía cardiovascular (bypass)"
+    },
+    {
+      "code": "810802",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cirugía de columna"
+    }
+  ],
+  "code_maps": [
+    {
+      "local_code": "879111",
+      "standard_code_type": "CPT4",
+      "standard_code": "70450",
+      "local_desc": "Tomografía axial computada de cráneo simple",
+      "standard_desc": "CT head without contrast",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "883101",
+      "standard_code_type": "CPT4",
+      "standard_code": "70551",
+      "local_desc": "Resonancia nuclear magnética de cerebro",
+      "standard_desc": "MRI brain without contrast",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "883231",
+      "standard_code_type": "CPT4",
+      "standard_code": "70553",
+      "local_desc": "Resonancia nuclear magnética de columna lumbar con contraste",
+      "standard_desc": "MRI brain with and without contrast",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "882110",
+      "standard_code_type": "CPT4",
+      "standard_code": "93880",
+      "local_desc": "Doppler de vasos del cuello",
+      "standard_desc": "Extracranial doppler",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "372202",
+      "standard_code_type": "CPT4",
+      "standard_code": "93458",
+      "local_desc": "Cateterismo cardíaco del lado izquierdo",
+      "standard_desc": "Left heart catheterization",
+      "equivalence": "aproximada"
+    }
+  ]
 }

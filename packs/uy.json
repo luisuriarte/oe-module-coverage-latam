@@ -1,19 +1,244 @@
 {
   "country_code": "UY",
   "name": "Uruguay — FONASA y Seguros Privados",
-    "currency": {
+  "currency": {
     "code": "UYU",
     "name": "Peso uruguayo",
     "symbol": "$U"
   },
   "version": "1.0.0",
-  "description": "Registra el tipo de código NOMUY (Nomenclador Uruguay). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "description": "Nomenclador Uruguay. La alta complejidad (angioplastia, cateterismo, cirugía cardíaca, prótesis, marcapasos) se autoriza centralmente a través del FNR (Fondo Nacional de Recursos). Incluye reglas base de autorización y frecuencia para prácticas de alta complejidad. Ajustar por contrato con cada financiador desde Configuración & Reglas.",
   "code_type": {
     "ct_key": "NOMUY",
     "ct_name": "Nomenclador Uruguay",
     "ct_term": "NOMUY"
   },
-  "auth_rules": [],
-  "frequency_rules": [],
-  "code_maps": []
+  "auth_rules": [
+    {
+      "code": "380601",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografía computada"
+    },
+    {
+      "code": "380602",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Tomografía computada con contraste"
+    },
+    {
+      "code": "380605",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Resonancia magnética"
+    },
+    {
+      "code": "380606",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Resonancia magnética con contraste"
+    },
+    {
+      "code": "380611",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ecografía Doppler"
+    },
+    {
+      "code": "380612",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Angiotomografía"
+    },
+    {
+      "code": "380613",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Angiorresonancia"
+    },
+    {
+      "code": "380614",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ecocardiograma con estrés"
+    },
+    {
+      "code": "380615",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Cateterismo cardíaco (autorización FNR)"
+    },
+    {
+      "code": "380616",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Cirugía cardiovascular (bypass) (autorización FNR)"
+    },
+    {
+      "code": "380617",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Cirugía de columna"
+    },
+    {
+      "code": "380620",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Colocación de marcapasos (autorización FNR)"
+    },
+    {
+      "code": "380621",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Prótesis de cadera (autorización FNR)"
+    },
+    {
+      "code": "380622",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Prótesis de rodilla (autorización FNR)"
+    }
+  ],
+  "frequency_rules": [
+    {
+      "code": "380601",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Tomografía computada"
+    },
+    {
+      "code": "380605",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Resonancia magnética"
+    },
+    {
+      "code": "380611",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Ecografía Doppler"
+    },
+    {
+      "code": "380612",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angiotomografía"
+    },
+    {
+      "code": "380613",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angiorresonancia"
+    },
+    {
+      "code": "380614",
+      "min_interval_days": 21,
+      "max_per_year": 12,
+      "severity": "alerta",
+      "notes": "Ecocardiograma con estrés"
+    },
+    {
+      "code": "380615",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cateterismo cardíaco"
+    },
+    {
+      "code": "380616",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cirugía cardiovascular (bypass)"
+    },
+    {
+      "code": "380617",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cirugía de columna"
+    },
+    {
+      "code": "380620",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Marcapasos"
+    },
+    {
+      "code": "380621",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Prótesis de cadera"
+    },
+    {
+      "code": "380622",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Prótesis de rodilla"
+    }
+  ],
+  "code_maps": [
+    {
+      "local_code": "380601",
+      "standard_code_type": "CPT4",
+      "standard_code": "70450",
+      "local_desc": "Tomografía computada",
+      "standard_desc": "CT head without contrast",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "380605",
+      "standard_code_type": "CPT4",
+      "standard_code": "70551",
+      "local_desc": "Resonancia magnética",
+      "standard_desc": "MRI brain without contrast",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "380611",
+      "standard_code_type": "CPT4",
+      "standard_code": "93880",
+      "local_desc": "Ecografía Doppler",
+      "standard_desc": "Extracranial doppler",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "380615",
+      "standard_code_type": "CPT4",
+      "standard_code": "93458",
+      "local_desc": "Cateterismo cardíaco",
+      "standard_desc": "Left heart catheterization",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "380616",
+      "standard_code_type": "CPT4",
+      "standard_code": "33510",
+      "local_desc": "Cirugía cardiovascular (bypass)",
+      "standard_desc": "Coronary artery bypass graft",
+      "equivalence": "aproximada"
+    }
+  ]
 }

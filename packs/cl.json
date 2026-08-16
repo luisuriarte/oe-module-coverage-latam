@@ -1,19 +1,286 @@
 {
   "country_code": "CL",
   "name": "Chile — Isapres y Fonasa",
-    "currency": {
+  "currency": {
     "code": "CLP",
     "name": "Peso chileno",
     "symbol": "$"
   },
   "version": "1.0.0",
-  "description": "Registra el tipo de código NNCL (Nomenclador Chile). Las reglas de autorización y frecuencia se cargan desde Configuración & Reglas.",
+  "description": "Nomenclador Chile basado en el Arancel de Prestaciones de Salud FONASA Modalidad Libre Elección (MLE). Incluye reglas base de autorización y frecuencia para prácticas de alta complejidad. Ajustar por contrato con cada Isapre desde Configuración & Reglas.",
   "code_type": {
     "ct_key": "NNCL",
     "ct_name": "Nomenclador Chile",
     "ct_term": "Nomenclador Chile"
   },
-  "auth_rules": [],
-  "frequency_rules": [],
-  "code_maps": []
+  "auth_rules": [
+    {
+      "code": "0403001",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "TC cráneo encefálica"
+    },
+    {
+      "code": "0403008",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "TC columna cervical"
+    },
+    {
+      "code": "0403013",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "TC tórax"
+    },
+    {
+      "code": "0403014",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "TC abdomen"
+    },
+    {
+      "code": "0403016",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "TC pelvis"
+    },
+    {
+      "code": "0403101",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "TC angio encéfalo"
+    },
+    {
+      "code": "0403102",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "TC angio tórax"
+    },
+    {
+      "code": "0403106",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "TC angio cardíaco"
+    },
+    {
+      "code": "0405001",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "RM cráneo encefálica u oídos"
+    },
+    {
+      "code": "0405005",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "RM columna cervical"
+    },
+    {
+      "code": "0405007",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "RM columna lumbar"
+    },
+    {
+      "code": "0405016",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "RM columna total"
+    },
+    {
+      "code": "0405017",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "RM angio encéfalo"
+    },
+    {
+      "code": "1701007",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Ecocardiograma doppler"
+    },
+    {
+      "code": "1701012",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Sondaje cardíaco izquierdo"
+    },
+    {
+      "code": "1701019",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Cinecoronariografía"
+    },
+    {
+      "code": "1701031",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Angioplastia intraluminal coronaria"
+    },
+    {
+      "code": "1103069",
+      "auth_mode": "requerida",
+      "max_quantity": 1,
+      "priority": 100,
+      "notes": "Fijación de columna (cervical, dorsal, lumbar)"
+    }
+  ],
+  "frequency_rules": [
+    {
+      "code": "0403001",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Tomografía computada"
+    },
+    {
+      "code": "0403013",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Tomografía computada"
+    },
+    {
+      "code": "0403101",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angiotomografía"
+    },
+    {
+      "code": "0403106",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angiotomografía cardíaca"
+    },
+    {
+      "code": "0405001",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Resonancia magnética"
+    },
+    {
+      "code": "0405005",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Resonancia magnética"
+    },
+    {
+      "code": "0405007",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Resonancia magnética"
+    },
+    {
+      "code": "0405017",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angiorresonancia"
+    },
+    {
+      "code": "1701007",
+      "min_interval_days": 180,
+      "max_per_year": 2,
+      "severity": "alerta",
+      "notes": "Ecocardiograma"
+    },
+    {
+      "code": "1701019",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cinecoronariografía"
+    },
+    {
+      "code": "1701031",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angioplastia coronaria"
+    },
+    {
+      "code": "1701012",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cateterismo cardíaco"
+    },
+    {
+      "code": "0403102",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Angiotomografía de tórax"
+    },
+    {
+      "code": "1103069",
+      "min_interval_days": 365,
+      "max_per_year": 1,
+      "severity": "alerta",
+      "notes": "Cirugía de columna"
+    }
+  ],
+  "code_maps": [
+    {
+      "local_code": "0403001",
+      "standard_code_type": "CPT4",
+      "standard_code": "70450",
+      "local_desc": "TC cráneo encefálica",
+      "standard_desc": "CT head without contrast",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "0405001",
+      "standard_code_type": "CPT4",
+      "standard_code": "70551",
+      "local_desc": "RM cráneo encefálica u oídos",
+      "standard_desc": "MRI brain without contrast",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "0405017",
+      "standard_code_type": "CPT4",
+      "standard_code": "70544",
+      "local_desc": "RM angio encéfalo",
+      "standard_desc": "MRA head without contrast",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "1701007",
+      "standard_code_type": "CPT4",
+      "standard_code": "93306",
+      "local_desc": "Ecocardiograma doppler",
+      "standard_desc": "Echocardiography transthoracic complete",
+      "equivalence": "aproximada"
+    },
+    {
+      "local_code": "1701019",
+      "standard_code_type": "CPT4",
+      "standard_code": "93458",
+      "local_desc": "Cinecoronariografía",
+      "standard_desc": "Left heart catheterization",
+      "equivalence": "aproximada"
+    }
+  ]
 }
