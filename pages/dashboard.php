@@ -254,7 +254,7 @@ $covlI18n = [
     <title><?php echo xlt('Coberturas LATAM — Gestión'); ?></title>
     <?php Header::setupHeader(['bootstrap', 'fontawesome']); ?>
 <link rel="stylesheet" href="<?php echo $moduleBase; ?>/assets/css/admin-rules.css">
-    <link rel="stylesheet" href="<?php echo $moduleBase; ?>/assets/css/vendor/flag-icons/css/flag-icons.min.css">
+    <link rel="stylesheet" href="<?php echo $moduleBase; ?>/assets/vendor/flag-icons/css/flag-icons.min.css">
     <link rel="stylesheet" href="<?php echo $moduleBase; ?>/assets/css/dashboard.css">
     <style>
         .covl-header-banner {
