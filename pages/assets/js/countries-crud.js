@@ -243,7 +243,7 @@
             const res = await fetch(apiUrl('country_packs.php', { action: 'install' }), {
                 method: 'POST',
                 headers: csrfHeaders(),
-                body: JSON.stringify({ country_code: code }),
+                body: JSON.stringify({ country_code: code, csrf_token: covlConfig.csrfToken }),
             });
             const json = await res.json();
             if (!res.ok || json.error) throw new Error(json.error || t('error_install'));
@@ -264,7 +264,7 @@
             const res = await fetch(apiUrl('country_packs.php', { action: 'reimport' }), {
                 method: 'POST',
                 headers: csrfHeaders(),
-                body: JSON.stringify({ country_code: code }),
+                body: JSON.stringify({ country_code: code, csrf_token: covlConfig.csrfToken }),
             });
             const json = await res.json();
             if (!res.ok || json.error) throw new Error(json.error || t('error_reimport'));

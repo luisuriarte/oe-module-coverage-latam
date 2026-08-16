@@ -28,7 +28,7 @@ use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Service\CountryPackCatalog;
 use OpenEMR\Modules\CoverageLatam\Service\CountryPackImporter;
 
-if (empty($session->get('authUserID'))) {
+if (empty($_SESSION['authUserID'])) {
     http_response_code(401);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['error' => xl('No autenticado')]);
@@ -39,9 +39,21 @@ header('Content-Type: application/json; charset=utf-8');
 
 $action = $_REQUEST['action'] ?? '';
 
+// ---------------------------------------------------------------------------
+// Lectura del body (form-data o JSON) — se hace primero porque las mutaciones
+// pueden enviar el token CSRF tanto en el header como en el payload.
+// ---------------------------------------------------------------------------
+$body = array_merge($_POST, []);
+if (empty($body)) {
+    $parsed = json_decode((string) file_get_contents('php://input'), true);
+    $body   = is_array($parsed) ? $parsed : [];
+}
+
 // Seguridad: verificar CSRF en mutaciones
 if ($action === 'install' || $action === 'reimport') {
-    $csrfToken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? ($_POST['csrf_token'] ?? '');
+    $csrfToken = $_SERVER['HTTP_X_CSRF_TOKEN']
+        ?? ($body['csrf_token'] ?? '')
+        ?? ($_POST['csrf_token'] ?? '');
     if (!CsrfCompat::verifyCsrfToken($csrfToken)) {
         http_response_code(403);
         echo json_encode(['error' => xl('Token CSRF inválido')], JSON_UNESCAPED_UNICODE);
@@ -84,12 +96,7 @@ if ($action === 'catalog') {
     }
     covl_json(['data' => $rows]);
 } elseif ($action === 'install' || $action === 'reimport') {
-    // Soporta form-data y body JSON (como las demás APIs del módulo)
-    $data  = array_merge($_POST, []);
-    if (empty($data)) {
-        $data = json_decode((string) file_get_contents('php://input'), true) ?: [];
-    }
-    $code = strtoupper(trim((string) ($data['country_code'] ?? '')));
+    $code = strtoupper(trim((string) ($body['country_code'] ?? '')));
     if ($catalog->get($code) === null) {
         covl_json(['error' => xl('Paquete no encontrado en el catálogo')], 404);
     }

@@ -38,7 +38,7 @@ use OpenEMR\Common\Acl\AclMain;
 use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Repository\SettlementBatchRepository;
 
-if (empty($session->get('authUserID'))) {
+if (empty($_SESSION['authUserID'])) {
     http_response_code(401);
     header('Content-Type: application/json');
     echo json_encode(['error' => xl('No autenticado')]);
@@ -149,7 +149,7 @@ try {
             if (empty($data['insurance_company_id']) || empty($data['period_from']) || empty($data['period_to'])) {
                 covl_json(['error' => xl('Campos requeridos: insurance_company_id, period_from, period_to')], 422);
             }
-            $data['created_by'] = (int) ($session->get('authUserID') ?? 0) ?: null;
+            $data['created_by'] = (int) ($_SESSION['authUserID'] ?? 0) ?: null;
             // País activo de la configuración (por defecto AR)
             $conf = sqlQuery("SELECT country_code FROM covl_config WHERE facility_id = 0 LIMIT 1");
             $data['country_code'] = $conf['country_code'] ?? 'AR';

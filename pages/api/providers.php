@@ -34,7 +34,7 @@ use OpenEMR\Common\Acl\AclMain;
 use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Repository\ProviderCoverageRepository;
 
-if (empty($session->get('authUserID'))) {
+if (empty($_SESSION['authUserID'])) {
     http_response_code(401);
     header('Content-Type: application/json');
     echo json_encode(['error' => xl('No autenticado')]);
