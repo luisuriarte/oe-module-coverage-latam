@@ -1261,7 +1261,7 @@ $covlI18n = [
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-shield-halved text-primary me-2"></i><?php echo xlt('Regla de Autorización'); ?></h5>
+                    <h5 class="modal-title fw-bold" id="covlAuthModalLabel"><i class="fa-solid fa-shield-halved text-primary me-2"></i><?php echo xlt('Regla de Autorización'); ?></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('covlAuthModal')"></button>
                 </div>
                 <form id="covl-auth-form" onsubmit="event.preventDefault(); COVL.Auth.save();">
@@ -1355,7 +1355,7 @@ $covlI18n = [
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-clock-rotate-left text-primary me-2"></i><?php echo xlt('Regla de Frecuencia'); ?></h5>
+                    <h5 class="modal-title fw-bold" id="covlFreqModalLabel"><i class="fa-solid fa-clock-rotate-left text-primary me-2"></i><?php echo xlt('Regla de Frecuencia'); ?></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('covlFreqModal')"></button>
                 </div>
                 <form id="covl-freq-form" onsubmit="event.preventDefault(); COVL.Freq.save();">
