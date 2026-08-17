@@ -273,8 +273,6 @@ $existsRow = sqlQuery(
 
             $shouldInsert = !$exists;
 
-            error_log("[covl] AuthRule debug: code={$code}, type={$codeTypeKey}, exists={$exists}, shouldInsert={$shouldInsert}");
-
             if ($shouldInsert) {
                 sqlStatement(
                     "INSERT INTO covl_auth_rules
@@ -324,7 +322,6 @@ $existsRow = sqlQuery(
                 );
                 $result['updated']++;
             }
-            error_log("[covl] AuthRule: code={$code}, type={$codeTypeKey}, action=" . ($exists ? 'UPDATE' : 'INSERT') . ", shouldInsert={$shouldInsert}");
         }
         error_log("[covl] AuthRules summary: inserted={$result['inserted']}, updated={$result['updated']}");
         return $result;
@@ -402,7 +399,6 @@ $existsRow = sqlQuery(
                 );
                 $result['inserted']++;
             }
-            error_log("[covl] FreqRule: code={$code}, type={$codeTypeKey}, action=" . ($exists ? 'UPDATE' : 'INSERT'));
         }
         error_log("[covl] FrequencyRules summary: inserted={$result['inserted']}, updated={$result['updated']}");
         return $result;
