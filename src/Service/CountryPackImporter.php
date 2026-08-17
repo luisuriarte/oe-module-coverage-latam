@@ -247,6 +247,7 @@ class CountryPackImporter
     private function upsertAuthRules(string $countryCode, string $codeTypeKey, array $rules): array
     {
         $result = ['inserted' => 0, 'updated' => 0];
+        error_log("[covl] upsertAuthRules START: country={$countryCode}, type={$codeTypeKey}, rulesType=" . gettype($rules) . ", rulesCount=" . (is_array($rules) ? count($rules) : 'N/A') . ", rulesFirst=" . print_r($rules[0] ?? 'EMPTY', true));
         foreach ($rules as $rule) {
             if (!is_array($rule)) {
                 continue;
@@ -263,42 +264,70 @@ class CountryPackImporter
                 : null;
             $notes    = (string) ($rule['notes'] ?? '');
 
-            $exists = sqlQuery(
+$existsRow = sqlQuery(
                 "SELECT id FROM covl_auth_rules
                  WHERE insurance_company_id = 0 AND plan_pattern = ? AND code_type = ? AND code = ?
                  LIMIT 1",
                 [$planPattern, $codeTypeKey, $code]
             );
+            $exists = is_array($existsRow);
 
-            sqlStatement(
-                "INSERT INTO covl_auth_rules
-                    (insurance_company_id, plan_pattern, code_type, code, auth_mode, max_quantity, priority, active, country_code, notes)
-                 VALUES (0, ?, ?, ?, ?, ?, ?, 1, ?, ?)
-                 ON DUPLICATE KEY UPDATE
-                    auth_mode = VALUES(auth_mode),
-                    max_quantity = VALUES(max_quantity),
-                    priority = VALUES(priority),
-                    active = 1,
-                    country_code = VALUES(country_code),
-                    notes = VALUES(notes)",
-                [
-                    $planPattern,
-                    $codeTypeKey,
-                    $code,
-                    $authMode,
-                    $maxQty,
-                    $priority,
-                    $countryCode,
-                    $notes,
-                ]
-            );
+            $shouldInsert = !$exists;
 
-            if ($exists) {
-                $result['updated']++;
-            } else {
+            error_log("[covl] AuthRule debug: code={$code}, type={$codeTypeKey}, exists={$exists}, shouldInsert={$shouldInsert}");
+
+            if ($shouldInsert) {
+                sqlStatement(
+                    "INSERT INTO covl_auth_rules
+                        (insurance_company_id, plan_pattern, code_type, code, auth_mode, max_quantity, priority, active, country_code, notes)
+                     VALUES (0, ?, ?, ?, ?, ?, ?, 1, ?, ?)
+                     ON DUPLICATE KEY UPDATE
+                        auth_mode = VALUES(auth_mode),
+                        max_quantity = VALUES(max_quantity),
+                        priority = VALUES(priority),
+                        active = 1,
+                        country_code = VALUES(country_code),
+                        notes = VALUES(notes)",
+                    [
+                        $planPattern,
+                        $codeTypeKey,
+                        $code,
+                        $authMode,
+                        $maxQty,
+                        $priority,
+                        $countryCode,
+                        $notes,
+                    ]
+                );
                 $result['inserted']++;
+            } else {
+                sqlStatement(
+                    "INSERT INTO covl_auth_rules
+                        (insurance_company_id, plan_pattern, code_type, code, auth_mode, max_quantity, priority, active, country_code, notes)
+                     VALUES (0, ?, ?, ?, ?, ?, ?, 1, ?, ?)
+                     ON DUPLICATE KEY UPDATE
+                        auth_mode = VALUES(auth_mode),
+                        max_quantity = VALUES(max_quantity),
+                        priority = VALUES(priority),
+                        active = 1,
+                        country_code = VALUES(country_code),
+                        notes = VALUES(notes)",
+                    [
+                        $planPattern,
+                        $codeTypeKey,
+                        $code,
+                        $authMode,
+                        $maxQty,
+                        $priority,
+                        $countryCode,
+                        $notes,
+                    ]
+                );
+                $result['updated']++;
             }
+            error_log("[covl] AuthRule: code={$code}, type={$codeTypeKey}, action=" . ($exists ? 'UPDATE' : 'INSERT') . ", shouldInsert={$shouldInsert}");
         }
+        error_log("[covl] AuthRules summary: inserted={$result['inserted']}, updated={$result['updated']}");
         return $result;
     }
 
@@ -326,41 +355,57 @@ class CountryPackImporter
             $severity    = (string) ($rule['severity'] ?? 'alerta');
             $notes       = (string) ($rule['notes'] ?? '');
 
-            $exists = sqlQuery(
+            $existsRow = sqlQuery(
                 "SELECT id FROM covl_frequency_rules
                  WHERE insurance_company_id = 0 AND code_type = ? AND code = ?
                  LIMIT 1",
                 [$codeTypeKey, $code]
             );
-
-            sqlStatement(
-                "INSERT INTO covl_frequency_rules
-                    (insurance_company_id, code_type, code, min_interval_days, max_per_year, severity, active, country_code, notes)
-                 VALUES (0, ?, ?, ?, ?, ?, 1, ?, ?)
-                 ON DUPLICATE KEY UPDATE
-                    min_interval_days = VALUES(min_interval_days),
-                    max_per_year = VALUES(max_per_year),
-                    severity = VALUES(severity),
-                    active = 1,
-                    country_code = VALUES(country_code),
-                    notes = VALUES(notes)",
-                [
-                    $codeTypeKey,
-                    $code,
-                    $minInterval,
-                    $maxPerYear,
-                    $severity,
-                    $countryCode,
-                    $notes,
-                ]
-            );
+            $exists = is_array($existsRow);
 
             if ($exists) {
+                sqlStatement(
+                    "INSERT INTO covl_frequency_rules
+                        (insurance_company_id, code_type, code, min_interval_days, max_per_year, severity, active, country_code, notes)
+                     VALUES (0, ?, ?, ?, ?, ?, 1, ?, ?)
+                     ON DUPLICATE KEY UPDATE
+                        min_interval_days = VALUES(min_interval_days),
+                        max_per_year = VALUES(max_per_year),
+                        severity = VALUES(severity),
+                        active = 1,
+                        country_code = VALUES(country_code),
+                        notes = VALUES(notes)",
+                    [
+                        $codeTypeKey,
+                        $code,
+                        $minInterval,
+                        $maxPerYear,
+                        $severity,
+                        $countryCode,
+                        $notes,
+                    ]
+                );
                 $result['updated']++;
             } else {
+                sqlStatement(
+                    "INSERT INTO covl_frequency_rules
+                        (insurance_company_id, code_type, code, min_interval_days, max_per_year, severity, active, country_code, notes)
+                     VALUES (0, ?, ?, ?, ?, ?, 1, ?, ?)",
+                    [
+                        $codeTypeKey,
+                        $code,
+                        $minInterval,
+                        $maxPerYear,
+                        $severity,
+                        $countryCode,
+                        $notes,
+                    ]
+                );
                 $result['inserted']++;
             }
+            error_log("[covl] FreqRule: code={$code}, type={$codeTypeKey}, action=" . ($exists ? 'UPDATE' : 'INSERT'));
         }
+        error_log("[covl] FrequencyRules summary: inserted={$result['inserted']}, updated={$result['updated']}");
         return $result;
     }
 
@@ -396,12 +441,13 @@ class CountryPackImporter
             $localDesc = (string) ($map['local_desc'] ?? '');
             $stdDesc   = (string) ($map['standard_desc'] ?? '');
 
-            $exists = sqlQuery(
+            $existsRow = sqlQuery(
                 "SELECT id FROM covl_country_code_maps
                  WHERE local_code_type = ? AND local_code = ? AND standard_code_type = ? AND standard_code = ?
                  LIMIT 1",
                 [$codeTypeKey, $localCode, $stdType, $stdCode]
             );
+            $exists = is_array($existsRow);
 
             $columns  = ['country_code', 'local_code_type', 'local_code', 'standard_code_type', 'standard_code'];
             $values   = [$countryCode, $codeTypeKey, $localCode, $stdType, $stdCode];
@@ -454,13 +500,14 @@ class CountryPackImporter
             return;
         }
 
-        $exists = sqlQuery("SELECT ct_id FROM code_types WHERE ct_key = ? LIMIT 1", [$ctKey]);
-        if ($exists) {
+        $existsRow = sqlQuery("SELECT ct_id FROM code_types WHERE ct_key = ? LIMIT 1", [$ctKey]);
+        if (is_array($existsRow)) {
             return; // Ya registrado
         }
 
         $columns = $this->tableColumns('code_types');
-        $nextId  = (int) (sqlQuery("SELECT COALESCE(MAX(ct_id), 100) + 1 AS next_id FROM code_types")['next_id'] ?? 100);
+        $nextIdRow = sqlQuery("SELECT COALESCE(MAX(ct_id), 100) + 1 AS next_id FROM code_types");
+        $nextId = (int) (is_array($nextIdRow) ? ($nextIdRow['next_id'] ?? 100) : 100);
 
         $fields = [];
         $params = [];

@@ -56,6 +56,9 @@ class CountryPackCatalog
             return null;
         }
         $contents = json_decode((string) file_get_contents($file), true);
+        if (is_array($contents)) {
+            error_log("[covl] CountryPackCatalog::get({$countryCode}): file={$file}, auth_rules=" . count($contents['auth_rules'] ?? []) . ", freq_rules=" . count($contents['frequency_rules'] ?? []) . ", code_maps=" . count($contents['code_maps'] ?? []));
+        }
         return is_array($contents) ? $contents : null;
     }
 

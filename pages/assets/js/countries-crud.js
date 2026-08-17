@@ -270,6 +270,12 @@
             if (!res.ok || json.error) throw new Error(json.error || t('error_reimport'));
             toast(`${t('country_reimported')}: ${code}`, 'success');
             await loadInstalled();
+            // Auto-cambiar filtros a "— Todos —" para ver las reglas recién importadas
+            const authFilter = document.getElementById('flt-auth-country');
+            if (authFilter) authFilter.value = '';
+            const freqFilter = document.getElementById('flt-freq-country');
+            if (freqFilter) freqFilter.value = '';
+            toast('Reglas actualizadas para ' + code + '. Filtrado en "— Todos —".', 'info');
         } catch (e) {
             toast(e.message || t('error_reimport'), 'error');
         }

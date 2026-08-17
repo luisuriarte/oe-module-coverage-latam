@@ -28,6 +28,7 @@ use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Service\CountryPackCatalog;
 use OpenEMR\Modules\CoverageLatam\Service\CountryPackImporter;
 
+// Session null-safety: verificar que $session esté disponible antes de usarlo
 $authUserId = null;
 if (is_object($session) && method_exists($session, 'get')) {
     $authUserId = $session->get('authUserID');
@@ -52,13 +53,32 @@ $parsed = json_decode((string) file_get_contents('php://input'), true);
 $body   = array_merge(is_array($parsed) ? $parsed : [], $_POST);
 
 // Seguridad: verificar CSRF en mutaciones
+// El JS envía el token tanto en el header X-CSRF-Token como en el body csrf_token.
+// Nos fijamos primero en el body (más confiable para JSON), luego en el header.
 if ($action === 'install' || $action === 'reimport') {
-    $csrfToken = $_SERVER['HTTP_X_CSRF_TOKEN']
-        ?? ($body['csrf_token'] ?? '')
-        ?? ($_POST['csrf_token'] ?? '');
+    $receivedBodyToken = $body['csrf_token'] ?? '';
+    $receivedPostToken = $_POST['csrf_token'] ?? '';
+    $receivedHeaderToken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+
+    // Loguear valores de depuración en error_log
+    error_log('[covl] CSRF debug - body: "' . $receivedBodyToken . '", post: "' . $receivedPostToken . '", header: "' . $receivedHeaderToken . '"');
+
+    $csrfToken = $receivedBodyToken
+        ?? $receivedPostToken
+        ?? $receivedHeaderToken;
+
+    // Validar token CSRF
     if (!CsrfCompat::verifyCsrfToken($csrfToken)) {
+        // Respuesta de diagnóstico para depurar
+        $diag = [
+            'csrf_error' => 'Token CSRF inválido',
+            'received_body_token' => $receivedBodyToken ? 'PRESENT' : 'MISSING',
+            'received_post_token' => $receivedPostToken ? 'PRESENT' : 'MISSING',
+            'received_header_token' => $receivedHeaderToken ? 'PRESENT' : 'MISSING',
+            'note' => 'Si received_body_token es MISSING, el JSON body no se parsea correctamente'
+        ];
         http_response_code(403);
-        echo json_encode(['error' => xl('Token CSRF inválido')], JSON_UNESCAPED_UNICODE);
+        echo json_encode($diag, JSON_UNESCAPED_UNICODE);
         exit;
     }
 }
@@ -104,9 +124,30 @@ if ($action === 'catalog') {
     }
     try {
         $result = (new CountryPackImporter())->importCountryPack($code);
+        // Loguear éxito con detalles del resultado para depuración
+        error_log('[covl] Import success: code=' . $code . ' result=' . print_r($result, true));
         covl_json(['ok' => true, 'data' => $result]);
     } catch (\Throwable $e) {
-        covl_json(['error' => $e->getMessage()], 500);
+        // Capturar error completo incluyendo el de MySQL
+        $errorMsg = 'Error al importar el paquete ' . $code . ': ' . $e->getMessage();
+        if (method_exists($e, 'getPrevious')) {
+            $prev = $e->getPrevious();
+            if ($prev !== null) {
+                $errorMsg .= ' - Caused by: ' . $prev->getMessage();
+            }
+        }
+        error_log('[covl] ERROR importing country pack ' . $code . ': ' . $errorMsg . ' in ' . $e->getFile() . ':' . $e->getLine());
+        // Respuesta de error detallada para diagnóstico
+        $errorDetail = [
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ];
+        $prev = $e->getPrevious();
+        if ($prev !== null && method_exists($prev, 'getCode')) {
+            $errorDetail['errno'] = $prev->getCode();
+        }
+        covl_json(['error' => $errorDetail], 500);
     }
 }
 
