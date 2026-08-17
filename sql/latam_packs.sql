@@ -3,10 +3,49 @@
 -- BASE DE DATOS: MariaDB / MySQL
 -- TABLA: cpt_codes
 -- DESCRIPCIÓN: Códigos CPT4 reales extraídos de fuentes públicas
--- CANTIDAD: 280+ códigos reales
+-- CANTIDAD: 500+ códigos reales (en crecimiento)
+-- 
+-- ESTRUCTURA DEL CATÁLOGO POR SECCIONES:
+-- ============================================================
+-- 
+-- 1. EVALUACIÓN Y MANEJO (E/M)          -> 99202-99215, G2211
+-- 2. PSICOTERAPIA Y SALUD MENTAL        -> 90791-90853
+-- 3. CIRUGÍA GENERAL                    -> 10060-64999 (selección)
+-- 4. CIRUGÍA DE COLUMNA                 -> 22551-63075
+-- 5. ANESTESIA                          -> 00104-01922
+-- 6. NEUROCIRUGÍA Y RADIOCIRUGÍA        -> 61520-77432
+-- 7. NUEVOS CPT 2025 (Cirugía General)  -> 49186-49190
+-- 8. SCSA (Injerto de Células Cutáneas) -> 15011-15018
+-- 9. UROLOGÍA PERCUTÁNEA                -> 50382-50706
+-- 10. INMUNIZACIONES Y VACUNAS (2026)   -> 90480-90613, 87812
+-- 11. OFTALMOLOGÍA (Corneal)            -> 65272-65855
+-- 12. RADIOLOGÍA INTERVENCIONISTA (Vasc)-> 37255-37273
+-- 13. CARDIOLOGÍA E INTERVENCIONISMO    -> 92920-93453
+-- 14. CUIDADOS PALIATIVOS / HOSPICIO    -> 99377-99378
+-- 15. NEUROESTIMULACIÓN                 -> 63685-64595
+-- 16. ECOCARDIOGRAFÍA                   -> 93303-93351
+-- 17. CIRUGÍA PLÁSTICA Y RECONSTRUCTIVA -> 15847-21275
+-- 18. REHABILITACIÓN Y TERAPIA FÍSICA   -> 97001-97760
+-- 19. MEDICINA DEL DOLOR                -> 62310-64490
+-- 20. MEDICINA PREVENTIVA Y CONDUCTUAL  -> 99401-99484
+-- 21. CIRUGÍA VASCULAR                  -> 37241-37722
+-- 22. CATEGORÍAS II Y III               -> 0001F-1053T
+-- 23. RADIOLOGÍA (RX, TAC, RMN, US)     -> 71045-76999
+-- 24. MAMOGRAFÍA Y DENSITOMETRÍA ÓSEA   -> 77046-77086
+-- 25. RADIOLOGÍA INTERVENCIONISTA (S&I) -> 75820-75989
+-- 26. RADIOTERAPIA                      -> 77261-77799
+-- 27. MEDICINA NUCLEAR                  -> 78012-78999
+-- 28. PATOLOGÍA Y LABORATORIO (Paneles) -> 80047-80081
+-- 29. PATOLOGÍA Y LABORATORIO (Química) -> 82681-85027
+-- 30. MICROBIOLOGÍA E INMUNOLOGÍA       -> 86000-87999
+-- 31. CÓDIGOS PLA (Propietarios)        -> 0552U-0574U
+-- 32. PATOLOGÍA QUIRÚRGICA              -> 88300-88309
+-- 
+-- ============================================================
 -- NOTA: Este archivo contiene códigos CPT reales de la AMA
---       extraídos de fuentes públicas (CMS, AMA, AAPC, ACS)
---       NO es un catálogo completo ni oficial
+--       extraídos de fuentes públicas (CMS, AMA, AAPC, ACS, NCQA)
+--       NO es un catálogo completo ni oficial.
+--       Para uso comercial se requiere licencia de la AMA.
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS cpt_codes (
