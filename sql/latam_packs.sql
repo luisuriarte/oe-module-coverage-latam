@@ -3047,27 +3047,1519 @@ INSERT INTO cpt_codes (
 ('1053T', 'Nuevo', 'Monitoreo IC - reprogramación', 'Monitoreo subcutáneo de descompensación cardíaca - reprogramación',
  'Subcutaneous heart failure decompensation monitoring, device reprogramming. ',
  'Categoría III', 'Cardiología', 0.000, 0.000, 0.000,
- 'Reprogramación del dispositivo de monitorización subcutánea de insuficiencia cardíaca.', 'Sí', 2026, 'AMA');
+ 'Reprogramación del dispositivo de monitorización subcutánea de insuficiencia cardíaca.', 'Sí', 2026, 'AMA'),
+
+ -- ============================================================
+-- 22. RADIOLOGÍA - DIAGNÓSTICO POR IMÁGENES (70010-73222)
+-- Fuente: AMA, CMS, ACR
+-- ============================================================
+
+-- ------------------------------------------------------------
+-- 22.1 RADIOGRAFÍA DE TÓRAX - 71045-71048
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+('71045', 'Vigente', 'RX tórax 1 vista', 'Radiografía de tórax, 1 vista',
+ 'Radiografía de tórax, una vista (proyección frontal).',
+ 'Radiología', 'Torácica', 0.250, 0.350, 0.040,
+ 'Se toma una radiografía del pecho (1 vista)', 'No', 2024, 'AMA/CMS'),
+
+('71046', 'Vigente', 'RX tórax 2 vistas', 'Radiografía de tórax, 2 vistas',
+ 'Radiografía de tórax, dos vistas (frontal y lateral).',
+ 'Radiología', 'Torácica', 0.350, 0.500, 0.050,
+ 'Se toman dos radiografías del pecho', 'No', 2024, 'AMA/CMS'),
+
+('71047', 'Vigente', 'RX tórax 3 vistas', 'Radiografía de tórax, 3 vistas',
+ 'Radiografía de tórax, tres vistas.',
+ 'Radiología', 'Torácica', 0.450, 0.600, 0.060,
+ 'Se toman tres radiografías del pecho', 'No', 2024, 'AMA/CMS'),
+
+('71048', 'Vigente', 'RX tórax 4+ vistas', 'Radiografía de tórax, 4 o más vistas',
+ 'Radiografía de tórax, cuatro o más vistas.',
+ 'Radiología', 'Torácica', 0.550, 0.700, 0.070,
+ 'Se toman cuatro o más radiografías del pecho', 'No', 2024, 'AMA/CMS'),
+
+-- ------------------------------------------------------------
+-- 22.2 RADIOGRAFÍA DE COLUMNA - 72010-72092
+-- ============================================================
+
+('72010', 'Vigente', 'RX columna completa', 'Radiografía de columna completa (escoliosis)',
+ 'Radiografía de columna vertebral completa en posición erecta (AP y lateral), para evaluar escoliosis.',
+ 'Radiología', 'Musculoesquelética', 0.800, 1.200, 0.150,
+ 'Se toma una radiografía de toda la columna', 'No', 2024, 'AMA/CMS'),
+
+('72020', 'Vigente', 'RX columna 1 vista', 'Radiografía de columna, 1 vista',
+ 'Radiografía de columna vertebral, una vista (AP o lateral).',
+ 'Radiología', 'Musculoesquelética', 0.300, 0.400, 0.050,
+ 'Se toma una radiografía de la columna', 'No', 2024, 'AMA/CMS'),
+
+('72040', 'Vigente', 'RX columna cervical 2-3 vistas', 'Radiografía de columna cervical, 2-3 vistas',
+ 'Radiografía de columna cervical, 2-3 vistas (AP, lateral, oblicuas).',
+ 'Radiología', 'Musculoesquelética', 0.400, 0.600, 0.060,
+ 'Se toman 2-3 radiografías del cuello', 'No', 2024, 'AMA/CMS'),
+
+('72050', 'Vigente', 'RX columna cervical 4-5 vistas', 'Radiografía de columna cervical, 4-5 vistas',
+ 'Radiografía de columna cervical, 4-5 vistas (AP, lateral, oblicuas y flexión/extensión).',
+ 'Radiología', 'Musculoesquelética', 0.500, 0.700, 0.080,
+ 'Se toman 4-5 radiografías del cuello', 'No', 2024, 'AMA/CMS'),
+
+('72070', 'Vigente', 'RX columna torácica 2-3 vistas', 'Radiografía de columna torácica, 2-3 vistas',
+ 'Radiografía de columna torácica, 2-3 vistas (AP y lateral).',
+ 'Radiología', 'Musculoesquelética', 0.400, 0.600, 0.060,
+ 'Se toman 2-3 radiografías de la columna torácica', 'No', 2024, 'AMA/CMS'),
+
+('72080', 'Vigente', 'RX columna lumbar 2-3 vistas', 'Radiografía de columna lumbar, 2-3 vistas',
+ 'Radiografía de columna lumbar, 2-3 vistas (AP y lateral).',
+ 'Radiología', 'Musculoesquelética', 0.400, 0.600, 0.060,
+ 'Se toman 2-3 radiografías de la columna lumbar', 'No', 2024, 'AMA/CMS'),
+
+('72100', 'Vigente', 'RX columna lumbar 4-5 vistas', 'Radiografía de columna lumbar, 4-5 vistas',
+ 'Radiografía de columna lumbar, 4-5 vistas (AP, lateral, oblicuas y flexión/extensión).',
+ 'Radiología', 'Musculoesquelética', 0.500, 0.700, 0.080,
+ 'Se toman 4-5 radiografías de la columna lumbar', 'No', 2024, 'AMA/CMS'),
+
+('72110', 'Vigente', 'RX columna lumbosacra', 'Radiografía de columna lumbosacra, 2-3 vistas',
+ 'Radiografía de columna lumbosacra, 2-3 vistas (AP y lateral).',
+ 'Radiología', 'Musculoesquelética', 0.400, 0.600, 0.060,
+ 'Se toman radiografías de la columna lumbosacra', 'No', 2024, 'AMA/CMS'),
+
+-- ------------------------------------------------------------
+-- 22.3 RADIOGRAFÍA DE EXTREMIDADES - 73000-73762
+-- ============================================================
+
+('73020', 'Vigente', 'RX hombro 2 vistas', 'Radiografía de hombro, 2 vistas',
+ 'Radiografía de hombro, 2 vistas (AP y axial).',
+ 'Radiología', 'Musculoesquelética', 0.300, 0.400, 0.040,
+ 'Se toman 2 radiografías del hombro', 'No', 2024, 'AMA/CMS'),
+
+('73030', 'Vigente', 'RX hombro 3+ vistas', 'Radiografía de hombro, 3+ vistas',
+ 'Radiografía de hombro, 3 o más vistas.',
+ 'Radiología', 'Musculoesquelética', 0.400, 0.550, 0.050,
+ 'Se toman 3 o más radiografías del hombro', 'No', 2024, 'AMA/CMS'),
+
+('73070', 'Vigente', 'RX codo 2 vistas', 'Radiografía de codo, 2 vistas',
+ 'Radiografía de codo, 2 vistas (AP y lateral).',
+ 'Radiología', 'Musculoesquelética', 0.250, 0.350, 0.040,
+ 'Se toman 2 radiografías del codo', 'No', 2024, 'AMA/CMS'),
+
+('73080', 'Vigente', 'RX codo 3+ vistas', 'Radiografía de codo, 3+ vistas',
+ 'Radiografía de codo, 3 o más vistas.',
+ 'Radiología', 'Musculoesquelética', 0.350, 0.480, 0.050,
+ 'Se toman 3 o más radiografías del codo', 'No', 2024, 'AMA/CMS'),
+
+('73090', 'Vigente', 'RX antebrazo 2 vistas', 'Radiografía de antebrazo, 2 vistas',
+ 'Radiografía de antebrazo, 2 vistas (AP y lateral).',
+ 'Radiología', 'Musculoesquelética', 0.250, 0.350, 0.040,
+ 'Se toman 2 radiografías del antebrazo', 'No', 2024, 'AMA/CMS'),
+
+('73092', 'Vigente', 'RX antebrazo 3+ vistas', 'Radiografía de antebrazo, 3+ vistas',
+ 'Radiografía de antebrazo, 3 o más vistas.',
+ 'Radiología', 'Musculoesquelética', 0.350, 0.480, 0.050,
+ 'Se toman 3 o más radiografías del antebrazo', 'No', 2024, 'AMA/CMS'),
+
+('73100', 'Vigente', 'RX muñeca 2 vistas', 'Radiografía de muñeca, 2 vistas',
+ 'Radiografía de muñeca, 2 vistas (AP y lateral).',
+ 'Radiología', 'Musculoesquelética', 0.250, 0.350, 0.040,
+ 'Se toman 2 radiografías de la muñeca', 'No', 2024, 'AMA/CMS'),
+
+('73110', 'Vigente', 'RX muñeca 3+ vistas', 'Radiografía de muñeca, 3+ vistas',
+ 'Radiografía de muñeca, 3 o más vistas.',
+ 'Radiología', 'Musculoesquelética', 0.350, 0.480, 0.050,
+ 'Se toman 3 o más radiografías de la muñeca', 'No', 2024, 'AMA/CMS'),
+
+('73120', 'Vigente', 'RX mano 2 vistas', 'Radiografía de mano, 2 vistas',
+ 'Radiografía de mano, 2 vistas (AP y oblicua).',
+ 'Radiología', 'Musculoesquelética', 0.250, 0.350, 0.040,
+ 'Se toman 2 radiografías de la mano', 'No', 2024, 'AMA/CMS'),
+
+('73130', 'Vigente', 'RX mano 3+ vistas', 'Radiografía de mano, 3+ vistas',
+ 'Radiografía de mano, 3 o más vistas.',
+ 'Radiología', 'Musculoesquelética', 0.350, 0.480, 0.050,
+ 'Se toman 3 o más radiografías de la mano', 'No', 2024, 'AMA/CMS'),
+
+('73510', 'Vigente', 'RX cadera 2 vistas', 'Radiografía de cadera, 2 vistas',
+ 'Radiografía de cadera, 2 vistas (AP y lateral).',
+ 'Radiología', 'Musculoesquelética', 0.350, 0.480, 0.050,
+ 'Se toman 2 radiografías de la cadera', 'No', 2024, 'AMA/CMS'),
+
+('73520', 'Vigente', 'RX cadera bilateral', 'Radiografía de cadera bilateral',
+ 'Radiografía de cadera bilateral, 2 vistas por lado.',
+ 'Radiología', 'Musculoesquelética', 0.500, 0.700, 0.080,
+ 'Se toman radiografías de ambas caderas', 'No', 2024, 'AMA/CMS'),
+
+('73560', 'Vigente', 'RX rodilla 2 vistas', 'Radiografía de rodilla, 2 vistas',
+ 'Radiografía de rodilla, 2 vistas (AP y lateral).',
+ 'Radiología', 'Musculoesquelética', 0.250, 0.350, 0.040,
+ 'Se toman 2 radiografías de la rodilla', 'No', 2024, 'AMA/CMS'),
+
+('73562', 'Vigente', 'RX rodilla 3 vistas', 'Radiografía de rodilla, 3 vistas',
+ 'Radiografía de rodilla, 3 vistas (AP, lateral y oblicua).',
+ 'Radiología', 'Musculoesquelética', 0.350, 0.480, 0.050,
+ 'Se toman 3 radiografías de la rodilla', 'No', 2024, 'AMA/CMS'),
+
+('73564', 'Vigente', 'RX rodilla 4+ vistas', 'Radiografía de rodilla, 4+ vistas',
+ 'Radiografía de rodilla, 4 o más vistas.',
+ 'Radiología', 'Musculoesquelética', 0.450, 0.600, 0.060,
+ 'Se toman 4 o más radiografías de la rodilla', 'No', 2024, 'AMA/CMS'),
+
+('73600', 'Vigente', 'RX tobillo 2 vistas', 'Radiografía de tobillo, 2 vistas',
+ 'Radiografía de tobillo, 2 vistas (AP y lateral).',
+ 'Radiología', 'Musculoesquelética', 0.250, 0.350, 0.040,
+ 'Se toman 2 radiografías del tobillo', 'No', 2024, 'AMA/CMS'),
+
+('73610', 'Vigente', 'RX tobillo 3+ vistas', 'Radiografía de tobillo, 3+ vistas',
+ 'Radiografía de tobillo, 3 o más vistas.',
+ 'Radiología', 'Musculoesquelética', 0.350, 0.480, 0.050,
+ 'Se toman 3 o más radiografías del tobillo', 'No', 2024, 'AMA/CMS'),
+
+('73620', 'Vigente', 'RX pie 2 vistas', 'Radiografía de pie, 2 vistas',
+ 'Radiografía de pie, 2 vistas (AP y oblicua).',
+ 'Radiología', 'Musculoesquelética', 0.250, 0.350, 0.040,
+ 'Se toman 2 radiografías del pie', 'No', 2024, 'AMA/CMS'),
+
+('73630', 'Vigente', 'RX pie 3+ vistas', 'Radiografía de pie, 3+ vistas',
+ 'Radiografía de pie, 3 o más vistas.',
+ 'Radiología', 'Musculoesquelética', 0.350, 0.480, 0.050,
+ 'Se toman 3 o más radiografías del pie', 'No', 2024, 'AMA/CMS'),
+
+-- ------------------------------------------------------------
+-- 22.4 TOMOGRAFÍA COMPUTARIZADA (TAC) - 71250-73222
+-- ============================================================
+
+('71250', 'Vigente', 'TAC tórax sin contraste', 'TAC de tórax sin contraste',
+ 'Tomografía computarizada de tórax, sin contraste intravenoso.',
+ 'Radiología', 'Torácica', 1.800, 2.800, 0.350,
+ 'Se toma una TAC del tórax sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('71260', 'Vigente', 'TAC tórax con contraste', 'TAC de tórax con contraste',
+ 'Tomografía computarizada de tórax, con contraste intravenoso.',
+ 'Radiología', 'Torácica', 2.000, 3.000, 0.400,
+ 'Se toma una TAC del tórax con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('71270', 'Vigente', 'TAC tórax sin/con contraste', 'TAC de tórax sin y con contraste',
+ 'Tomografía computarizada de tórax, sin y con contraste intravenoso.',
+ 'Radiología', 'Torácica', 2.200, 3.200, 0.450,
+ 'Se toma una TAC del tórax con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('71275', 'Vigente', 'AngioTAC tórax', 'Angiografía por TAC de tórax',
+ 'Angiografía por tomografía computarizada de tórax, con contraste.',
+ 'Radiología', 'Torácica', 2.500, 3.800, 0.500,
+ 'Se toma una AngioTAC del tórax', 'Sí', 2024, 'AMA/CMS'),
+
+('70450', 'Vigente', 'TAC cabeza sin contraste', 'TAC de cabeza sin contraste',
+ 'Tomografía computarizada de cabeza, sin contraste.',
+ 'Radiología', 'Neuroimagen', 1.500, 2.200, 0.300,
+ 'Se toma una TAC de la cabeza sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70460', 'Vigente', 'TAC cabeza con contraste', 'TAC de cabeza con contraste',
+ 'Tomografía computarizada de cabeza, con contraste.',
+ 'Radiología', 'Neuroimagen', 1.800, 2.800, 0.350,
+ 'Se toma una TAC de la cabeza con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70470', 'Vigente', 'TAC cabeza sin/con contraste', 'TAC de cabeza sin y con contraste',
+ 'Tomografía computarizada de cabeza, sin y con contraste.',
+ 'Radiología', 'Neuroimagen', 2.000, 3.000, 0.400,
+ 'Se toma una TAC de la cabeza con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70480', 'Vigente', 'TAC órbita sin contraste', 'TAC de órbita sin contraste',
+ 'Tomografía computarizada de órbita, sin contraste.',
+ 'Radiología', 'Neuroimagen', 1.400, 2.000, 0.250,
+ 'Se toma una TAC de la órbita sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70481', 'Vigente', 'TAC órbita con contraste', 'TAC de órbita con contraste',
+ 'Tomografía computarizada de órbita, con contraste.',
+ 'Radiología', 'Neuroimagen', 1.600, 2.400, 0.300,
+ 'Se toma una TAC de la órbita con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70482', 'Vigente', 'TAC órbita sin/con contraste', 'TAC de órbita sin y con contraste',
+ 'Tomografía computarizada de órbita, sin y con contraste.',
+ 'Radiología', 'Neuroimagen', 1.800, 2.800, 0.350,
+ 'Se toma una TAC de la órbita con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70486', 'Vigente', 'TAC maxilofacial sin contraste', 'TAC maxilofacial sin contraste',
+ 'Tomografía computarizada de maxilofacial, sin contraste.',
+ 'Radiología', 'Neuroimagen', 1.400, 2.000, 0.250,
+ 'Se toma una TAC de maxilofacial sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70487', 'Vigente', 'TAC maxilofacial con contraste', 'TAC maxilofacial con contraste',
+ 'Tomografía computarizada de maxilofacial, con contraste.',
+ 'Radiología', 'Neuroimagen', 1.600, 2.400, 0.300,
+ 'Se toma una TAC de maxilofacial con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70488', 'Vigente', 'TAC maxilofacial sin/con contraste', 'TAC maxilofacial sin y con contraste',
+ 'Tomografía computarizada de maxilofacial, sin y con contraste.',
+ 'Radiología', 'Neuroimagen', 1.800, 2.800, 0.350,
+ 'Se toma una TAC de maxilofacial con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70490', 'Vigente', 'TAC cuello sin contraste', 'TAC de cuello sin contraste',
+ 'Tomografía computarizada de cuello, sin contraste.',
+ 'Radiología', 'Cabeza y Cuello', 1.400, 2.000, 0.250,
+ 'Se toma una TAC del cuello sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70491', 'Vigente', 'TAC cuello con contraste', 'TAC de cuello con contraste',
+ 'Tomografía computarizada de cuello, con contraste.',
+ 'Radiología', 'Cabeza y Cuello', 1.600, 2.400, 0.300,
+ 'Se toma una TAC del cuello con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70492', 'Vigente', 'TAC cuello sin/con contraste', 'TAC de cuello sin y con contraste',
+ 'Tomografía computarizada de cuello, sin y con contraste.',
+ 'Radiología', 'Cabeza y Cuello', 1.800, 2.800, 0.350,
+ 'Se toma una TAC del cuello con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('74150', 'Vigente', 'TAC abdomen sin contraste', 'TAC de abdomen sin contraste',
+ 'Tomografía computarizada de abdomen, sin contraste.',
+ 'Radiología', 'Abdominal', 1.800, 2.800, 0.350,
+ 'Se toma una TAC del abdomen sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('74160', 'Vigente', 'TAC abdomen con contraste', 'TAC de abdomen con contraste',
+ 'Tomografía computarizada de abdomen, con contraste.',
+ 'Radiología', 'Abdominal', 2.000, 3.000, 0.400,
+ 'Se toma una TAC del abdomen con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('74170', 'Vigente', 'TAC abdomen sin/con contraste', 'TAC de abdomen sin y con contraste',
+ 'Tomografía computarizada de abdomen, sin y con contraste.',
+ 'Radiología', 'Abdominal', 2.200, 3.200, 0.450,
+ 'Se toma una TAC del abdomen con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('74174', 'Vigente', 'AngioTAC abdomen', 'Angiografía por TAC de abdomen',
+ 'Angiografía por tomografía computarizada de abdomen, con contraste.',
+ 'Radiología', 'Abdominal', 2.500, 3.800, 0.500,
+ 'Se toma una AngioTAC del abdomen', 'Sí', 2024, 'AMA/CMS'),
+
+('74176', 'Vigente', 'TAC abdomen y pelvis', 'TAC de abdomen y pelvis sin contraste',
+ 'Tomografía computarizada de abdomen y pelvis, sin contraste.',
+ 'Radiología', 'Abdominal', 2.000, 3.000, 0.400,
+ 'Se toma una TAC del abdomen y pelvis sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('74177', 'Vigente', 'TAC abdomen y pelvis con contraste', 'TAC de abdomen y pelvis con contraste',
+ 'Tomografía computarizada de abdomen y pelvis, con contraste.',
+ 'Radiología', 'Abdominal', 2.200, 3.200, 0.450,
+ 'Se toma una TAC del abdomen y pelvis con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('74178', 'Vigente', 'TAC abdomen y pelvis sin/con', 'TAC de abdomen y pelvis sin y con contraste',
+ 'Tomografía computarizada de abdomen y pelvis, sin y con contraste.',
+ 'Radiología', 'Abdominal', 2.500, 3.800, 0.500,
+ 'Se toma una TAC del abdomen y pelvis con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('72125', 'Vigente', 'TAC columna cervical sin contraste', 'TAC de columna cervical sin contraste',
+ 'Tomografía computarizada de columna cervical, sin contraste.',
+ 'Radiología', 'Musculoesquelética', 1.600, 2.400, 0.300,
+ 'Se toma una TAC de la columna cervical sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('72126', 'Vigente', 'TAC columna cervical con contraste', 'TAC de columna cervical con contraste',
+ 'Tomografía computarizada de columna cervical, con contraste.',
+ 'Radiología', 'Musculoesquelética', 1.800, 2.800, 0.350,
+ 'Se toma una TAC de la columna cervical con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('72127', 'Vigente', 'TAC columna cervical sin/con', 'TAC de columna cervical sin y con contraste',
+ 'Tomografía computarizada de columna cervical, sin y con contraste.',
+ 'Radiología', 'Musculoesquelética', 2.000, 3.000, 0.400,
+ 'Se toma una TAC de la columna cervical con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('72131', 'Vigente', 'TAC columna lumbar sin contraste', 'TAC de columna lumbar sin contraste',
+ 'Tomografía computarizada de columna lumbar, sin contraste.',
+ 'Radiología', 'Musculoesquelética', 1.600, 2.400, 0.300,
+ 'Se toma una TAC de la columna lumbar sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('72132', 'Vigente', 'TAC columna lumbar con contraste', 'TAC de columna lumbar con contraste',
+ 'Tomografía computarizada de columna lumbar, con contraste.',
+ 'Radiología', 'Musculoesquelética', 1.800, 2.800, 0.350,
+ 'Se toma una TAC de la columna lumbar con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('72133', 'Vigente', 'TAC columna lumbar sin/con', 'TAC de columna lumbar sin y con contraste',
+ 'Tomografía computarizada de columna lumbar, sin y con contraste.',
+ 'Radiología', 'Musculoesquelética', 2.000, 3.000, 0.400,
+ 'Se toma una TAC de la columna lumbar con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('72192', 'Vigente', 'TAC pelvis sin contraste', 'TAC de pelvis sin contraste',
+ 'Tomografía computarizada de pelvis, sin contraste.',
+ 'Radiología', 'Pélvica', 1.600, 2.400, 0.300,
+ 'Se toma una TAC de la pelvis sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('72193', 'Vigente', 'TAC pelvis con contraste', 'TAC de pelvis con contraste',
+ 'Tomografía computarizada de pelvis, con contraste.',
+ 'Radiología', 'Pélvica', 1.800, 2.800, 0.350,
+ 'Se toma una TAC de la pelvis con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('72194', 'Vigente', 'TAC pelvis sin/con contraste', 'TAC de pelvis sin y con contraste',
+ 'Tomografía computarizada de pelvis, sin y con contraste.',
+ 'Radiología', 'Pélvica', 2.000, 3.000, 0.400,
+ 'Se toma una TAC de la pelvis con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73200', 'Vigente', 'TAC extremidad superior sin contraste', 'TAC de extremidad superior sin contraste',
+ 'Tomografía computarizada de extremidad superior, sin contraste.',
+ 'Radiología', 'Musculoesquelética', 1.400, 2.000, 0.250,
+ 'Se toma una TAC de la extremidad superior sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73201', 'Vigente', 'TAC extremidad superior con contraste', 'TAC de extremidad superior con contraste',
+ 'Tomografía computarizada de extremidad superior, con contraste.',
+ 'Radiología', 'Musculoesquelética', 1.600, 2.400, 0.300,
+ 'Se toma una TAC de la extremidad superior con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73202', 'Vigente', 'TAC extremidad superior sin/con', 'TAC de extremidad superior sin y con contraste',
+ 'Tomografía computarizada de extremidad superior, sin y con contraste.',
+ 'Radiología', 'Musculoesquelética', 1.800, 2.800, 0.350,
+ 'Se toma una TAC de la extremidad superior con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73700', 'Vigente', 'TAC extremidad inferior sin contraste', 'TAC de extremidad inferior sin contraste',
+ 'Tomografía computarizada de extremidad inferior, sin contraste.',
+ 'Radiología', 'Musculoesquelética', 1.400, 2.000, 0.250,
+ 'Se toma una TAC de la extremidad inferior sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73701', 'Vigente', 'TAC extremidad inferior con contraste', 'TAC de extremidad inferior con contraste',
+ 'Tomografía computarizada de extremidad inferior, con contraste.',
+ 'Radiología', 'Musculoesquelética', 1.600, 2.400, 0.300,
+ 'Se toma una TAC de la extremidad inferior con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73702', 'Vigente', 'TAC extremidad inferior sin/con', 'TAC de extremidad inferior sin y con contraste',
+ 'Tomografía computarizada de extremidad inferior, sin y con contraste.',
+ 'Radiología', 'Musculoesquelética', 1.800, 2.800, 0.350,
+ 'Se toma una TAC de la extremidad inferior con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+ -- ============================================================
+-- 22.5 RESONANCIA MAGNÉTICA (RMN / MRI) - 70540-73722
+-- Fuente: AMA, CMS, Brookings Health, Highmark
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+-- CABEZA Y CUELLO [citation:7][citation:11]
+('70540', 'Vigente', 'RMN órbita/cara/cuello s/c', 'RMN de órbita, cara o cuello sin contraste',
+ 'Resonancia magnética de órbita, cara o cuello, sin contraste intravenoso.',
+ 'Radiología', 'Neuroimagen', 1.500, 2.500, 0.300,
+ 'Se toma una resonancia de la cara o el cuello sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70542', 'Vigente', 'RMN órbita/cara/cuello c c', 'RMN de órbita, cara o cuello con contraste',
+ 'Resonancia magnética de órbita, cara o cuello, con contraste intravenoso.',
+ 'Radiología', 'Neuroimagen', 1.800, 2.800, 0.350,
+ 'Se toma una resonancia de la cara o el cuello con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70543', 'Vigente', 'RMN órbita/cara/cuello s/c c', 'RMN de órbita, cara o cuello sin y con contraste',
+ 'Resonancia magnética de órbita, cara o cuello, sin y con contraste intravenoso.',
+ 'Radiología', 'Neuroimagen', 2.000, 3.200, 0.400,
+ 'Se toma una resonancia de la cara o el cuello con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70551', 'Vigente', 'RMN cerebro s/c', 'RMN de cerebro sin contraste',
+ 'Resonancia magnética de cerebro, sin contraste intravenoso.',
+ 'Radiología', 'Neuroimagen', 1.800, 2.800, 0.350,
+ 'Se toma una resonancia del cerebro sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70552', 'Vigente', 'RMN cerebro c c', 'RMN de cerebro con contraste',
+ 'Resonancia magnética de cerebro, con contraste intravenoso.',
+ 'Radiología', 'Neuroimagen', 2.000, 3.200, 0.400,
+ 'Se toma una resonancia del cerebro con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('70553', 'Vigente', 'RMN cerebro s/c c', 'RMN de cerebro sin y con contraste',
+ 'Resonancia magnética de cerebro, sin y con contraste intravenoso, incluyendo imágenes de difusión.',
+ 'Radiología', 'Neuroimagen', 2.200, 3.400, 0.450,
+ 'Se toma una resonancia del cerebro con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+-- EXTREMIDAD SUPERIOR [citation:7]
+('73218', 'Vigente', 'RMN extremidad superior s/c', 'RMN de extremidad superior sin contraste',
+ 'Resonancia magnética de extremidad superior (ej. hombro, brazo), sin contraste.',
+ 'Radiología', 'Musculoesquelética', 1.500, 2.500, 0.300,
+ 'Se toma una resonancia de la extremidad superior sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73220', 'Vigente', 'RMN extremidad superior s/c c', 'RMN de extremidad superior sin y con contraste',
+ 'Resonancia magnética de extremidad superior, sin y con contraste.',
+ 'Radiología', 'Musculoesquelética', 1.800, 2.800, 0.350,
+ 'Se toma una resonancia de la extremidad superior con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73221', 'Vigente', 'RMN articulación superior s/c', 'RMN de articulación de extremidad superior sin contraste',
+ 'Resonancia magnética de articulación de extremidad superior (ej. hombro, codo, muñeca), sin contraste.',
+ 'Radiología', 'Musculoesquelética', 1.500, 2.500, 0.300,
+ 'Se toma una resonancia de una articulación (hombro, codo, muñeca) sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73222', 'Vigente', 'RMN articulación superior c c', 'RMN de articulación de extremidad superior con contraste',
+ 'Resonancia magnética de articulación de extremidad superior, con contraste intravenoso.',
+ 'Radiología', 'Musculoesquelética', 1.700, 2.700, 0.350,
+ 'Se toma una resonancia de una articulación (hombro, codo, muñeca) con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73223', 'Vigente', 'RMN articulación superior s/c c', 'RMN de articulación de extremidad superior sin y con contraste',
+ 'Resonancia magnética de articulación de extremidad superior, sin y con contraste.',
+ 'Radiología', 'Musculoesquelética', 2.000, 3.200, 0.400,
+ 'Se toma una resonancia de una articulación (hombro, codo, muñeca) con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+-- EXTREMIDAD INFERIOR [citation:7][citation:11]
+('73718', 'Vigente', 'RMN extremidad inferior s/c', 'RMN de extremidad inferior sin contraste',
+ 'Resonancia magnética de extremidad inferior (ej. muslo, pierna), sin contraste.',
+ 'Radiología', 'Musculoesquelética', 1.500, 2.500, 0.300,
+ 'Se toma una resonancia de la extremidad inferior sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73720', 'Vigente', 'RMN extremidad inferior s/c c', 'RMN de extremidad inferior sin y con contraste',
+ 'Resonancia magnética de extremidad inferior, sin y con contraste.',
+ 'Radiología', 'Musculoesquelética', 1.800, 2.800, 0.350,
+ 'Se toma una resonancia de la extremidad inferior con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73721', 'Vigente', 'RMN articulación inferior s/c', 'RMN de articulación de extremidad inferior sin contraste',
+ 'Resonancia magnética de articulación de extremidad inferior (ej. cadera, rodilla, tobillo), sin contraste.',
+ 'Radiología', 'Musculoesquelética', 1.500, 2.500, 0.300,
+ 'Se toma una resonancia de una articulación (cadera, rodilla, tobillo) sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73722', 'Vigente', 'RMN articulación inferior c c', 'RMN de articulación de extremidad inferior con contraste',
+ 'Resonancia magnética de articulación de extremidad inferior, con contraste.',
+ 'Radiología', 'Musculoesquelética', 1.700, 2.700, 0.350,
+ 'Se toma una resonancia de una articulación (cadera, rodilla, tobillo) con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('73723', 'Vigente', 'RMN articulación inferior s/c c', 'RMN de articulación de extremidad inferior sin y con contraste',
+ 'Resonancia magnética de articulación de extremidad inferior, sin y con contraste.',
+ 'Radiología', 'Musculoesquelética', 2.000, 3.200, 0.400,
+ 'Se toma una resonancia de una articulación (cadera, rodilla, tobillo) con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+-- ABDOMEN Y PELVIS [citation:7][citation:13]
+('74181', 'Vigente', 'RMN abdomen s/c', 'RMN de abdomen sin contraste',
+ 'Resonancia magnética de abdomen, sin contraste intravenoso.',
+ 'Radiología', 'Abdominal', 2.200, 3.600, 0.450,
+ 'Se toma una resonancia del abdomen sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('74182', 'Vigente', 'RMN abdomen c c', 'RMN de abdomen con contraste',
+ 'Resonancia magnética de abdomen, con contraste intravenoso.',
+ 'Radiología', 'Abdominal', 2.500, 4.000, 0.500,
+ 'Se toma una resonancia del abdomen con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('74183', 'Vigente', 'RMN abdomen s/c c', 'RMN de abdomen sin y con contraste',
+ 'Resonancia magnética de abdomen, sin y con contraste intravenoso.',
+ 'Radiología', 'Abdominal', 2.800, 4.200, 0.550,
+ 'Se toma una resonancia del abdomen con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('72195', 'Vigente', 'RMN pelvis s/c', 'RMN de pelvis sin contraste',
+ 'Resonancia magnética de pelvis, sin contraste intravenoso.',
+ 'Radiología', 'Pélvica', 2.000, 3.200, 0.400,
+ 'Se toma una resonancia de la pelvis sin contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('72196', 'Vigente', 'RMN pelvis c c', 'RMN de pelvis con contraste',
+ 'Resonancia magnética de pelvis, con contraste intravenoso.',
+ 'Radiología', 'Pélvica', 2.200, 3.600, 0.450,
+ 'Se toma una resonancia de la pelvis con contraste', 'Sí', 2024, 'AMA/CMS'),
+
+('72197', 'Vigente', 'RMN pelvis s/c c', 'RMN de pelvis sin y con contraste',
+ 'Resonancia magnética de pelvis, sin y con contraste intravenoso.',
+ 'Radiología', 'Pélvica', 2.500, 4.000, 0.500,
+ 'Se toma una resonancia de la pelvis con y sin contraste', 'Sí', 2024, 'AMA/CMS');
 
 
 -- ============================================================
--- NOTA SOBRE RVU: 
--- Los códigos de Categoría III no tienen valores de RVU asignados. Son temporales y su reembolso varía según el pagador. [citation:1][citation:11]
+-- 22.6 ULTRASONIDO (ECOGRAFÍA) - 76506-76999
+-- Fuente: AMA, AAPC [citation:4][citation:8][citation:12], CMS
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+-- ABDOMEN Y RETROPERITONEO [citation:4][citation:12]
+('76700', 'Vigente', 'Ecografía abdominal completa', 'Ultrasonido abdominal completo',
+ 'Ultrasonido abdominal, en tiempo real con documentación de imágenes; completo. Incluye evaluación de: hígado, vesícula biliar, vía biliar común, páncreas, bazo, riñones, aorta abdominal superior y vena cava inferior.',
+ 'Radiología', 'Abdominal', 0.800, 1.200, 0.150,
+ 'Se hace un ultrasonido completo del abdomen (todos los órganos principales)', 'Sí', 2024, 'AMA/CMS'),
+
+('76705', 'Vigente', 'Ecografía abdominal limitada', 'Ultrasonido abdominal limitado',
+ 'Ultrasonido abdominal, en tiempo real con documentación de imágenes; limitado (ej. órgano único, cuadrante, seguimiento).',
+ 'Radiología', 'Abdominal', 0.600, 0.900, 0.100,
+ 'Se hace un ultrasonido limitado de una zona específica del abdomen', 'Sí', 2024, 'AMA/CMS'),
+
+('76706', 'Vigente', 'Ecografía aorta abdominal', 'Ultrasonido de aorta abdominal',
+ 'Ultrasonido de aorta abdominal, en tiempo real con documentación de imágenes, para detección de aneurisma.',
+ 'Radiología', 'Abdominal', 0.500, 0.700, 0.080,
+ 'Se hace un ultrasonido de la aorta del abdomen para detectar aneurismas', 'Sí', 2024, 'AMA/CMS'),
+
+('76770', 'Vigente', 'Ecografía retroperitoneal completa', 'Ultrasonido retroperitoneal completo',
+ 'Ultrasonido retroperitoneal (espacio detrás del peritoneo), completo, incluyendo riñones, uréteres, y vejiga.',
+ 'Radiología', 'Abdominal', 0.700, 1.000, 0.120,
+ 'Se hace un ultrasonido completo del espacio retroperitoneal (riñones, uréteres, vejiga)', 'Sí', 2024, 'AMA/CMS'),
+
+('76775', 'Vigente', 'Ecografía retroperitoneal limitada', 'Ultrasonido retroperitoneal limitado',
+ 'Ultrasonido retroperitoneal, limitado (ej. riñón, vejiga).',
+ 'Radiología', 'Abdominal', 0.500, 0.700, 0.080,
+ 'Se hace un ultrasonido limitado de los riñones o la vejiga', 'Sí', 2024, 'AMA/CMS'),
+
+-- PELVIS [citation:4][citation:8]
+('76830', 'Vigente', 'Ecografía pélvica transabdominal', 'Ultrasonido pélvico transabdominal',
+ 'Ultrasonido pélvico transabdominal, no obstétrico.',
+ 'Radiología', 'Pélvica', 0.600, 0.900, 0.100,
+ 'Se hace un ultrasonido de la pelvis a través del abdomen', 'Sí', 2024, 'AMA/CMS'),
+
+('76856', 'Vigente', 'Ecografía pélvica completa', 'Ultrasonido pélvico completo (transabdominal y transvaginal)',
+ 'Ultrasonido pélvico completo, no obstétrico, incluyendo transabdominal y transvaginal (cuando se realiza).',
+ 'Radiología', 'Pélvica', 0.800, 1.200, 0.150,
+ 'Se hace un ultrasonido completo de la pelvis (por abdomen y por vagina)', 'Sí', 2024, 'AMA/CMS'),
+
+('76857', 'Vigente', 'Ecografía pélvica limitada', 'Ultrasonido pélvico limitado',
+ 'Ultrasonido pélvico, no obstétrico, limitado (ej. evaluación de volumen de orina postmiccional).',
+ 'Radiología', 'Pélvica', 0.500, 0.700, 0.080,
+ 'Se hace un ultrasonido limitado de la pelvis (ej. para medir orina residual)', 'Sí', 2024, 'AMA/CMS'),
+
+-- OBSTÉTRICA [citation:4][citation:8]
+('76801', 'Vigente', 'Ecografía obstétrica 1er trim', 'Ultrasonido obstétrico primer trimestre',
+ 'Ultrasonido obstétrico, primer trimestre, evaluación fetal detallada (edad gestacional, número de fetos, frecuencia cardíaca).',
+ 'Radiología', 'Obstétrica', 0.700, 1.000, 0.120,
+ 'Se hace un ultrasonido del embarazo en el primer trimestre', 'Sí', 2024, 'AMA/CMS'),
+
+('76805', 'Vigente', 'Ecografía obstétrica 2do trim', 'Ultrasonido obstétrico segundo trimestre',
+ 'Ultrasonido obstétrico, segundo trimestre, evaluación fetal detallada (anatomía básica, edad gestacional).',
+ 'Radiología', 'Obstétrica', 1.000, 1.500, 0.180,
+ 'Se hace un ultrasonido del embarazo en el segundo trimestre', 'Sí', 2024, 'AMA/CMS'),
+
+('76810', 'Vigente', 'Ecografía obstétrica 2do trim +', 'Ultrasonido obstétrico segundo trimestre, más de un feto',
+ 'Ultrasonido obstétrico, segundo trimestre, evaluación fetal detallada de más de un feto (gemelos).',
+ 'Radiología', 'Obstétrica', 1.200, 1.800, 0.200,
+ 'Se hace un ultrasonido de un embarazo múltiple en el segundo trimestre', 'Sí', 2024, 'AMA/CMS'),
+
+('76811', 'Vigente', 'Ecografía obstétrica detallada', 'Ultrasonido obstétrico detallado (nivel 2)',
+ 'Ultrasonido obstétrico de nivel 2 (detallado) con evaluación anatómica completa del feto.',
+ 'Radiología', 'Obstétrica', 1.500, 2.200, 0.250,
+ 'Se hace un ultrasonido detallado (nivel 2) del embarazo', 'Sí', 2024, 'AMA/CMS'),
+
+('76815', 'Vigente', 'Ecografía obstétrica limitada', 'Ultrasonido obstétrico limitado',
+ 'Ultrasonido obstétrico, limitado (ej. evaluación de bienestar fetal, frecuencia cardíaca, posición).',
+ 'Radiología', 'Obstétrica', 0.400, 0.600, 0.060,
+ 'Se hace un ultrasonido limitado del embarazo (ej. para ver el latido del corazón)', 'Sí', 2024, 'AMA/CMS'),
+
+ -- ============================================================
+-- 22.7 MAMOGRAFÍA (77046-77067)
+-- Fuente: AMA, AAPC, CMS, MGMA [citation:1][citation:2]
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+('77046', 'Vigente', 'Mamografía digital 1 seno', 'Mamografía digital bilateral, 1 seno',
+ 'Mamografía digital, bilateral, 1 seno, incluyendo interpretación y reporte.',
+ 'Radiología', 'Mamaria', 0.500, 0.800, 0.080,
+ 'Se toma una mamografía digital de un seno', 'No', 2024, 'AMA/CMS'),
+
+('77047', 'Vigente', 'Mamografía digital 2 senos', 'Mamografía digital bilateral, 2 senos',
+ 'Mamografía digital, bilateral, 2 senos, incluyendo interpretación y reporte.',
+ 'Radiología', 'Mamaria', 0.700, 1.100, 0.100,
+ 'Se toma una mamografía digital de ambos senos', 'No', 2024, 'AMA/CMS'),
+
+('77048', 'Vigente', 'Tomosíntesis 1 seno', 'Tomosíntesis mamaria bilateral, 1 seno',
+ 'Tomosíntesis mamaria bilateral, 1 seno, incluyendo interpretación y reporte.',
+ 'Radiología', 'Mamaria', 0.600, 0.900, 0.090,
+ 'Se toma una tomosíntesis (mamografía 3D) de un seno', 'No', 2024, 'AMA/CMS'),
+
+('77049', 'Vigente', 'Tomosíntesis 2 senos', 'Tomosíntesis mamaria bilateral, 2 senos',
+ 'Tomosíntesis mamaria bilateral, 2 senos, incluyendo interpretación y reporte.',
+ 'Radiología', 'Mamaria', 0.900, 1.400, 0.120,
+ 'Se toma una tomosíntesis (mamografía 3D) de ambos senos', 'No', 2024, 'AMA/CMS'),
+
+('77063', 'Vigente', 'Mamografía de tamizaje', 'Mamografía de tamizaje bilateral (screening)',
+ 'Mamografía de tamizaje (detección) bilateral, incluyendo interpretación y reporte.',
+ 'Radiología', 'Mamaria', 0.700, 1.100, 0.100,
+ 'Se toma una mamografía de tamizaje (preventiva) de ambos senos', 'No', 2024, 'AMA/CMS'),
+
+('77066', 'Vigente', 'Mamografía diagnóstica 1 seno', 'Mamografía diagnóstica bilateral, 1 seno',
+ 'Mamografía diagnóstica bilateral, 1 seno, incluyendo interpretación y reporte.',
+ 'Radiología', 'Mamaria', 0.600, 0.900, 0.090,
+ 'Se toma una mamografía diagnóstica de un seno', 'No', 2024, 'AMA/CMS'),
+
+('77067', 'Vigente', 'Mamografía diagnóstica 2 senos', 'Mamografía diagnóstica bilateral, 2 senos',
+ 'Mamografía diagnóstica bilateral, 2 senos, incluyendo interpretación y reporte, con o sin CAD (Computer Aided Detection).',
+ 'Radiología', 'Mamaria', 0.900, 1.400, 0.120,
+ 'Se toma una mamografía diagnóstica de ambos senos', 'No', 2024, 'AMA/CMS'),
+
+-- ============================================================
+-- 22.8 DENSITOMETRÍA ÓSEA (77078-77086)
+-- Fuente: AMA, AAPC, Hologic [citation:5][citation:9]
+-- ============================================================
+
+('77078', 'Vigente', 'TC densidad ósea', 'Tomografía computarizada de densidad ósea',
+ 'Tomografía computarizada de densidad ósea, 1 o más sitios, sin contraste.',
+ 'Radiología', 'Musculoesquelética', 0.800, 1.200, 0.150,
+ 'Se toma una TAC para medir la densidad ósea', 'Sí', 2024, 'AMA/CMS'),
+
+('77080', 'Vigente', 'DXA axial', 'Densitometría DXA axial (cadera, pelvis, columna)',
+ 'Densitometría ósea por absorciometría de rayos X de energía dual (DXA), 1 o más sitios; esqueleto axial (ej. cadera, pelvis, columna).',
+ 'Radiología', 'Musculoesquelética', 0.280, 0.830, 0.050,
+ 'Se mide la densidad ósea en la cadera, pelvis o columna', 'No', 2024, 'AMA/CMS'),
+
+('77081', 'Vigente', 'DXA periférico', 'Densitometría DXA periférica (radio, muñeca, talón)',
+ 'Densitometría ósea por absorciometría de rayos X de energía dual (DXA), 1 o más sitios; esqueleto apendicular (periférico) (ej. radio, muñeca, talón).',
+ 'Radiología', 'Musculoesquelética', 0.290, 0.630, 0.050,
+ 'Se mide la densidad ósea en el brazo o talón', 'No', 2024, 'AMA/CMS'),
+
+('77085', 'Vigente', 'DXA axial con VFA', 'Densitometría DXA axial con evaluación de fractura vertebral',
+ 'Densitometría ósea por absorciometría de rayos X de energía dual (DXA), 1 o más sitios; esqueleto axial (ej. cadera, pelvis, columna), incluyendo evaluación de fractura vertebral.',
+ 'Radiología', 'Musculoesquelética', 0.430, 1.100, 0.070,
+ 'Se mide la densidad ósea y se evalúa el riesgo de fractura vertebral', 'No', 2024, 'AMA/CMS'),
+
+('77086', 'Vigente', 'VFA por DXA', 'Evaluación de fractura vertebral por DXA',
+ 'Evaluación de fractura vertebral por absorciometría de rayos X de energía dual (DXA).',
+ 'Radiología', 'Musculoesquelética', 0.240, 0.740, 0.040,
+ 'Se evalúa la presencia de fracturas vertebrales usando DXA', 'No', 2024, 'AMA/CMS'),
+
+-- ============================================================
+-- 22.9 NUEVOS CÓDIGOS CATEGORÍA III - ANÁLISIS DE HUESO (2026)
+-- Fuente: CMS NCD 150.3, ACR [citation:12]
+-- ============================================================
+
+('0554T', 'Nuevo', 'Análisis FEA hueso', 'Análisis de resistencia ósea y riesgo de fractura por FEA',
+ 'Análisis de resistencia ósea y riesgo de fractura utilizando análisis de elementos finitos (FEA) de datos funcionales y densidad mineral ósea, utilizando datos de una tomografía computarizada; recuperación y transmisión de los datos, evaluación de la resistencia ósea y el riesgo de fractura, interpretación y reporte.',
+ 'Radiología', 'Musculoesquelética', 0.000, 0.000, 0.000,
+ 'Análisis avanzado por computadora de la resistencia de los huesos usando datos de TAC', 'No', 2026, 'CMS'),
+
+('0555T', 'Nuevo', 'FEA - recuperación datos', 'Análisis FEA - recuperación y transmisión de datos',
+ 'Análisis de resistencia ósea y riesgo de fractura utilizando análisis de elementos finitos (FEA) ...; recuperación y transmisión de los datos.',
+ 'Radiología', 'Musculoesquelética', 0.000, 0.000, 0.000,
+ 'Recuperación y transmisión de datos para el análisis de resistencia ósea (código adicional)', 'No', 2026, 'CMS'),
+
+('0556T', 'Nuevo', 'FEA - evaluación', 'Análisis FEA - evaluación de resistencia y riesgo',
+ 'Análisis de resistencia ósea y riesgo de fractura utilizando análisis de elementos finitos (FEA) ...; evaluación de la resistencia ósea y el riesgo de fractura, interpretación y reporte.',
+ 'Radiología', 'Musculoesquelética', 0.000, 0.000, 0.000,
+ 'Evaluación e interpretación de la resistencia ósea por FEA (código adicional)', 'No', 2026, 'CMS'),
+
+('0557T', 'Nuevo', 'FEA - tecnología', 'Análisis FEA - tecnología',
+ 'Análisis de resistencia ósea y riesgo de fractura utilizando análisis de elementos finitos (FEA) ...; tecnología.',
+ 'Radiología', 'Musculoesquelética', 0.000, 0.000, 0.000,
+ 'Tecnología de análisis de elementos finitos para hueso', 'No', 2026, 'CMS'),
+
+('0558T', 'Nuevo', 'TC para FEA', 'Tomografía computarizada para análisis biomecánico',
+ 'Tomografía computarizada realizada con el propósito de análisis biomecánico (FEA).',
+ 'Radiología', 'Musculoesquelética', 0.000, 0.000, 0.000,
+ 'TAC específica para análisis biomecánico de hueso', 'Sí', 2026, 'CMS'),
+
+-- ============================================================
+-- NOTAS SOBRE CODIFICACIÓN:
+-- 1. 77080 y 77085 son para esqueleto axial (cadera, pelvis, columna) [citation:5][citation:9]
+-- 2. 77081 es para esqueleto apendicular (periférico) [citation:5]
+-- 3. 77085 y 77086 solo se facturan una vez, aunque se evalúen múltiples segmentos [citation:5]
+-- 4. 0554T-0558T son Categoría III, cubiertos solo para indicaciones diagnósticas, no para monitoreo [citation:12]
+-- 5. CMS ordena eximir los copagos para 0554T-0558T [citation:12]
+-- ============================================================
+-- ============================================================
+-- 22.10 RADIOLOGÍA INTERVENCIONISTA (75820-75989)
+-- Fuente: AMA, CMS, RUC
+-- ============================================================
+
+-- ------------------------------------------------------------
+-- 22.10.1 VENOGRAFÍA (75820-75822)
+-- ------------------------------------------------------------
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+('75820', 'Vigente', 'Venografía extremidad unilateral', 'Venografía de extremidad, unilateral, supervisión e interpretación',
+ 'Venografía de extremidad, unilateral, radiological supervision and interpretation. Incluye la supervisión radiológica y la interpretación del estudio venográfico de una extremidad (superior o inferior).',
+ 'Radiología', 'Intervencionista Vascular', 1.050, 1.800, 0.150,
+ 'Se toman radiografías de las venas de una extremidad (brazo o pierna) con contraste, para evaluar su estructura.', 'No', 2024, 'AMA/CMS'),
+
+('75822', 'Vigente', 'Venografía extremidad bilateral', 'Venografía de extremidad, bilateral, supervisión e interpretación',
+ 'Venografía de extremidad, bilateral, radiological supervision and interpretation. Incluye la supervisión radiológica y la interpretación de un estudio venográfico de ambas extremidades (superiores o inferiores).',
+ 'Radiología', 'Intervencionista Vascular', 1.500, 2.500, 0.200,
+ 'Se toman radiografías de las venas de ambas extremidades con contraste.', 'No', 2024, 'AMA/CMS');
+
+-- ------------------------------------------------------------
+-- 22.10.2 CÓDIGOS DE SUPERVISIÓN E INTERPRETACIÓN (S&I) DEL SISTEMA PORTA
+-- ------------------------------------------------------------
+
+('75810', 'Vigente', 'Esplenoportografía S&I', 'Esplenoportografía, supervisión e interpretación radiológica',
+ 'Esplenoportografía, radiological supervision and interpretation. Se utiliza para la evaluación del sistema venoso portal. Este código reporta únicamente el componente de S&I; el componente quirúrgico se reporta con el código 38200 .',
+ 'Radiología', 'Intervencionista Vascular', 0.000, 0.000, 0.000,
+ 'Supervisión e interpretación de una esplenoportografía (estudio de las venas del bazo e hígado).', 'No', 2024, 'AMA/CMS'),
+
+('75885', 'Vigente', 'Portografía transhepática c/ hemodinamia', 'Portografía transhepática percutánea con evaluación hemodinámica, S&I',
+ 'Percutaneous transhepatic portography with hemodynamic evaluation, radiological supervision and interpretation. Reporta la S&I de una portografía con evaluación del flujo. El componente quirúrgico se reporta con el código 36481 .',
+ 'Radiología', 'Intervencionista Vascular', 0.000, 0.000, 0.000,
+ 'Supervisión e interpretación de un estudio de las venas del hígado con medición de presiones.', 'No', 2024, 'AMA/CMS'),
+
+('75887', 'Vigente', 'Portografía transhepática s/ hemodinamia', 'Portografía transhepática percutánea sin evaluación hemodinámica, S&I',
+ 'Percutaneous transhepatic portography without hemodynamic evaluation, radiological supervision and interpretation. Reporta la S&I de una portografía sin evaluación del flujo. El componente quirúrgico se reporta con el código 36481 .',
+ 'Radiología', 'Intervencionista Vascular', 0.000, 0.000, 0.000,
+ 'Supervisión e interpretación de un estudio de las venas del hígado sin medición de presiones.', 'No', 2024, 'AMA/CMS'),
+
+('75889', 'Vigente', 'Venografía hepática c/ hemodinamia', 'Venografía hepática con evaluación hemodinámica, S&I',
+ 'Hepatic venography, wedged or free, with hemodynamic evaluation, radiological supervision and interpretation. Reporta la S&I de una venografía hepática con medición de la presión venosa hepática .',
+ 'Radiología', 'Intervencionista Vascular', 0.000, 0.000, 0.000,
+ 'Supervisión e interpretación de un estudio de las venas del hígado con medición de presiones.', 'No', 2024, 'AMA/CMS'),
+
+('75891', 'Vigente', 'Venografía hepática s/ hemodinamia', 'Venografía hepática sin evaluación hemodinámica, S&I',
+ 'Hepatic venography, wedged or free, without hemodynamic evaluation, radiological supervision and interpretation. Reporta la S&I de una venografía hepática sin medición de presión .',
+ 'Radiología', 'Intervencionista Vascular', 0.000, 0.000, 0.000,
+ 'Supervisión e interpretación de un estudio de las venas del hígado sin medición de presiones.', 'No', 2024, 'AMA/CMS');
+
+-- ------------------------------------------------------------
+-- 22.10.3 CÓDIGO S&I PARA DRENAJE GUIADO POR IMAGEN
+-- ------------------------------------------------------------
+
+('75989', 'Vigente', 'Guía radiológica para drenaje percutáneo', 'Supervisión radiológica para drenaje percutáneo (fluoro, US, TC)',
+ 'Radiological guidance (fluoroscopy, ultrasound, or CT) for percutaneous drainage (e.g., abscess or fluid collection), with catheter placement, radiological supervision and interpretation. **Uso actual:** Su uso es restringido. Es válido únicamente para reportar la supervisión radiológica junto con el código 32550 (colocación de catéter pleural tunelizado) [citation:2][citation:4][citation:5]. Para el drenaje de abscesos en otros sitios, la guía de imagen ya está incluida en los códigos de procedimiento (ej. 10030, 49405-49407) y no se debe reportar por separado [citation:2][citation:4][citation:5].',
+ 'Radiología', 'Intervencionista Vascular', 1.160, 2.120, 0.090,
+ 'Código para la supervisión radiológica de un drenaje guiado por imagen. Actualmente su uso es muy limitado.', 'No', 2024, 'AMA/CMS'),
+
+-- ============================================================
+-- NOTAS IMPORTANTES SOBRE 75989:
+-- 1. Según la AMA y CMS, la guía de imagen está incluida en la mayoría de los códigos de drenaje percutáneo (ej. 10030, 49405-49407) y NO debe facturarse por separado [citation:2][citation:4][citation:5].
+-- 2. El código 75989 es válido para usarse en conjunto SOLO con el código 32550 (colocación de catéter pleural tunelizado) [citation:2][citation:4][citation:5].
+-- 3. Para la mayoría de los procedimientos de drenaje, se debe usar el código apropiado de la sección de Cirugía que ya incluye la guía de imagen.
+-- 4. Los códigos 75810-75891 reportan únicamente la supervisión e interpretación radiológica y deben usarse con el código quirúrgico correspondiente .
+-- 5. Los valores de RVU para 75820 y 75989 están basados en la información disponible [citation:7][citation:6].
 -- ============================================================
 
 -- ============================================================
--- NOTA SOBRE RVU: 
--- Los códigos de Categoría II y III no tienen valores de RVU asignados.
--- Los Category II son para medición de calidad y no generan reembolso directo. [citation:3][citation:6]
--- Los Category III son temporales y su reembolso varía según el pagador. [citation:1][citation:12]
--- Fuentes: AMA, NCQA/HEDIS, CMS
+-- 22.11 RADIOTERAPIA - PLANIFICACIÓN CLÍNICA (77261-77299)
+-- Fuente: AAPC, Medical Billers and Coders, TRICARE
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+('77261', 'Vigente', 'Planificación radioterapia simple', 'Planificación de tratamiento radioterápico simple',
+ 'Planificación de tratamiento de radiación, simple. Incluye la delineación del objetivo, el cálculo de dosis y la documentación de un plan de tratamiento básico para fuentes externas o internas.',
+ 'Radiología', 'Radioterapia', 1.500, 2.500, 0.300,
+ 'El médico diseña un plan sencillo de radioterapia.', 'No', 2024, 'AAPC'),
+
+('77262', 'Vigente', 'Planificación radioterapia compleja', 'Planificación de tratamiento radioterápico complejo',
+ 'Planificación de tratamiento de radiación, complejo. Incluye la delineación del objetivo, el cálculo de dosis y la documentación de un plan de tratamiento con técnicas avanzadas (ej. múltiples campos, compensadores, bloques).',
+ 'Radiología', 'Radioterapia', 2.200, 3.800, 0.450,
+ 'El médico diseña un plan complejo de radioterapia (ej. con varios ángulos).', 'No', 2024, 'AAPC'),
+
+('77263', 'Vigente', 'Planificación radioterapia IMRT', 'Planificación de tratamiento de IMRT (intensidad modulada)',
+ 'Planificación de tratamiento de radiación, de intensidad modulada (IMRT). Incluye la planificación inversa, la optimización de la dosis y la documentación del plan.',
+ 'Radiología', 'Radioterapia', 3.000, 5.000, 0.600,
+ 'El médico diseña un plan de radioterapia de intensidad modulada (IMRT).', 'No', 2024, 'AAPC'),
+
+('77280', 'Vigente', 'Planificación radioterapia protones', 'Planificación de tratamiento de protones',
+ 'Planificación de tratamiento de radiación, con protones. Incluye la planificación específica para la terapia de protones.',
+ 'Radiología', 'Radioterapia', 3.500, 5.500, 0.700,
+ 'El médico diseña un plan de radioterapia con protones.', 'No', 2024, 'AAPC');
+
+-- ============================================================
+-- 22.12 RADIOTERAPIA - ADMINISTRACIÓN DE TRATAMIENTO (77300-77499)
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+-- Cálculo de Dosis y Dosimetría
+('77300', 'Vigente', 'Cálculo de dosis', 'Cálculo de dosis de radiación básico',
+ 'Cálculo de dosis de radiación, simple. Cálculo de la distribución de dosis para un campo de tratamiento.',
+ 'Radiología', 'Radioterapia', 0.800, 1.200, 0.150,
+ 'Se calcula la dosis de radiación para el tratamiento.', 'No', 2024, 'AAPC'),
+
+('77301', 'Vigente', 'Dosimetría IMRT', 'Dosimetría de IMRT (intensidad modulada)',
+ 'Dosimetría de radioterapia de intensidad modulada (IMRT). Incluye la planificación inversa y la optimización de la dosis.',
+ 'Radiología', 'Radioterapia', 2.500, 4.000, 0.500,
+ 'Se calcula la distribución de dosis para IMRT.', 'No', 2024, 'AAPC'),
+
+-- Gestión del Tratamiento
+('77427', 'Vigente', 'Gestión de radioterapia', 'Gestión de tratamiento de radioterapia (mensual)',
+ 'Gestión de tratamiento de radioterapia, en el curso del tratamiento, con revisión de la dosis, la planificación y el estado del paciente. Usualmente reportado por mes.',
+ 'Radiología', 'Radioterapia', 2.000, 3.200, 0.400,
+ 'El médico supervisa el tratamiento de radioterapia y ajusta el plan según sea necesario.', 'No', 2024, 'AAPC'),
+
+('77432', 'Vigente', 'Gestión radioterapia estereotáctica', 'Gestión de radioterapia estereotáctica (SBRT/SRS)',
+ 'Gestión de tratamiento de radiación estereotáctico (ej. SBRT, SRS), incluyendo la planificación y la supervisión del tratamiento.',
+ 'Radiología', 'Radioterapia', 3.500, 5.500, 0.700,
+ 'El médico supervisa el tratamiento de radioterapia estereotáctica.', 'No', 2024, 'AAPC'),
+
+-- ============================================================
+-- 22.13 BRAQUITERAPIA (77750-77799)
+-- ============================================================
+
+('77750', 'Vigente', 'Aplicación intrauterina', 'Aplicación de braquiterapia intrauterina',
+ 'Aplicación de braquiterapia intrauterina (para cáncer de endometrio o cérvix), con o sin carga.',
+ 'Radiología', 'Radioterapia', 3.000, 5.000, 0.600,
+ 'Se coloca una fuente radiactiva en el útero para tratar el cáncer.', 'Sí', 2024, 'AAPC'),
+
+('77760', 'Vigente', 'Aplicación intravaginal', 'Aplicación de braquiterapia intravaginal',
+ 'Aplicación de braquiterapia intravaginal (para cáncer de vagina).',
+ 'Radiología', 'Radioterapia', 2.500, 4.000, 0.500,
+ 'Se coloca una fuente radiactiva en la vagina para tratar el cáncer.', 'Sí', 2024, 'AAPC'),
+
+('77761', 'Vigente', 'Aplicación intracavitaria simple', 'Aplicación de braquiterapia intracavitaria simple',
+ 'Aplicación de braquiterapia intracavitaria simple (ej. para cáncer de cavidad oral o nasal).',
+ 'Radiología', 'Radioterapia', 2.000, 3.200, 0.400,
+ 'Se coloca una fuente radiactiva en una cavidad del cuerpo.', 'Sí', 2024, 'AAPC'),
+
+('77762', 'Vigente', 'Aplicación intracavitaria compleja', 'Aplicación de braquiterapia intracavitaria compleja',
+ 'Aplicación de braquiterapia intracavitaria compleja (ej. para cáncer de esófago o bronquios).',
+ 'Radiología', 'Radioterapia', 3.500, 5.500, 0.700,
+ 'Se coloca una fuente radiactiva en una cavidad del cuerpo (procedimiento complejo).', 'Sí', 2024, 'AAPC'),
+
+('77770', 'Vigente', 'Aplicación intersticial simple', 'Aplicación de braquiterapia intersticial simple',
+ 'Aplicación de braquiterapia intersticial simple (ej. semillas en la próstata).',
+ 'Radiología', 'Radioterapia', 4.000, 6.500, 0.800,
+ 'Se implantan fuentes radiactivas directamente en el tumor (ej. próstata).', 'Sí', 2024, 'AAPC'),
+
+('77771', 'Vigente', 'Aplicación intersticial compleja', 'Aplicación de braquiterapia intersticial compleja',
+ 'Aplicación de braquiterapia intersticial compleja (ej. con múltiples catéteres o fuentes).',
+ 'Radiología', 'Radioterapia', 5.000, 8.000, 1.000,
+ 'Se implantan fuentes radiactivas en el tumor (procedimiento complejo).', 'Sí', 2024, 'AAPC'),
+
+('77799', 'Vigente', 'Procedimiento de braquiterapia no listado', 'Procedimiento de braquiterapia no listado',
+ 'Procedimiento de braquiterapia no listado. Se utiliza para procedimientos que no tienen un código específico.',
+ 'Radiología', 'Radioterapia', 0.000, 0.000, 0.000,
+ 'Procedimiento de braquiterapia sin código específico.', 'Sí', 2024, 'AAPC'),
+
+-- ============================================================
+-- 22.14 MEDICINA NUCLEAR - DIAGNÓSTICO (78012-78999)
+-- Fuente: AMA, AAPC, Highmark, AdventHealth
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+-- ------------------------------------------------------------
+-- 22.14.1 TIROIDES Y PARATIROIDES
+-- ------------------------------------------------------------
+('78012', 'Vigente', 'Captación tiroidea', 'Captación tiroidea, una o múltiples mediciones',
+ 'Thyroid uptake, single or multiple quantitative measurement(s) (including stimulation, suppression, or discharge, when performed). Estudio que mide la función de la glándula tiroides mediante la administración de yodo radiactivo (RAIU). [citation:5][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se administra yodo radiactivo y se mide cuánto absorbe la tiroides.', 'No', 2024, 'AMA/Highmark'),
+
+('78013', 'Vigente', 'Gammagrafía tiroidea', 'Gammagrafía de tiroides (incluye flujo vascular)',
+ 'Thyroid imaging (including vascular flow, when performed). Estudio que evalúa la posición, tamaño y forma de la glándula tiroides mediante imágenes con un gammacámara. [citation:5][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se toma una imagen de la tiroides con una cámara especial.', 'No', 2024, 'AMA/Highmark'),
+
+('78014', 'Vigente', 'Gammagrafía y captación tiroidea', 'Gammagrafía de tiroides con captación cuantitativa',
+ 'Thyroid imaging (including vascular flow, when performed); with single or multiple uptake(s) quantitative measurement(s). Estudio combinado que evalúa la estructura y función de la tiroides. [citation:5][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se toman imágenes de la tiroides y se mide su función en el mismo estudio.', 'No', 2024, 'AMA/Highmark'),
+
+('78015', 'Vigente', 'Gammagrafía metástasis tiroidea', 'Gammagrafía de metástasis de tiroides (área limitada)',
+ 'Thyroid metastasis imaging; limited area (eg, neck, chest, or other specified area). Estudio para detectar metástasis de cáncer de tiroides en un área específica. [citation:1][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.650, 6.110, 0.000,
+ 'Se busca diseminación de cáncer de tiroides en una zona del cuerpo.', 'No', 2024, 'AMA/PayerReady'),
+
+('78016', 'Vigente', 'Gammagrafía metástasis tiroidea - adicional', 'Gammagrafía de metástasis de tiroides, con estudios adicionales',
+ 'Thyroid metastasis imaging; with additional studies (eg, whole body, SPECT). Estudio más completo para detectar metástasis, incluyendo técnicas como SPECT. [citation:1][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.800, 7.530, 0.000,
+ 'Se busca diseminación de cáncer de tiroides con técnicas de imagen avanzadas.', 'No', 2024, 'AMA/PayerReady'),
+
+('78018', 'Vigente', 'Gammagrafía tiroidea cuerpo entero', 'Gammagrafía de tiroides, cuerpo entero',
+ 'Thyroid imaging, whole body. Estudio de cuerpo entero para detectar metástasis de cáncer de tiroides. [citation:1][citation:6][citation:14]',
+ 'Radiología', 'Medicina Nuclear', 0.840, 8.250, 0.000,
+ 'Se busca diseminación de cáncer de tiroides en todo el cuerpo.', 'No', 2024, 'AMA/PayerReady'),
+
+('78020', 'Vigente', 'Captación de metástasis tiroideas', 'Captación de metástasis de carcinoma tiroideo',
+ 'Thyroid carcinoma metastases uptake. Estudio para evaluar la captación de yodo radiactivo por metástasis de cáncer de tiroides. [citation:6][citation:14]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se mide la absorción de yodo radiactivo por las metástasis de cáncer de tiroides.', 'No', 2024, 'AMA/Highmark'),
+
+('78070', 'Vigente', 'Gammagrafía paratiroidea planar', 'Gammagrafía planar de paratiroides (incluye sustracción)',
+ 'Parathyroid planar imaging (including subtraction, when performed). Estudio para localizar glándulas paratiroides hiperfuncionantes. [citation:1][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.780, 7.810, 0.000,
+ 'Se buscan glándulas paratiroides anormales con una cámara gamma.', 'No', 2024, 'AMA/PayerReady'),
+
+('78071', 'Vigente', 'Gammagrafía paratiroidea con SPECT', 'Gammagrafía planar paratiroidea con SPECT (tomografía)',
+ 'Parathyroid planar imaging (including subtraction, when performed); with tomographic (SPECT). Estudio que añade SPECT para mejor localización anatómica. [citation:1][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 1.170, 9.270, 0.000,
+ 'Se buscan glándulas paratiroides anormales usando SPECT.', 'No', 2024, 'AMA/PayerReady'),
+
+('78072', 'Vigente', 'Gammagrafía paratiroidea con SPECT/CT', 'Gammagrafía planar paratiroidea con SPECT y CT',
+ 'Parathyroid planar imaging (including subtraction, when performed); with tomographic (SPECT), and concurrently acquired computed tomography (CT) for anatomical localization. Técnica híbrida que combina SPECT y CT para la localización precisa de paratiroides. [citation:1][citation:6][citation:7]',
+ 'Radiología', 'Medicina Nuclear', 1.560, 11.470, 0.000,
+ 'Se localizan glándulas paratiroides anormales con SPECT/CT.', 'No', 2024, 'AMA/PayerReady'),
+
+('78075', 'Vigente', 'Gammagrafía suprarrenal', 'Gammagrafía de corteza y médula suprarrenal',
+ 'Adrenal cortex and medulla imaging. Estudio para evaluar la función de las glándulas suprarrenales. [citation:1][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.720, 11.600, 0.000,
+ 'Se evalúan las glándulas suprarrenales con un radiofármaco.', 'No', 2024, 'AMA/PayerReady'),
+
+-- ------------------------------------------------------------
+-- 22.14.2 HUESO Y MÉDULA ÓSEA
+-- ------------------------------------------------------------
+('78300', 'Vigente', 'Gammagrafía ósea limitada', 'Gammagrafía ósea o articular, área limitada',
+ 'Bone and/or joint imaging; limited area. Estudio de una zona ósea o articular limitada (ej. rodillas, cadera). [citation:6][citation:11]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se toman imágenes de una zona limitada de los huesos o articulaciones.', 'No', 2024, 'AMA/Highmark'),
+
+('78305', 'Vigente', 'Gammagrafía ósea múltiple', 'Gammagrafía ósea o articular, múltiples áreas',
+ 'Bone and/or joint imaging; multiple areas. Estudio de varias zonas óseas o articulares [citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se toman imágenes de varias zonas de los huesos o articulaciones.', 'No', 2024, 'AMA/Highmark'),
+
+('78306', 'Vigente', 'Gammagrafía ósea cuerpo entero', 'Gammagrafía ósea, cuerpo entero',
+ 'Bone and/or joint imaging; whole body. Estudio de cuerpo entero para detectar metástasis óseas u otras patologías. [citation:1][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.840, 7.760, 0.000,
+ 'Se toman imágenes de todos los huesos del cuerpo.', 'No', 2024, 'AMA/PayerReady'),
+
+('78315', 'Vigente', 'Gammagrafía ósea trifásica', 'Gammagrafía ósea de 3 fases (estudio dinámico)',
+ 'Bone and/or joint imaging; three phase study. Estudio que evalúa el flujo sanguíneo, el pool sanguíneo y la captación ósea tardía (útil en infecciones). [citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Estudio de los huesos en tres fases (flujo, pool y tardío).', 'No', 2024, 'AMA/Highmark'),
+
+-- ------------------------------------------------------------
+-- 22.14.3 CARDIOVASCULAR Y RESPIRATORIO
+-- ------------------------------------------------------------
+('78451', 'Vigente', 'SPECT cardíaco (único estudio)', 'Imagen de músculo cardíaco con SPECT, estudio único',
+ 'Heart muscle imaging, SPECT; single study. Estudio de perfusión miocárdica con SPECT para evaluar el flujo sanguíneo al corazón. [citation:1]',
+ 'Radiología', 'Medicina Nuclear', 1.350, 9.320, 0.000,
+ 'Se evalúa el flujo de sangre al músculo cardíaco con SPECT.', 'No', 2024, 'AMA/PayerReady'),
+
+('78452', 'Vigente', 'SPECT cardíaco (múltiple)', 'Imagen de músculo cardíaco con SPECT, estudios múltiples',
+ 'Heart muscle imaging, SPECT; multiple studies. Estudio de perfusión miocárdica con SPECT que incluye múltiples adquisiciones (ej. estrés y reposo). [citation:1]',
+ 'Radiología', 'Medicina Nuclear', 1.580, 12.810, 0.000,
+ 'Se evalúa el flujo de sangre al corazón en múltiples momentos (ej. reposo y estrés).', 'No', 2024, 'AMA/PayerReady'),
+
+('78582', 'Vigente', 'Gammagrafía pulmonar V/Q', 'Gammagrafía de ventilación y perfusión pulmonar',
+ 'Pulmonary ventilation (eg, aerosol or gas) and perfusion imaging. Estudio de ventilación/perfusión (V/Q) para evaluar la función pulmonar y detectar embolismos. [citation:6][citation:14]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se estudian la ventilación y el flujo sanguíneo de los pulmones.', 'No', 2024, 'AMA/Highmark'),
+
+-- ------------------------------------------------------------
+-- 22.14.4 SISTEMA NERVIOSO
+-- ------------------------------------------------------------
+('78605', 'Vigente', 'Gammagrafía cerebral estática', 'Gammagrafía cerebral, estudio estático completo',
+ 'Brain imaging, complete; static only. Estudio de perfusión cerebral estático para evaluar el flujo sanguíneo en el cerebro. [citation:1][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.520, 0.000, 0.000,
+ 'Se toma una imagen estática del flujo sanguíneo cerebral.', 'No', 2024, 'AMA/PayerReady'),
+
+('78606', 'Vigente', 'Gammagrafía cerebral con flujo', 'Gammagrafía cerebral, estudio completo con flujo',
+ 'Brain imaging, complete; with flow. Estudio de perfusión cerebral que incluye la evaluación del flujo sanguíneo dinámico. [citation:1][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.620, 0.000, 0.000,
+ 'Se evalúa el flujo sanguíneo cerebral de forma dinámica.', 'No', 2024, 'AMA/PayerReady'),
+
+-- ------------------------------------------------------------
+-- 22.14.5 SISTEMA DIGESTIVO Y ABDOMINAL
+-- ------------------------------------------------------------
+('78226', 'Vigente', 'Gammagrafía hepatobiliar (estándar)', 'Gammagrafía del sistema hepatobiliar',
+ 'Hepatobiliary system imaging, including gallbladder when present. Estudio de la función de la vesícula y vías biliares. [citation:1][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.720, 8.530, 0.000,
+ 'Se evalúa la función de la vesícula y las vías biliares.', 'No', 2024, 'AMA/PayerReady'),
+
+('78227', 'Vigente', 'Gammagrafía hepatobiliar con fármaco', 'Gammagrafía del sistema hepatobiliar con intervención farmacológica',
+ 'Hepatobiliary system imaging, including gallbladder when present; with pharmacologic intervention, including quantitative measurement(s) when performed. Estudio que añade un fármaco (ej. CCK) para evaluar la función de la vesícula. [citation:1][citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.880, 11.460, 0.000,
+ 'Se evalúa la función de la vesícula usando un medicamento.', 'No', 2024, 'AMA/PayerReady'),
+
+('78258', 'Vigente', 'Estudio de motilidad esofágica', 'Estudio de motilidad del esófago',
+ 'Esophagus motility study. Estudio de la función motora del esófago. [citation:6]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se evalúa cómo se mueve el esófago.', 'No', 2024, 'AMA/Highmark'),
+
+('78264', 'Vigente', 'Estudio de vaciamiento gástrico', 'Estudio de vaciamiento gástrico (sólido o líquido)',
+ 'Gastric emptying imaging study (eg, solid, liquid, or both). Estudio para medir la velocidad a la que el estómago vacía su contenido. [citation:6][citation:14]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se mide la velocidad del vaciamiento del estómago.', 'No', 2024, 'AMA/Highmark'),
+
+('78278', 'Vigente', 'Gammagrafía de sangrado GI', 'Gammagrafía para sangrado gastrointestinal',
+ 'Gastrointestinal bleeding imaging. Estudio para localizar el origen de un sangrado en el tracto gastrointestinal. [citation:6][citation:14]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se busca el origen de un sangrado en el sistema digestivo.', 'No', 2024, 'AMA/Highmark'),
+
+-- ------------------------------------------------------------
+-- 22.14.6 SISTEMA RENAL Y URINARIO
+-- ------------------------------------------------------------
+('78707', 'Vigente', 'Gammagrafía renal con flujo y función', 'Gammagrafía renal con flujo vascular y función (estudio único)',
+ 'Kidney imaging with vascular flow and function; single study without pharmacological intervention. Estudio de la perfusión y función renal. [citation:6][citation:14]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se evalúa el flujo sanguíneo y la función de los riñones.', 'No', 2024, 'AMA/Highmark'),
+
+('78708', 'Vigente', 'Gammagrafía renal con fármaco', 'Gammagrafía renal con flujo y función, con intervención farmacológica',
+ 'Kidney imaging with vascular flow and function; single study with pharmacological intervention (eg, diuretic or ACE inhibitor). Estudio que evalúa la función renal con un fármaco (ej. diurético). [citation:6][citation:14]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se evalúa la función renal usando un medicamento.', 'No', 2024, 'AMA/Highmark'),
+
+-- ------------------------------------------------------------
+-- 22.14.7 OTROS PROCEDIMIENTOS
+-- ------------------------------------------------------------
+('78195', 'Vigente', 'Gammagrafía del sistema linfático', 'Gammagrafía del sistema linfático (linfocintigrafía)',
+ 'Lymph system imaging. Estudio del sistema linfático, incluyendo la identificación del ganglio centinela. [citation:1][citation:6][citation:14]',
+ 'Radiología', 'Medicina Nuclear', 1.170, 9.330, 0.000,
+ 'Se evalúa el sistema linfático o se identifica el ganglio centinela.', 'No', 2024, 'AMA/PayerReady'),
+
+('78800', 'Vigente', 'Gammagrafía de proceso inflamatorio', 'Gammagrafía para localización de proceso inflamatorio (una zona)',
+ 'Radiopharmaceutical localization of inflammatory process; single area. Estudio para localizar un proceso inflamatorio o infeccioso en una zona. [citation:11]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Se busca un proceso inflamatorio en una zona del cuerpo.', 'No', 2024, 'AMA'),
+
+('78999', 'Vigente', 'Procedimiento no listado', 'Procedimiento no listado de medicina nuclear',
+ 'Unlisted nuclear medicine procedure. Se utiliza para procedimientos de medicina nuclear no listados. [citation:3]',
+ 'Radiología', 'Medicina Nuclear', 0.000, 0.000, 0.000,
+ 'Procedimiento de medicina nuclear sin código específico.', 'Sí', 2024, 'AMA'),
+
+-- ============================================================
+-- 23. PATOLOGÍA Y LABORATORIO (80047-89398)
+-- Fuente: AMA, CMS, AAPC, State of Mississippi
+-- ============================================================
+
+-- ------------------------------------------------------------
+-- 23.1 PANELES ORIENTADOS A ÓRGANOS O ENFERMEDADES (80047-80081)
+-- Fuente: AMA, CMS, Devry University
+-- NOTA: Los paneles son códigos que agrupan pruebas comúnmente solicitadas juntas.
+--       Para usar un panel, TODAS las pruebas del panel deben haberse realizado. 
+--       Las pruebas adicionales a las del panel se reportan por separado [citation:5].
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+('80047', 'Vigente', 'Panel metabólico básico', 'Panel metabólico básico (BMP)',
+ 'Panel metabólico básico (BMP), incluye: glucosa, BUN, creatinina, electrolitos (sodio, potasio, cloro, bicarbonato), calcio, y albúmina. Un grupo de pruebas que evalúa el equilibrio de fluidos, electrolitos, función renal y metabolismo de la glucosa.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre básico para evaluar riñones, electrolitos y azúcar.', 'No', 2024, 'AMA/CMS'),
+
+('80048', 'Vigente', 'Panel de salud', 'Panel de salud básico (electrolitos y función renal)',
+ 'Panel de salud básico, incluye: glucosa, BUN, creatinina, sodio, potasio, cloro, CO2, calcio.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre básico para evaluar salud general.', 'No', 2024, 'AMA/CMS'),
+
+('80050', 'Vigente', 'Panel de salud general', 'Panel de salud general, con pruebas tiroideas',
+ 'Panel de salud general, incluye: glucosa, BUN, creatinina, sodio, potasio, cloro, CO2, calcio, albúmina, y pruebas de función tiroidea (T4, TSH).',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para evaluación de salud general y tiroides.', 'No', 2024, 'AMA/CMS'),
+
+('80051', 'Vigente', 'Panel de electrolitos', 'Panel de electrolitos',
+ 'Panel de electrolitos, incluye: sodio, potasio, cloro, y CO2 (bicarbonato).',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir las sales minerales (electrolitos).', 'No', 2024, 'AMA/CMS'),
+
+('80053', 'Vigente', 'Panel metabólico completo', 'Panel metabólico completo (CMP)',
+ 'Panel metabólico completo (CMP), incluye: glucosa, BUN, creatinina, sodio, potasio, cloro, CO2, calcio, albúmina, bilirrubina, proteína total, y pruebas de función hepática (TGP, TGO, FA). Un panel más amplio que evalúa el estado metabólico y la función de órganos clave.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre completo para evaluar función renal, hepática y metabólica.', 'No', 2024, 'AMA/CMS'),
+
+('80055', 'Vigente', 'Panel obstétrico', 'Panel de laboratorio obstétrico',
+ 'Panel obstétrico, incluye: ABO y Rh, anticuerpos de células rojas, VDRL/RPR, y pruebas de inmunidad a rubéola.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para la atención prenatal.', 'No', 2024, 'AMA/CMS'),
+
+('80061', 'Vigente', 'Perfil lipídico', 'Perfil lipídico (colesterol)',
+ 'Perfil lipídico, incluye: colesterol total, lipoproteína de alta densidad (HDL), lipoproteína de baja densidad (LDL), y triglicéridos.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para evaluar los niveles de grasa (colesterol y triglicéridos).', 'No', 2024, 'AMA/CMS'),
+
+('80069', 'Vigente', 'Panel de función renal', 'Panel de función renal',
+ 'Panel de función renal, incluye: BUN, creatinina, y tasa de filtración glomerular (eGFR), cuando se calcula.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para evaluar la función de los riñones.', 'No', 2024, 'AMA/CMS'),
+
+('80074', 'Vigente', 'Panel de hepatitis aguda', 'Panel de hepatitis viral aguda',
+ 'Panel de hepatitis viral aguda, incluye: anticuerpo contra el core de hepatitis B, anticuerpo de superficie de hepatitis B, anticuerpo de hepatitis C, y anticuerpo de hepatitis A (IgM), cuando se realiza.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para detectar hepatitis viral activa.', 'No', 2024, 'AMA/CMS'),
+
+('80076', 'Vigente', 'Panel de función hepática', 'Panel de función hepática',
+ 'Panel de función hepática, incluye: albúmina, bilirrubina total, proteína total, fosfatasa alcalina (FA), transaminasa glutámico-oxalacética (TGO/AST), transaminasa glutámico-pirúvica (TGP/ALT), y gamma-glutamiltransferasa (GGT), cuando se realiza.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para evaluar la función y salud del hígado.', 'No', 2024, 'AMA/CMS'),
+
+('80081', 'Vigente', 'Panel de artritis reumatoide', 'Panel de artritis reumatoide',
+ 'Panel de artritis reumatoide, incluye: factor reumatoide, anticuerpo anti-CCP (proteína citrulinada cíclica), y velocidad de sedimentación globular (VSG), cuando se realiza.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para ayudar en el diagnóstico de artritis reumatoide.', 'No', 2024, 'AMA/CMS');
+
+-- ============================================================
+-- 23.2 PRUEBAS DE QUÍMICA (82000-84999) - EJEMPLOS CLAVE
+-- Fuente: State of Mississippi Medicaid Fee Schedule [citation:2]
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+('82681', 'Vigente', 'Estradiol libre', 'Ensayo de estradiol, medición directa libre',
+ 'Ensayo de estradiol, medición directa y libre (no unido). Utilizado para evaluar la función ovárica y testicular.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir la hormona estradiol en su forma libre.', 'No', 2024, 'AMA/CMS'),
+
+('82693', 'Vigente', 'Etilenglicol', 'Ensayo de etilenglicol (anticongelante) en sangre',
+ 'Ensayo de etilenglicol (anticongelante) en sangre. Se utiliza para detectar intoxicación por etilenglicol.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para detectar la presencia de anticongelante (etilenglicol).', 'No', 2024, 'AMA/CMS'),
+
+('82725', 'Vigente', 'Ácidos grasos no esterificados', 'Ensayo de ácidos grasos no esterificados (libres)',
+ 'Ensayo de ácidos grasos no esterificados (NEFA). Utilizado para evaluar el metabolismo de las grasas.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir ácidos grasos libres.', 'No', 2024, 'AMA/CMS'),
+
+('82728', 'Vigente', 'Ferritina', 'Ensayo de ferritina en suero',
+ 'Ensayo de ferritina en suero. Refleja las reservas de hierro en el cuerpo. Útil para diagnosticar anemia ferropénica o hemocromatosis.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir las reservas de hierro (ferritina).', 'No', 2024, 'AMA/CMS'),
+
+('82746', 'Vigente', 'Ácido fólico sérico', 'Ensayo de ácido fólico en suero',
+ 'Ensayo de ácido fólico en suero. Se utiliza para evaluar el estado de ácido fólico y diagnosticar su deficiencia.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir la vitamina B9 (ácido fólico).', 'No', 2024, 'AMA/CMS'),
+
+('82747', 'Vigente', 'Ácido fólico en GR', 'Ensayo de ácido fólico en glóbulos rojos (RBC)',
+ 'Ensayo de ácido fólico en glóbulos rojos. Refleja los niveles de ácido fólico en los tejidos.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir la vitamina B9 (ácido fólico) dentro de los glóbulos rojos.', 'No', 2024, 'AMA/CMS'),
+
+('83020', 'Vigente', 'Hemoglobina', 'Hemoglobina total en sangre (cuantitativa)',
+ 'Hemoglobina total en sangre (cuantitativa). Mide la concentración de hemoglobina, la proteína que transporta oxígeno en los glóbulos rojos.',
+ 'Patología', 'Hematología', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir la cantidad de hemoglobina.', 'No', 2024, 'AMA/CMS'),
+
+('83090', 'Vigente', 'Hormona de crecimiento', 'Ensayo de hormona de crecimiento (GH)',
+ 'Ensayo de hormona de crecimiento (GH) humana. Se utiliza para evaluar trastornos del crecimiento y de la glándula pituitaria.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir la hormona del crecimiento.', 'No', 2024, 'AMA/CMS'),
+
+('83655', 'Vigente', 'Plomo en sangre', 'Ensayo de plomo en sangre',
+ 'Ensayo de plomo en sangre. Se utiliza para detectar y monitorear la intoxicación por plomo.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir los niveles de plomo.', 'No', 2024, 'AMA/CMS'),
+
+('84443', 'Vigente', 'TSH', 'Ensayo de hormona estimulante de la tiroides (TSH)',
+ 'Ensayo de hormona estimulante de la tiroides (TSH). Prueba de primera línea para evaluar la función tiroidea e identificar hipotiroidismo o hipertiroidismo.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir la hormona que regula la tiroides (TSH).', 'No', 2024, 'AMA/CMS'),
+
+('84480', 'Vigente', 'T3 total', 'Ensayo de triyodotironina (T3) total en suero',
+ 'Ensayo de triyodotironina (T3) total en suero. Se utiliza para evaluar la función tiroidea, a menudo en conjunto con TSH y T4.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir la hormona tiroidea T3 total.', 'No', 2024, 'AMA/CMS'),
+
+('84481', 'Vigente', 'T3 libre', 'Ensayo de triyodotironina (T3) libre en suero',
+ 'Ensayo de triyodotironina (T3) libre en suero. Mide la forma activa no unida de la T3.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir la hormona tiroidea T3 libre.', 'No', 2024, 'AMA/CMS'),
+
+('84482', 'Vigente', 'T4 libre', 'Ensayo de tiroxina (T4) libre en suero',
+ 'Ensayo de tiroxina (T4) libre en suero. Mide la forma activa no unida de la T4. Prueba clave para la función tiroidea.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir la hormona tiroidea T4 libre.', 'No', 2024, 'AMA/CMS'),
+
+('84484', 'Vigente', 'T4 total', 'Ensayo de tiroxina (T4) total en suero',
+ 'Ensayo de tiroxina (T4) total en suero.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir la hormona tiroidea T4 total.', 'No', 2024, 'AMA/CMS'),
+
+('84520', 'Vigente', 'Urea (BUN)', 'Ensayo de urea (BUN) en sangre',
+ 'Ensayo de nitrógeno ureico en sangre (BUN). Marca de la función renal.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir el nitrógeno ureico (función renal).', 'No', 2024, 'AMA/CMS'),
+
+('84630', 'Vigente', 'Zinc en suero', 'Ensayo de zinc en suero',
+ 'Ensayo de zinc en suero. Se utiliza para evaluar el estado del zinc y detectar deficiencia o toxicidad.',
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir los niveles de zinc.', 'No', 2024, 'AMA/CMS'),
+
+('85025', 'Vigente', 'Hemograma completo c/diferencial', 'Hemograma completo con fórmula leucocitaria',
+ 'Conteo sanguíneo completo (CBC) con fórmula leucocitaria (diferencial). Incluye: hematocrito, hemoglobina, recuento de glóbulos rojos y blancos, y plaquetas.',
+ 'Patología', 'Hematología', 0.000, 0.000, 0.000,
+ 'Análisis de sangre completo (glóbulos rojos, blancos, plaquetas).', 'No', 2024, 'AMA/CMS'),
+
+('85027', 'Vigente', 'Hemograma completo', 'Hemograma completo sin diferencial',
+ 'Conteo sanguíneo completo (CBC) sin fórmula leucocitaria. Incluye: hematocrito, hemoglobina, recuento de glóbulos rojos y blancos, y plaquetas.',
+ 'Patología', 'Hematología', 0.000, 0.000, 0.000,
+ 'Análisis de sangre (glóbulos rojos, blancos, plaquetas, sin diferencial).', 'No', 2024, 'AMA/CMS'),
+
+-- ============================================================
+-- 23.3 MICROBIOLOGÍA (87003-87999)
+-- Fuente: AAPC, AMA, CMS, GSA [citation:1][citation:6]
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+-- ------------------------------------------------------------
+-- 23.3.1 CULTIVOS Y TIPIFICACIÓN (87040-87158)
+-- ------------------------------------------------------------
+('87040', 'Vigente', 'Cultivo sangre bacterias', 'Cultivo de sangre, detección bacteriana',
+ 'Cultivo de sangre, para la detección y aislamiento de bacterias. Incluye la incubación y el examen inicial para la identificación de microorganismos.',
+ 'Patología', 'Microbiología', 0.000, 0.000, 0.000,
+ 'Se extrae sangre y se cultiva para ver si crecen bacterias.', 'No', 2024, 'AMA/AAPC'),
+
+('87070', 'Vigente', 'Cultivo microorganismos', 'Cultivo bacteriano (excepto orina, sangre)',
+ 'Cultivo bacteriano, para la detección y aislamiento de microorganismos, excepto orina y sangre. Se utiliza para muestras de heridas, garganta, esputo, etc.',
+ 'Patología', 'Microbiología', 0.000, 0.000, 0.000,
+ 'Se cultiva una muestra (ej. de herida) para ver si crecen bacterias.', 'No', 2024, 'AMA/AAPC'),
+
+('87086', 'Vigente', 'Cultivo orina cuantitativo', 'Cultivo de orina, cuantitativo (conteo de colonias)',
+ 'Cultivo de orina, cuantitativo, para el aislamiento y conteo de colonias bacterianas. Se utiliza para diagnosticar infecciones del tracto urinario.',
+ 'Patología', 'Microbiología', 0.000, 0.000, 0.000,
+ 'Se cultiva la orina y se cuentan las bacterias para diagnosticar una infección.', 'No', 2024, 'AMA/AAPC'),
+
+('87088', 'Vigente', 'Cultivo orina identificación', 'Cultivo de orina, con identificación bacteriana',
+ 'Cultivo de orina, para el aislamiento e identificación de un microorganismo. Se reporta además del cultivo cuantitativo.',
+ 'Patología', 'Microbiología', 0.000, 0.000, 0.000,
+ 'Se identifica la bacteria específica que crece en el cultivo de orina.', 'No', 2024, 'AMA/AAPC'),
+
+('87186', 'Vigente', 'Antibiograma levaduras', 'Antibiograma (sensibilidad a antifúngicos) - levaduras',
+ 'Prueba de sensibilidad a agentes antifúngicos (antibiograma), método de microdilución en caldo o agar, para levaduras (ej. Candida).',
+ 'Patología', 'Microbiología', 0.000, 0.000, 0.000,
+ 'Se prueba qué medicamento antifúngico es efectivo contra la levadura aislada.', 'No', 2024, 'AMA/AAPC'),
+
+('87188', 'Vigente', 'Antibiograma mohos', 'Antibiograma (sensibilidad a antifúngicos) - mohos',
+ 'Prueba de sensibilidad a agentes antifúngicos (antibiograma), método de microdilución en caldo o agar, para mohos (ej. Aspergillus).',
+ 'Patología', 'Microbiología', 0.000, 0.000, 0.000,
+ 'Se prueba qué medicamento antifúngico es efectivo contra el moho aislado.', 'No', 2024, 'AMA/AAPC'),
+
+-- ------------------------------------------------------------
+-- 23.3.2 DETECCIÓN DE ANTÍGENOS Y ÁCIDOS NUCLEICOS (87804-87999)
+-- ------------------------------------------------------------
+('87804', 'Vigente', 'Antígeno influenza', 'Detección de antígenos del virus de influenza (A o B)',
+ 'Detección de antígenos de agentes infecciosos mediante inmunoensayo con observación óptica directa; virus de influenza (A o B).',
+ 'Patología', 'Microbiología', 0.000, 0.000, 0.000,
+ 'Prueba rápida para detectar el virus de la gripe (A o B).', 'No', 2024, 'AAP [citation:4]'),
+
+('87811', 'Vigente', 'Antígeno COVID-19', 'Detección de antígenos SARS-CoV-2 (COVID-19)',
+ 'Detección de antígenos de agentes infecciosos mediante inmunoensayo con observación óptica directa; SARS-CoV-2 (COVID-19).',
+ 'Patología', 'Microbiología', 0.000, 0.000, 0.000,
+ 'Prueba rápida de antígenos para COVID-19.', 'No', 2024, 'AAP [citation:4]'),
+
+('87812', 'Nuevo', 'Antígeno COVID-19 + Influenza', 'Detección de antígenos SARS-CoV-2 (COVID-19) e influenza A y B',
+ 'Detección de antígenos de agentes infecciosos mediante inmunoensayo con observación óptica directa; SARS-CoV-2 (COVID-19) y virus de influenza tipos A y B.',
+ 'Patología', 'Microbiología', 0.000, 0.000, 0.000,
+ 'Prueba rápida de antígenos combinada para COVID-19 e influenza.', 'No', 2026, 'AAP [citation:4]'),
+
+('87635', 'Vigente', 'PCR COVID-19', 'Detección de ácido nucleico (PCR) para SARS-CoV-2',
+ 'Detección de ácido nucleico (DNA o RNA) de agente infeccioso; SARS-CoV-2 (COVID-19), técnica de sonda amplificada.',
+ 'Patología', 'Microbiología', 0.000, 0.000, 0.000,
+ 'Prueba PCR para detectar el virus del COVID-19.', 'No', 2024, 'HL7 [citation:5]'),
+
+('87999', 'Vigente', 'Procedimiento microbiológico no listado', 'Procedimiento de microbiología no listado',
+ 'Procedimiento de microbiología no listado. Se utiliza para procedimientos que no tienen un código específico.',
+ 'Patología', 'Microbiología', 0.000, 0.000, 0.000,
+ 'Procedimiento de microbiología sin código específico.', 'Sí', 2024, 'Mayo Clinic [citation:10]');
+
+-- ============================================================
+-- 23.4 INMUNOLOGÍA (86000-86849)
+-- Fuente: AAPC, AMA, Bonfire Revenue [citation:2][citation:7]
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+-- ------------------------------------------------------------
+-- 23.4.1 ANTICUERPOS Y AUTOINMUNIDAD (86000-86235)
+-- ------------------------------------------------------------
+('86000', 'Vigente', 'Inmunoglobulina sérica', 'Inmunoglobulina sérica total (IgG, IgA, IgM)',
+ 'Inmunoglobulina sérica total, medición cuantitativa de IgA, IgG e IgM. Se utiliza para evaluar el estado inmunológico global.',
+ 'Patología', 'Inmunología', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para medir los niveles de anticuerpos (IgG, IgA, IgM).', 'No', 2024, 'AMA/AAPC'),
+
+('86235', 'Vigente', 'Anticuerpos ENA', 'Anticuerpos contra antígenos nucleares extraíbles (ENA)',
+ 'Anticuerpos contra antígenos nucleares extraíbles (ENA), incluye anti-Sm, anti-RNP, anti-SSA, anti-SSB. Se utiliza en el diagnóstico de enfermedades del tejido conectivo (ej. lupus).',
+ 'Patología', 'Inmunología', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para detectar anticuerpos asociados a enfermedades autoinmunes.', 'No', 2024, 'AMA/AAPC'),
+
+('86200', 'Vigente', 'ANA (título)', 'Anticuerpos antinucleares (ANA), con título y patrón',
+ 'Anticuerpos antinucleares (ANA), con título y patrón de fluorescencia (homogéneo, periférico, moteado, nucleolar). Prueba de detección para enfermedades autoinmunes.',
+ 'Patología', 'Inmunología', 0.000, 0.000, 0.000,
+ 'Prueba de anticuerpos antinucleares (ANA) para detectar enfermedades autoinmunes.', 'No', 2024, 'AMA/AAPC'),
+
+-- ------------------------------------------------------------
+-- 23.4.2 PRUEBAS CUANTITATIVAS Y CUALITATIVAS
+-- ------------------------------------------------------------
+('86317', 'Vigente', 'Inmunoensayo cuantitativo', 'Inmunoensayo cuantitativo (medición de nivel)',
+ 'Inmunoensayo cuantitativo, para medición de un analito específico (ej. citoquinas, hormonas).',
+ 'Patología', 'Inmunología', 0.000, 0.000, 0.000,
+ 'Análisis de sangre que mide la cantidad precisa de una sustancia (ej. una hormona).', 'No', 2024, 'Bonfire [citation:7]'),
+
+('86756', 'Vigente', 'Anticuerpo virus paperas', 'Anticuerpo contra el virus de las paperas (IgG o IgM)',
+ 'Anticuerpo contra el virus de las paperas, medición cualitativa o cuantitativa (IgG o IgM).',
+ 'Patología', 'Inmunología', 0.000, 0.000, 0.000,
+ 'Análisis de sangre para detectar anticuerpos contra el virus de las paperas.', 'No', 2024, 'Bonfire [citation:7]');
+
+-- ============================================================
+-- 23.5 CÓDIGOS DE ANÁLISIS DE LABORATORIO PROPIETARIOS (PLA) - 0552U-0574U
+-- Fuente: AAPC, AMA [citation:8]
+-- NOTA: Los códigos PLA son para pruebas de laboratorio propietarias, 
+--       identificadas por un nombre comercial específico.
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+('0552U', 'Nuevo', 'PLA - prueba 1', 'Prueba de laboratorio propietaria 1',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica. Ver Apéndice O del CPT para el nombre comercial exacto.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0553U', 'Nuevo', 'PLA - prueba 2', 'Prueba de laboratorio propietaria 2',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0554U', 'Nuevo', 'PLA - prueba 3', 'Prueba de laboratorio propietaria 3',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0555U', 'Nuevo', 'PLA - prueba 4', 'Prueba de laboratorio propietaria 4',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0556U', 'Nuevo', 'PLA - prueba 5', 'Prueba de laboratorio propietaria 5',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0557U', 'Nuevo', 'PLA - prueba 6', 'Prueba de laboratorio propietaria 6',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0558U', 'Nuevo', 'PLA - prueba 7', 'Prueba de laboratorio propietaria 7',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0559U', 'Nuevo', 'PLA - prueba 8', 'Prueba de laboratorio propietaria 8',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0560U', 'Nuevo', 'PLA - prueba 9', 'Prueba de laboratorio propietaria 9',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0561U', 'Nuevo', 'PLA - prueba 10', 'Prueba de laboratorio propietaria 10',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0562U', 'Nuevo', 'PLA - prueba 11', 'Prueba de laboratorio propietaria 11',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0563U', 'Nuevo', 'PLA - prueba 12', 'Prueba de laboratorio propietaria 12',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0564U', 'Nuevo', 'PLA - prueba 13', 'Prueba de laboratorio propietaria 13',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0565U', 'Nuevo', 'PLA - prueba 14', 'Prueba de laboratorio propietaria 14',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0566U', 'Nuevo', 'PLA - prueba 15', 'Prueba de laboratorio propietaria 15',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0567U', 'Nuevo', 'PLA - prueba 16', 'Prueba de laboratorio propietaria 16',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0568U', 'Nuevo', 'PLA - prueba 17', 'Prueba de laboratorio propietaria 17',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0569U', 'Nuevo', 'PLA - prueba 18', 'Prueba de laboratorio propietaria 18',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0570U', 'Nuevo', 'PLA - prueba 19', 'Prueba de laboratorio propietaria 19',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0571U', 'Nuevo', 'PLA - prueba 20', 'Prueba de laboratorio propietaria 20',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0572U', 'Nuevo', 'PLA - prueba 21', 'Prueba de laboratorio propietaria 21',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0573U', 'Nuevo', 'PLA - prueba 22', 'Prueba de laboratorio propietaria 22',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+('0574U', 'Nuevo', 'PLA - prueba 23', 'Prueba de laboratorio propietaria 23',
+ 'Prueba de laboratorio propietaria para el diagnóstico de una condición específica.',
+ 'Patología', 'PLA', 0.000, 0.000, 0.000,
+ 'Prueba de laboratorio con un nombre comercial específico.', 'No', 2025, 'AAPC [citation:8]'),
+
+-- ============================================================
+-- NOTA SOBRE CÓDIGOS PLA (0552U-0574U):
+-- 1. Estos son 23 nuevos códigos PLA efectivos desde julio de 2025 [citation:8].
+-- 2. Para codificar un PLA, se debe buscar en el Índice Alfabético del CPT por especialidad o enfermedad,
+--    y luego verificar el nombre comercial exacto en el Apéndice O.
+-- 3. Los códigos PLA incluyen todos los procesos de laboratorio necesarios (lisis celular, extracción, amplificación, etc.) 
+--    y no deben reportarse por separado [citation:8].
+-- 4. Nota: Los códigos PLA 0240U, 0241U, 0369U, 0370U, 0373U, 0374U han sido eliminados a partir de 2025 [citation:8].
 -- ============================================================
 
 -- ============================================================
--- NOTA SOBRE RVU: 
--- Los códigos de Categoría II y III no tienen valores de RVU asociados.
--- Los Category II son para medición de calidad. Los Category III son temporales y su reembolso varía.
--- Fuentes: AMA, NCQA/HEDIS
+-- 23.6 PATOLOGÍA QUIRÚRGICA (88300-88309)
+-- Fuente: AMA, CMS, NGS Medicare, HealthLab
+-- NOTA: Los niveles se basan en la complejidad del tejido, el diagnóstico y el tipo de procedimiento.
+--       La unidad de servicio es la "muestra" (specimen) [citation:13].
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+('88300', 'Vigente', 'Patología quirúrgica Nivel I', 'Patología quirúrgica Nivel I (examen macroscópico)',
+ 'Patología quirúrgica, Nivel I, examen macroscópico únicamente. Incluye la accesión, examen macroscópico (a simple vista) y reporte. No incluye examen microscópico.',
+ 'Patología', 'Patología Quirúrgica', 0.000, 0.000, 0.000,
+ 'El patólogo examina una muestra de tejido solo a simple vista (sin microscopio).', 'No', 2024, 'AMA/HealthLab'),
+
+('88302', 'Vigente', 'Patología quirúrgica Nivel II', 'Patología quirúrgica Nivel II',
+ 'Patología quirúrgica, Nivel II, examen macroscópico y microscópico. Incluye la accesión, examen macroscópico y microscópico (con tinción de rutina H&E) y reporte. **Ejemplos:** apéndice (incidental), trompa de Falopio (esterilización), dedos/pies (amputación traumática), prepucio (recién nacido), piel (cirugía plástica) [citation:3][citation:4].',
+ 'Patología', 'Patología Quirúrgica', 0.000, 0.000, 0.000,
+ 'El patólogo examina una muestra de tejido con microscopio, típicamente para confirmar que no hay enfermedad.', 'No', 2024, 'AMA/NGS Medicare'),
+
+('88304', 'Vigente', 'Patología quirúrgica Nivel III', 'Patología quirúrgica Nivel III',
+ 'Patología quirúrgica, Nivel III, examen macroscópico y microscópico. **Ejemplos:** aborto inducido, absceso, aneurisma, apéndice (no incidental), quiste cutáneo, piel (lesión), pólipo rectal, biopsia endometrial, muestras de TURP [citation:3][citation:5].',
+ 'Patología', 'Patología Quirúrgica', 0.000, 0.000, 0.000,
+ 'El patólogo examina una muestra de tejido de complejidad baja a moderada (ej. un quiste o un absceso).', 'No', 2024, 'AMA/NGS Medicare'),
+
+('88305', 'Vigente', 'Patología quirúrgica Nivel IV', 'Patología quirúrgica Nivel IV',
+ 'Patología quirúrgica, Nivel IV, examen macroscópico y microscópico. **Ejemplos:** aborto (espontáneo), biopsia de médula ósea, biopsia de mama (sin evaluación de márgenes), biopsia de cerebro/meninges, trompa de Falopio (embarazo ectópico), biopsia de riñón, laringe (biopsia), pulmón (biopsia transbronquial), melanoma (biopsia), próstata (biopsia por aguja), estómago (biopsia), tiroides (biopsia por aguja) [citation:3][citation:5].',
+ 'Patología', 'Patología Quirúrgica', 0.000, 0.000, 0.000,
+ 'El patólogo examina una biopsia o muestra de complejidad moderada (ej. una biopsia de mama o de próstata).', 'No', 2024, 'AMA/NGS Medicare'),
+
+('88307', 'Vigente', 'Patología quirúrgica Nivel V', 'Patología quirúrgica Nivel V',
+ 'Patología quirúrgica, Nivel V, examen macroscópico y microscópico. **Ejemplos:** resección de glándula suprarrenal, biopsia de hueso, cerebro (biopsia), colon (resección segmentaria no tumoral), extremidad (amputación por enfermedad), hígado (biopsia por aguja), pulmón (biopsia por aguja), ganglio linfático (disección), páncreas (biopsia), próstata (resección por TURP), tiroides (resección parcial) [citation:3][citation:5].',
+ 'Patología', 'Patología Quirúrgica', 0.000, 0.000, 0.000,
+ 'El patólogo examina una muestra de tejido compleja (ej. una resección de colon no tumoral o una biopsia de hueso).', 'No', 2024, 'AMA/NGS Medicare'),
+
+('88309', 'Vigente', 'Patología quirúrgica Nivel VI', 'Patología quirúrgica Nivel VI',
+ 'Patología quirúrgica, Nivel VI, examen macroscópico y microscópico. **Ejemplos:** mama (mastectomía con ganglios regionales), colon (resección segmentaria por tumor), esófago (resección total/parcial), extremidad (desarticulación), laringe (resección parcial/total con ganglios), pulmón (resección total/lobar/segmentaria), páncreas (resección total/subtotal), próstata (resección radical), intestino delgado (resección por tumor), estómago (resección subtotal/total por tumor), testículo (tumor), útero (con o sin trompas y ovarios, neoplásico) [citation:3][citation:4].',
+ 'Patología', 'Patología Quirúrgica', 0.000, 0.000, 0.000,
+ 'El patólogo examina una muestra de tejido de máxima complejidad (ej. una mastectomía por cáncer o una resección de colon por tumor).', 'No', 2024, 'AMA/NGS Medicare');
+
+-- ============================================================
+-- NOTA SOBRE LA CODIFICACIÓN DE PATOLOGÍA QUIRÚRGICA:
+-- 1. Factor Clave: El nivel se determina por el tipo de muestra, el diagnóstico (neoplásico vs. no neoplásico) y el tipo de procedimiento (biopsia vs. resección) [citation:13].
+-- 2. Ejemplo Clave: Un útero con diagnóstico de endometriosis se codifica como 88307, pero si el diagnóstico es adenocarcinoma, se codifica como 88309 [citation:13].
+-- 3. Biopsia vs. Resección: Una biopsia de colon es 88305, pero una resección segmentaria de colon por tumor es 88309 [citation:13].
+-- 4. Unidad de Servicio: La unidad es la "muestra" (specimen). Múltiples muestras del mismo paciente se codifican por separado, cada una con su nivel correspondiente [citation:3][citation:13].
+-- 5. Los códigos 88300-88309 incluyen la accesión, examen y reporte, pero no incluyen servicios adicionales como tinciones especiales (88311-88365) [citation:3].
+-- 6. Los RVU no se han incluido ya que varían significativamente. Se recomienda verificar con el fee schedule de cada pagador [citation:1].
 -- ============================================================
 
 -- ============================================================
