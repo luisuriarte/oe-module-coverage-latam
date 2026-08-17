@@ -3049,12 +3049,6 @@ INSERT INTO cpt_codes (
  'Categoría III', 'Cardiología', 0.000, 0.000, 0.000,
  'Reprogramación del dispositivo de monitorización subcutánea de insuficiencia cardíaca.', 'Sí', 2026, 'AMA');
 
--- ============================================================
--- NOTA SOBRE RVU: 
--- Los códigos de Categoría III no tienen valores de RVU asignados. Son temporales y su reembolso varía según el pagador.
--- Códigos 1044T-1049T son sustitutos de piel (grupo de 6 códigos) [citation:1]
--- Código 1042T descriptor corregido por AMA (cambio de "prosthetic" a "prostatic" en errata del 26/03/2026) [citation:5][citation:10]
--- ============================================================
 
 -- ============================================================
 -- NOTA SOBRE RVU: 
