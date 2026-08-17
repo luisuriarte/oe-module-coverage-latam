@@ -228,7 +228,7 @@ INSERT INTO cpt_codes_es (
 ('90838', 'Vigente', 'Psicoterapia 53+ min + E/M', 'Psicoterapia 53+ min con E/M',
  'Psicoterapia individual, 53 minutos o más, con servicios de evaluación y manejo, con el paciente en persona (se debe'
  'reportar además del código de E/M).',
- 'Medicina', 'Psiquiatría', 2.86, 0.32, 0.12, 'Sesión de terapia de 53+ min con consulta médica', 'No', 2024, 'AMA', ';'),
+ 'Medicina', 'Psiquiatría', 2.86, 0.32, 0.12, 'Sesión de terapia de 53+ min con consulta médica', 'No', 2024, 'AMA'),
 ('90853', 'Vigente', 'Psicoterapia grupal', 'Psicoterapia de grupo',
  'Psicoterapia de grupo, con el paciente y otros participantes en grupo.',
  'Medicina', 'Psiquiatría', 0.67, 0.05, 0.01, 'Sesión de terapia en grupo con varios pacientes', 'No', 2024, 'AMA');
@@ -291,10 +291,10 @@ INSERT INTO cpt_codes_es (
  'Cirugía', 'Piel y Tejido Subcutáneo', 8.500, 12.500, 1.700, 'Se aplica el injerto de células en una herida muy extensa', 'Sí', 2025, 'AMA'),
 ('15018', 'Nuevo', 'SCSA aplicación 501-600 cm²', 'Aplicación SCSA 501-600 cm²',
  'Aplicación de autograft de suspensión de células cutáneas (SCSA), herida de 501-600 cm².',
- 'Cirugía', 'Piel y Tejido Subcutáneo', 9.500, 14.000, 1.900, 'Se aplica el injerto de células en una herida de máxima extensión', 'Sí', 2025, 'AMA', ';'),
+ 'Cirugía', 'Piel y Tejido Subcutáneo', 9.500, 14.000, 1.900, 'Se aplica el injerto de células en una herida de máxima extensión', 'Sí', 2025, 'AMA'),
 ('15847', 'Vigente', 'Abdominoplastía extensa', 'Abdominoplastía extensa',
  'Abdominoplastía (cirugía de abdomen), extensa, con múltiples áreas.',
- 'Cirugía', 'Plástica', 8.000, 10.500, 1.800, 'Se hace una cirugía extensa del abdomen para remover piel y grasa', 'Sí', 2024, 'AMA', ';'),
+ 'Cirugía', 'Plástica', 8.000, 10.500, 1.800, 'Se hace una cirugía extensa del abdomen para remover piel y grasa', 'Sí', 2024, 'AMA'),
 ('19316', 'Vigente', 'Mastopexia', 'Mastopexia (levantamiento de senos)',
  'Mastopexia, levantamiento de la mama y reposición del complejo areola-pezón.',
  'Cirugía', 'Plástica', 10.81, 8.89, 2.13, 'Se levanta y reafirma el seno', 'Sí', 2024, 'AMA'),
@@ -479,7 +479,7 @@ INSERT INTO cpt_codes_es (
  'Radiología', 'Intervencionista Vascular', 9.00, 1.32, 2.00, 'Se coloca stent después de remover placa', 'Sí', 2026, 'CMS'),
 ('37273', 'Vigente', 'Stent + aterectomía compleja', 'Stent con aterectomía compleja',
  'Intervención percutánea con stent y aterectomía compleja.',
- 'Radiología', 'Intervencionista Vascular', 12.63, 1.81, 2.81, 'Se coloca stent después de remover placa (procedimiento complejo)', 'Sí', 2026, 'CMS', ';'),
+ 'Radiología', 'Intervencionista Vascular', 12.63, 1.81, 2.81, 'Se coloca stent después de remover placa (procedimiento complejo)', 'Sí', 2026, 'CMS'),
 ('37600', 'Vigente', 'Ligadura carótida', 'Ligadura de arteria carótida externa',
  'Ligadura de arteria carótida externa (cirugía transoral robótica).',
  'Cirugía', 'Vascular', 12.11, 5.59, 2.13, 'Se liga la arteria carótida externa', 'Sí', 2024, 'AMA'),
@@ -488,7 +488,7 @@ INSERT INTO cpt_codes_es (
  'Cirugía', 'Vascular', 3.72, 2.15, 0.95, 'Se liga la vena safena para tratar várices', 'Sí', 2024, 'AMA'),
 ('37722', 'Vigente', 'Flebectomía', 'Flebectomía (extracción de venas)',
  'Flebectomía (extracción de venas varicosas), con técnicas de avulsión.',
- 'Cirugía', 'Vascular', 7.96, 2.70, 2.04, 'Se extraen venas varicosas', 'Sí', 2024, 'AMA', ';'),
+ 'Cirugía', 'Vascular', 7.96, 2.70, 2.04, 'Se extraen venas varicosas', 'Sí', 2024, 'AMA'),
 ('43235', 'Vigente', 'Esofagogastroduodenoscopia', 'Esofagogastroduodenoscopia (EGD) diagnóstica',
  'Esofagogastroduodenoscopia (EGD), diagnóstica, con o sin biopsia.',
  'Cirugía', 'Gastroenterología', 2.04, 1.03, 0.24, 'Se introduce un endoscopio por la boca hasta el estómago', 'Sí', 2024, 'AMA'),
@@ -512,7 +512,7 @@ INSERT INTO cpt_codes_es (
  'Cirugía', 'Gastroenterología', 4.76, 1.78, 0.60, 'Se destruye un tumor durante la colonoscopía', 'Sí', 2024, 'AMA'),
 ('45391', 'Vigente', 'Colonoscopía con biopsia profunda', 'Colonoscopía con biopsia profunda',
  'Colonoscopía con biopsia endoscópica de tejido profundo (ej. ESD).',
- 'Cirugía', 'Gastroenterología', 4.52, 1.76, 0.49, 'Se toma una biopsia profunda durante la colonoscopía', 'Sí', 2024, 'AMA', ';'),
+ 'Cirugía', 'Gastroenterología', 4.52, 1.76, 0.49, 'Se toma una biopsia profunda durante la colonoscopía', 'Sí', 2024, 'AMA'),
 ('49186', 'Nuevo', 'Tumor intraabdominal 0.1-5 cm', 'Resección tumor intraabdominal 0.1-5 cm',
  'Suma de la longitud máxima de tumor(es) o quiste(s) de 0.1 a 5.0 cm, para resección o destrucción de tumores'
  'intraabdominales.',
@@ -532,7 +532,7 @@ INSERT INTO cpt_codes_es (
 ('49190', 'Nuevo', 'Tumor intraabdominal >20 cm', 'Resección tumor intraabdominal mayor de 20 cm',
  'Suma de la longitud máxima de tumor(es) o quiste(s) mayor de 20.0 cm, para resección o destrucción de tumores'
  'intraabdominales.',
- 'Cirugía', 'Abdomen', 48.75, 19.26, 11.04, 'Se extirpa un tumor del abdomen extremadamente grande', 'Sí', 2025, 'ACS', ';'),
+ 'Cirugía', 'Abdomen', 48.75, 19.26, 11.04, 'Se extirpa un tumor del abdomen extremadamente grande', 'Sí', 2025, 'ACS'),
 ('49505', 'Vigente', 'Reparación hernia inguinal', 'Reparación de hernia inguinal',
  'Reparación de hernia inguinal (con malla) en paciente de 5 años o más.',
  'Cirugía', 'Abdomen', 7.76, 5.40, 2.05, 'Se repara una hernia en la ingle', 'Sí', 2024, 'AMA'),
@@ -562,7 +562,7 @@ INSERT INTO cpt_codes_es (
  'Cirugía', 'Urología', 3.93, 0.36, 0.49, 'Se bloquea el uréter para detener la filtración de orina', 'Sí', 2024, 'Medicare'),
 ('50706', 'Vigente', 'Dilatación ureteral', 'Dilatación con balón de estenosis ureteral',
  'Dilatación con balón de estenosis ureteral (código adicional).',
- 'Cirugía', 'Urología', 3.71, 0.53, 0.41, 'Se dilata una estrechez en el uréter', 'Sí', 2024, 'Medicare', ';'),
+ 'Cirugía', 'Urología', 3.71, 0.53, 0.41, 'Se dilata una estrechez en el uréter', 'Sí', 2024, 'Medicare'),
 ('58150', 'Vigente', 'Histerectomía abdominal', 'Histerectomía abdominal total',
  'Histerectomía abdominal total, con o sin salpingooforectomía.',
  'Cirugía', 'Ginecología', 16.88, 7.65, 3.41, 'Se extirpa el útero por una incisión en el abdomen', 'Sí', 2024, 'AMA'),
@@ -595,7 +595,7 @@ INSERT INTO cpt_codes_es (
 ('63075', 'Vigente', 'Discectomía cervical anterior', 'Discectomía cervical anterior con descompresión',
  'Discectomía cervical anterior, con descompresión de la médula espinal y/o raíces nerviosas, incluyendo'
  'osteofitectomía.',
- 'Cirugía', 'Columna', 19.11, 13.12, 6.34, 'Se extrae un disco del cuello y se descomprimen los nervios', 'Sí', 2024, 'AMA', ';'),
+ 'Cirugía', 'Columna', 19.11, 13.12, 6.34, 'Se extrae un disco del cuello y se descomprimen los nervios', 'Sí', 2024, 'AMA'),
 ('63685', 'Vigente', 'Inserción generador neuroestimulador', 'Inserción o reemplazo de generador de neuroestimulador espinal',
  'Inserción o reemplazo del generador de pulsos o receptor del neuroestimulador espinal, que requiere la creación de un'
  'bolsillo y la conexión entre el conjunto de electrodos y el generador de pulsos o receptor.',
@@ -609,7 +609,7 @@ INSERT INTO cpt_codes_es (
  'Cirugía', 'Medicina del Dolor', 1.85, 0.96, 0.17, 'Se inyecta medicamento alrededor del nervio lumbar para el dolor', 'Sí', 2024, 'AMA'),
 ('64490', 'Vigente', 'Bloqueo nervio cervical', 'Bloqueo de nervio cervical (transforaminal)',
  'Inyección transforaminal de nervio cervical, con fluoroscopia.',
- 'Cirugía', 'Medicina del Dolor', 1.77, 0.88, 0.17, 'Se inyecta medicamento alrededor del nervio cervical para el dolor', 'Sí', 2024, 'AMA', ';'),
+ 'Cirugía', 'Medicina del Dolor', 1.77, 0.88, 0.17, 'Se inyecta medicamento alrededor del nervio cervical para el dolor', 'Sí', 2024, 'AMA'),
 ('64590', 'Vigente', 'Inserción generador periférico', 'Inserción de generador de neuroestimulador periférico',
  'Inserción o reemplazo del generador de pulsos o receptor del neuroestimulador periférico, sacro o gástrico, que'
  'requiere la creación de un bolsillo y la conexión entre el conjunto de electrodos y el generador de pulsos o receptor.',
@@ -617,10 +617,10 @@ INSERT INTO cpt_codes_es (
 ('64595', 'Vigente', 'Revisión generador periférico', 'Revisión o extracción de generador de neuroestimulador periférico',
  'Revisión o extracción del generador de pulsos o receptor del neuroestimulador periférico, sacro o gástrico, con'
  'conexión desmontable al conjunto de electrodos.',
- 'Cirugía', 'Neurocirugía', 3.70, 2.03, 0.55, 'Se revisa o extrae el generador de un estimulador periférico', 'Sí', 2024, 'AMA', ';'),
+ 'Cirugía', 'Neurocirugía', 3.70, 2.03, 0.55, 'Se revisa o extrae el generador de un estimulador periférico', 'Sí', 2024, 'AMA'),
 ('64999', 'Vigente', 'Proc. no listado - neurológico', 'Procedimiento no listado - sistema nervioso',
  'Procedimiento quirúrgico no listado, sistema nervioso.',
- 'Cirugía', 'Sistema Nervioso', 0.000, 0.000, 0.000, 'Procedimiento quirúrgico del sistema nervioso sin código específico', 'Sí', 2024, 'AMA', ';');
+ 'Cirugía', 'Sistema Nervioso', 0.000, 0.000, 0.000, 'Procedimiento quirúrgico del sistema nervioso sin código específico', 'Sí', 2024, 'AMA');
 
 -- ============================================================
 -- 5. ANESTESIA
@@ -664,7 +664,7 @@ INSERT INTO cpt_codes_es (
  'Anestesia', 'Anestesia Ortopedia', 3.000, 4.500, 0.600, 'Anestesia para cirugía de hombro', 'Sí', 2024, 'AMA'),
 ('01922', 'Vigente', 'Anestesia imagenología', 'Anestesia para imagenología no invasiva',
  'Anestesia para imágenes no invasivas o terapia de radiación.',
- 'Anestesia', 'Anestesia Radiología', 1.800, 2.800, 0.400, 'Anestesia para estudios de imagen', 'Sí', 2024, 'AMA', ';');
+ 'Anestesia', 'Anestesia Radiología', 1.800, 2.800, 0.400, 'Anestesia para estudios de imagen', 'Sí', 2024, 'AMA');
 
 -- ============================================================
 -- 6. NEUROCIRUGÍA Y RADIOCIRUGÍA
@@ -699,7 +699,7 @@ INSERT INTO cpt_codes_es (
  'Cirugía', 'Oftalmología', 16.42, 11.96, 1.31, 'Se trasplanta la capa posterior de la córnea', 'Sí', 2024, 'AMA'),
 ('65855', 'Vigente', 'Trabeculoplastía láser', 'Trabeculoplastía por láser',
  'Trabeculoplastía por láser (ej. SLT).',
- 'Cirugía', 'Oftalmología', 2.93, 1.98, 0.22, 'Se aplica láser en el ojo para bajar la presión (glaucoma)', 'Sí', 2024, 'AMA', ';'),
+ 'Cirugía', 'Oftalmología', 2.93, 1.98, 0.22, 'Se aplica láser en el ojo para bajar la presión (glaucoma)', 'Sí', 2024, 'AMA'),
 ('69209', 'Vigente', 'Extracción cerumen', 'Extracción de impacto de cerumen',
  'Extracción de impacto de cerumen (cera de oído) con remoción manual o instrumental.',
  'Medicina', 'Otorrinolaringología', 0.00, 0.50, 0.01, 'Se extrae la cera acumulada en el oído', 'Sí', 2024, 'AMA'),
@@ -711,7 +711,7 @@ INSERT INTO cpt_codes_es (
  'Cirugía', 'Otorrinolaringología', 9.80, 12.69, 1.44, 'Se repara el tímpano', 'Sí', 2024, 'AMA'),
 ('69641', 'Vigente', 'Mastoidectomía', 'Mastoidectomía, simple',
  'Mastoidectomía, simple, para remoción de tejido infectado.',
- 'Cirugía', 'Otorrinolaringología', 12.57, 13.37, 1.85, 'Se extrae tejido infectado del hueso mastoides', 'Sí', 2024, 'AMA', ';'),
+ 'Cirugía', 'Otorrinolaringología', 12.57, 13.37, 1.85, 'Se extrae tejido infectado del hueso mastoides', 'Sí', 2024, 'AMA'),
 ('70450', 'Vigente', 'TAC cabeza sin contraste', 'TAC de cabeza sin contraste',
  'Tomografía computarizada de cabeza, sin contraste.',
  'Radiología', 'Neuroimagen', 0.00, 2.00, 0.01, 'Se toma una TAC de la cabeza sin contraste', 'Sí', 2024, 'AMA/CMS'),
@@ -765,7 +765,7 @@ INSERT INTO cpt_codes_es (
  'Radiología', 'Neuroimagen', 0.00, 5.57, 0.03, 'Se toma una resonancia del cerebro con contraste', 'Sí', 2024, 'AMA/CMS'),
 ('70553', 'Vigente', 'RMN cerebro', 'Resonancia magnética de cerebro sin y con contraste',
  'Resonancia magnética de cerebro sin y con contraste, incluyendo imágenes de difusión.',
- 'Radiología', 'Neuroimagen', 0.00, 6.31, 0.03, 'Se toma una resonancia del cerebro con y sin contraste', 'Sí', 2024, 'AMA', ';'),
+ 'Radiología', 'Neuroimagen', 0.00, 6.31, 0.03, 'Se toma una resonancia del cerebro con y sin contraste', 'Sí', 2024, 'AMA'),
 ('71045', 'Vigente', 'RX tórax 1 vista', 'Radiografía de tórax, 1 vista',
  'Radiografía de tórax, una vista (proyección frontal).',
  'Radiología', 'Torácica', 0.00, 0.50, 0.01, 'Se toma una radiografía del pecho (1 vista)', 'No', 2024, 'AMA'),
@@ -855,7 +855,7 @@ INSERT INTO cpt_codes_es (
  'Radiología', 'Pélvica', 0.00, 5.62, 0.03, 'Se toma una resonancia de la pelvis con contraste', 'Sí', 2024, 'AMA/CMS'),
 ('72197', 'Vigente', 'RMN pelvis s/c c', 'RMN de pelvis sin y con contraste',
  'Resonancia magnética de pelvis, sin y con contraste intravenoso.',
- 'Radiología', 'Pélvica', 0.00, 6.94, 0.03, 'Se toma una resonancia de la pelvis con y sin contraste', 'Sí', 2024, 'AMA/CMS', ';'),
+ 'Radiología', 'Pélvica', 0.00, 6.94, 0.03, 'Se toma una resonancia de la pelvis con y sin contraste', 'Sí', 2024, 'AMA/CMS'),
 ('73020', 'Vigente', 'RX hombro 2 vistas', 'Radiografía de hombro, 2 vistas',
  'Radiografía de hombro, 2 vistas (AP y axial).',
  'Radiología', 'Musculoesquelética', 0.00, 0.42, 0.01, 'Se toman 2 radiografías del hombro', 'No', 2024, 'AMA/CMS'),
@@ -1003,7 +1003,7 @@ INSERT INTO cpt_codes_es (
 ('75822', 'Vigente', 'Venografía extremidad bilateral', 'Venografía de extremidad, bilateral, supervisión e interpretación',
  'Venografía de extremidad, bilateral, radiological supervision and interpretation. Incluye la supervisión radiológica'
  'y la interpretación de un estudio venográfico de ambas extremidades (superiores o inferiores).',
- 'Radiología', 'Intervencionista Vascular', 0.00, 1.96, 0.01, 'Se toman radiografías de las venas de ambas extremidades con contraste.', 'No', 2024, 'AMA/CMS', ';'),
+ 'Radiología', 'Intervencionista Vascular', 0.00, 1.96, 0.01, 'Se toman radiografías de las venas de ambas extremidades con contraste.', 'No', 2024, 'AMA/CMS'),
 ('75885', 'Vigente', 'Portografía transhepática c/ hemodinamia', 'Portografía transhepática percutánea con evaluación hemodinámica, S&I',
  'Percutaneous transhepatic portography with hemodynamic evaluation, radiological supervision and interpretation. Reporta'
  'la S&I de una portografía con evaluación del flujo. El componente quirúrgico se reporta con el código 36481 .',
@@ -1020,7 +1020,7 @@ INSERT INTO cpt_codes_es (
 ('75891', 'Vigente', 'Venografía hepática s/ hemodinamia', 'Venografía hepática sin evaluación hemodinámica, S&I',
  'Hepatic venography, wedged or free, without hemodynamic evaluation, radiological supervision and interpretation. Reporta'
  'la S&I de una venografía hepática sin medición de presión .',
- 'Radiología', 'Intervencionista Vascular', 0.00, 2.15, 0.02, 'Supervisión e interpretación de un estudio de las venas del hígado sin medición de presiones.', 'No', 2024, 'AMA/CMS', ';'),
+ 'Radiología', 'Intervencionista Vascular', 0.00, 2.15, 0.02, 'Supervisión e interpretación de un estudio de las venas del hígado sin medición de presiones.', 'No', 2024, 'AMA/CMS'),
 ('75989', 'Vigente', 'Guía radiológica para drenaje percutáneo', 'Supervisión radiológica para drenaje percutáneo (fluoro, US, TC)',
  'Radiological guidance (fluoroscopy, ultrasound, or CT) for percutaneous drainage (e.g., abscess or fluid collection),'
  'with catheter placement, radiological supervision and interpretation. **Uso actual:** Su uso es restringido. Es válido'
@@ -1095,7 +1095,7 @@ INSERT INTO cpt_codes_es (
  'Radiología', 'Musculoesquelética', 0.00, 2.61, 0.01, 'Se toma una TAC para medir la densidad ósea', 'Sí', 2024, 'AMA/CMS'),
 ('77080', 'Vigente', 'Densitometría ósea', 'Densitometría ósea (DXA)',
  'Densitometría ósea (DXA), columna y cadera.',
- 'Radiología', 'Musculoesquelética', 0.00, 0.89, 0.01, 'Se mide la densidad de los huesos con rayos X de baja dosis', 'No', 2024, 'AMA', ';'),
+ 'Radiología', 'Musculoesquelética', 0.00, 0.89, 0.01, 'Se mide la densidad de los huesos con rayos X de baja dosis', 'No', 2024, 'AMA'),
 ('77081', 'Vigente', 'DXA periférico', 'Densitometría DXA periférica (radio, muñeca, talón)',
  'Densitometría ósea por absorciometría de rayos X de energía dual (DXA), 1 o más sitios; esqueleto apendicular'
  '(periférico) (ej. radio, muñeca, talón).',
@@ -1121,7 +1121,7 @@ INSERT INTO cpt_codes_es (
 ('77280', 'Vigente', 'Planificación radioterapia protones', 'Planificación de tratamiento de protones',
  'Planificación de tratamiento de radiación, con protones. Incluye la planificación específica para la terapia de'
  'protones.',
- 'Radiología', 'Radioterapia', 0.00, 6.95, 0.01, 'El médico diseña un plan de radioterapia con protones.', 'No', 2024, 'AAPC', ';'),
+ 'Radiología', 'Radioterapia', 0.00, 6.95, 0.01, 'El médico diseña un plan de radioterapia con protones.', 'No', 2024, 'AAPC'),
 ('77295', 'Vigente', 'Dosimetría radioterapia', 'Dosimetría para planificación de radioterapia',
  'Física de radiación médica, dosimetría, dispositivos de tratamiento.',
  'Radiología', 'Radioterapia', 0.00, 7.73, 0.07, 'Se calcula la dosis de radiación para el tratamiento', 'No', 2024, 'AMA'),
@@ -1168,7 +1168,7 @@ INSERT INTO cpt_codes_es (
  'Medicina', 'Inmunización', 0.50, 0.12, 0.04, 'Se da información sobre vacunas en una sesión de 30 minutos', 'No', 2026, 'AMA'),
 ('90484', 'Nuevo', 'Consejería inmunización 45 min', 'Consejería para inmunización no administrada 45 min',
  'Consejería para inmunización no administrada, 45 minutos.',
- 'Medicina', 'Inmunización', 0.75, 0.18, 0.06, 'Se da información sobre vacunas en una sesión de 45 minutos', 'No', 2026, 'AMA', ';'),
+ 'Medicina', 'Inmunización', 0.75, 0.18, 0.06, 'Se da información sobre vacunas en una sesión de 45 minutos', 'No', 2026, 'AMA'),
 ('90612', 'Nuevo', 'Vacuna influenza-COVID', 'Vacuna influenza trivalente y COVID-19',
  'Vacuna contra el virus de la influenza, trivalente, y SARS-CoV-2 (COVID-19), mRNA-LNP, dosis de 31.7 mcg/0.32 mL, para'
  'uso intramuscular.',
@@ -1216,7 +1216,7 @@ INSERT INTO cpt_codes_es (
  'Radiología', 'Cardiovascular', 0.00, 3.51, 0.02, 'Se hace un ultrasonido del corazón durante el ejercicio', 'Sí', 2024, 'AMA'),
 ('93351', 'Vigente', 'Eco estrés completo', 'Ecocardiograma de estrés completo',
  'Ecocardiograma de estrés con Doppler y evaluación completa.',
- 'Radiología', 'Cardiovascular', 0.00, 4.52, 0.04, 'Se hace un ultrasonido completo del corazón durante el ejercicio', 'Sí', 2024, 'AMA', ';'),
+ 'Radiología', 'Cardiovascular', 0.00, 4.52, 0.04, 'Se hace un ultrasonido completo del corazón durante el ejercicio', 'Sí', 2024, 'AMA'),
 ('93451', 'Vigente', 'Cateterismo cardíaco', 'Cateterismo cardíaco derecho',
  'Cateterismo cardíaco derecho, con o sin angiografía.',
  'Cirugía', 'Cardiovascular', 0.00, 21.63, 0.03, 'Se introduce un catéter en el lado derecho del corazón', 'Sí', 2024, 'AMA'),
@@ -1225,7 +1225,7 @@ INSERT INTO cpt_codes_es (
  'Cirugía', 'Cardiovascular', 0.00, 19.26, 0.05, 'Se introduce un catéter en el lado izquierdo del corazón', 'Sí', 2024, 'AMA'),
 ('93453', 'Vigente', 'Cateterismo bilateral', 'Cateterismo cardíaco derecho e izquierdo',
  'Cateterismo cardíaco derecho e izquierdo, con o sin angiografía.',
- 'Cirugía', 'Cardiovascular', 0.00, 24.11, 0.05, 'Se introducen catéteres en ambos lados del corazón', 'Sí', 2024, 'AMA', ';'),
+ 'Cirugía', 'Cardiovascular', 0.00, 24.11, 0.05, 'Se introducen catéteres en ambos lados del corazón', 'Sí', 2024, 'AMA'),
 ('93503', 'Vigente', 'Inserción Swan-Ganz', 'Inserción de catéter de Swan-Ganz',
  'Inserción de catéter de Swan-Ganz para monitorización hemodinámica.',
  'Cirugía', 'Cardiovascular', 1.95, 0.31, 0.18, 'Se inserta un catéter para medir la presión del corazón', 'Sí', 2024, 'AMA');
@@ -1250,7 +1250,7 @@ INSERT INTO cpt_codes_es (
 ('99378', 'Vigente', 'Supervisión hospicio 30+ min', 'Supervisión de paciente en hospicio 30+ minutos',
  'Supervisión de un paciente en hospicio (paciente no presente) que requiere atención compleja y multidisciplinaria; 30'
  'minutos o más.',
- 'Medicina', 'Cuidados Paliativos', 1.73, 0.37, 0.11, 'Supervisión de un paciente en hospicio sin que esté presente (30+ min)', 'No', 2024, 'CMS', ';');
+ 'Medicina', 'Cuidados Paliativos', 1.73, 0.37, 0.11, 'Supervisión de un paciente en hospicio sin que esté presente (30+ min)', 'No', 2024, 'CMS');
 
 -- ============================================================
 -- 18. REHABILITACIÓN Y TERAPIA FÍSICA
@@ -1276,7 +1276,7 @@ INSERT INTO cpt_codes_es (
  'Medicina', 'Rehabilitación', 0.44, 0.60, 0.01, 'Se realizan actividades para mejorar la función diaria', 'No', 2024, 'AMA'),
 ('97760', 'Vigente', 'Ortesis', 'Evaluación de ortesis',
  'Evaluación y ajuste de ortesis (aparatos ortopédicos).',
- 'Medicina', 'Rehabilitación', 0.50, 0.87, 0.01, 'Se evalúa y ajusta un aparato ortopédico', 'No', 2024, 'AMA', ';');
+ 'Medicina', 'Rehabilitación', 0.50, 0.87, 0.01, 'Se evalúa y ajusta un aparato ortopédico', 'No', 2024, 'AMA');
 
 -- ============================================================
 -- 20. MEDICINA PREVENTIVA Y CONDUCTUAL
@@ -1360,7 +1360,7 @@ INSERT INTO cpt_codes_es (
  'Medicina', 'Preventiva', 3.84, 0.97, 0.27, 'Se evalúa la función cognitiva y se desarrolla un plan de atención', 'No', 2024, 'AMA'),
 ('99484', 'Nuevo', 'Gestión salud conductual', 'Gestión de atención de salud conductual general',
  'Gestión de atención de salud conductual general, incluyendo monitoreo y coordinación de atención.',
- 'Medicina', 'Salud Conductual', 0.93, 0.17, 0.06, 'Se gestiona la atención de salud conductual del paciente', 'No', 2024, 'AMA', ';');
+ 'Medicina', 'Salud Conductual', 0.93, 0.17, 0.06, 'Se gestiona la atención de salud conductual del paciente', 'No', 2024, 'AMA');
 
 -- ============================================================
 -- 22. CATEGORÍAS II Y III
@@ -1383,7 +1383,7 @@ INSERT INTO cpt_codes_es (
  'Medicina', 'Evaluación y Manejo', 1.000, 1.400, 0.150, 'Visita de evaluación y manejo en un centro médico', 'No', 2024, 'CMS'),
 ('G0475', 'Vigente', 'Prueba de drogas', 'Prueba de drogas (confirmación)',
  'Prueba de drogas con confirmación por cromatografía.',
- 'Patología', 'Toxicología', 0.300, 0.400, 0.040, 'Prueba de confirmación de drogas', 'No', 2024, 'CMS', ';'),
+ 'Patología', 'Toxicología', 0.300, 0.400, 0.040, 'Prueba de confirmación de drogas', 'No', 2024, 'CMS'),
 ('0500F', 'Vigente', 'Visita prenatal inicial', 'Visita prenatal inicial',
  'Initial prenatal care visit. Report at first prenatal encounter with healthcare professional providing obstetrical care.'
  'Report the date of the visit and in a separate field, the date of the last menstrual period.',
@@ -1984,7 +1984,7 @@ INSERT INTO cpt_codes_es (
 ('80081', 'Vigente', 'Panel de artritis reumatoide', 'Panel de artritis reumatoide',
  'Panel de artritis reumatoide, incluye: factor reumatoide, anticuerpo anti-CCP (proteína citrulinada cíclica), y'
  'velocidad de sedimentación globular (VSG), cuando se realiza.',
- 'Patología', 'Química Clínica', 0.000, 0.000, 0.000, 'Análisis de sangre para ayudar en el diagnóstico de artritis reumatoide.', 'No', 2024, 'AMA/CMS', ';'),
+ 'Patología', 'Química Clínica', 0.000, 0.000, 0.000, 'Análisis de sangre para ayudar en el diagnóstico de artritis reumatoide.', 'No', 2024, 'AMA/CMS'),
 ('81001', 'Vigente', 'Análisis de orina', 'Análisis de orina con microscopio',
  'Análisis de orina, con examen microscópico (sedimento).',
  'Patología', 'Laboratorio', 0.120, 0.160, 0.015, 'Análisis completo de orina con microscopio', 'No', 2024, 'AMA'),
@@ -2089,7 +2089,7 @@ INSERT INTO cpt_codes_es (
  'Patología', 'Inmunología', 0.000, 0.000, 0.000, 'Análisis de sangre que mide la cantidad precisa de una sustancia (ej. una hormona).', 'No', 2024, 'Bonfire'),
 ('86756', 'Vigente', 'Anticuerpo virus paperas', 'Anticuerpo contra el virus de las paperas (IgG o IgM)',
  'Anticuerpo contra el virus de las paperas, medición cualitativa o cuantitativa (IgG o IgM).',
- 'Patología', 'Inmunología', 0.000, 0.000, 0.000, 'Análisis de sangre para detectar anticuerpos contra el virus de las paperas.', 'No', 2024, 'Bonfire', ';'),
+ 'Patología', 'Inmunología', 0.000, 0.000, 0.000, 'Análisis de sangre para detectar anticuerpos contra el virus de las paperas.', 'No', 2024, 'Bonfire'),
 ('87040', 'Vigente', 'Cultivo sangre bacterias', 'Cultivo de sangre, detección bacteriana',
  'Cultivo de sangre, para la detección y aislamiento de bacterias. Incluye la incubación y el examen inicial para la'
  'identificación de microorganismos.',
@@ -2124,7 +2124,7 @@ INSERT INTO cpt_codes_es (
  'Patología', 'Microbiología', 0.150, 0.220, 0.020, 'Prueba rápida de antígenos para COVID-19', 'No', 2024, 'AMA'),
 ('87999', 'Vigente', 'Procedimiento microbiológico no listado', 'Procedimiento de microbiología no listado',
  'Procedimiento de microbiología no listado. Se utiliza para procedimientos que no tienen un código específico.',
- 'Patología', 'Microbiología', 0.000, 0.000, 0.000, 'Procedimiento de microbiología sin código específico.', 'Sí', 2024, 'Mayo Clinic', ';');
+ 'Patología', 'Microbiología', 0.000, 0.000, 0.000, 'Procedimiento de microbiología sin código específico.', 'Sí', 2024, 'Mayo Clinic');
 
 -- ============================================================
 -- 32. PATOLOGÍA QUIRÚRGICA
@@ -2157,4 +2157,4 @@ INSERT INTO cpt_codes_es (
  'Patología', 'Anatomía Patológica', 0.00, 5.99, 0.04, 'Examen de una pieza quirúrgica compleja', 'No', 2024, 'AMA'),
 ('88309', 'Vigente', 'Patología quirúrgica Nivel VI', 'Patología quirúrgica Nivel VI (grandes órganos)',
  'Patología quirúrgica, Nivel VI, examen macroscópico y microscópico. **Ejemplos:** mama (mastectomía con ganglios regionales), colon (resección segmentaria por tumor), esófago (resección total/parcial), extremidad (desarticulación), laringe (resección parcial/total con ganglios), pulmón (resección total/lobar/segmentaria), páncreas (resección total/subtotal), próstata (resección radical), intestino delgado (resección por tumor), estómago (resección subtotal/total por tumor), testículo (tumor), útero (con o sin trompas y ovarios, neoplásico).',
- 'Patología', 'Anatomía Patológica', 0.00, 8.30, 0.05, 'Examen de un órgano completo', 'No', 2024, 'AMA', ';');
+ 'Patología', 'Anatomía Patológica', 0.00, 8.30, 0.05, 'Examen de un órgano completo', 'No', 2024, 'AMA');
