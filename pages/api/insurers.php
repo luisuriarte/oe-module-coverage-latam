@@ -19,7 +19,11 @@ $ignoreAuth = false;
 
 require_once __DIR__ . '/../../../../../globals.php';
 
-if (empty($session->get('authUserID'))) {
+$authUserId = null;
+if (is_object($session) && method_exists($session, 'get')) {
+    $authUserId = $session->get('authUserID');
+}
+if (empty($authUserId)) {
     http_response_code(401);
     header('Content-Type: application/json');
     echo json_encode(['error' => xl('No autenticado')]);

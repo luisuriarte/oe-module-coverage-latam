@@ -28,7 +28,11 @@ use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Service\CountryPackCatalog;
 use OpenEMR\Modules\CoverageLatam\Service\CountryPackImporter;
 
-if (empty($session->get('authUserID'))) {
+$authUserId = null;
+if (is_object($session) && method_exists($session, 'get')) {
+    $authUserId = $session->get('authUserID');
+}
+if (empty($authUserId)) {
     http_response_code(401);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['error' => xl('No autenticado')]);
@@ -40,14 +44,12 @@ header('Content-Type: application/json; charset=utf-8');
 $action = $_REQUEST['action'] ?? '';
 
 // ---------------------------------------------------------------------------
-// Lectura del body (form-data o JSON) — se hace primero porque las mutaciones
-// pueden enviar el token CSRF tanto en el header como en el payload.
+// Lectura del body — siempre parsear JSON primero, luego fallback a $_POST.
+// Con Content-Type: application/json, $_POST suele estar vacío; al inverso
+// (form-data), $_POST tiene los campos. Se unen para cubrir ambos casos.
 // ---------------------------------------------------------------------------
-$body = array_merge($_POST, []);
-if (empty($body)) {
-    $parsed = json_decode((string) file_get_contents('php://input'), true);
-    $body   = is_array($parsed) ? $parsed : [];
-}
+$parsed = json_decode((string) file_get_contents('php://input'), true);
+$body   = array_merge(is_array($parsed) ? $parsed : [], $_POST);
 
 // Seguridad: verificar CSRF en mutaciones
 if ($action === 'install' || $action === 'reimport') {
@@ -97,8 +99,8 @@ if ($action === 'catalog') {
     covl_json(['data' => $rows]);
 } elseif ($action === 'install' || $action === 'reimport') {
     $code = strtoupper(trim((string) ($body['country_code'] ?? '')));
-    if ($catalog->get($code) === null) {
-        covl_json(['error' => xl('Paquete no encontrado en el catálogo')], 404);
+    if ($code === '' || $catalog->get($code) === null) {
+        covl_json(['error' => xl('Paquete no encontrado en el catálogo') . ' (code=' . $code . ')'], 404);
     }
     try {
         $result = (new CountryPackImporter())->importCountryPack($code);

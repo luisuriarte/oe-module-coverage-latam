@@ -32,7 +32,11 @@ use OpenEMR\Common\Acl\AclMain;
 use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Repository\AuthRulesRepository;
 
-if (empty($session->get('authUserID'))) {
+$authUserId = null;
+if (is_object($session) && method_exists($session, 'get')) {
+    $authUserId = $session->get('authUserID');
+}
+if (empty($authUserId)) {
     http_response_code(401);
     header('Content-Type: application/json');
     echo json_encode(['error' => xl('No autenticado')]);
@@ -101,12 +105,8 @@ try {
 
         // -----------------------------------------------------------------------
         case 'create':
-            $data = array_merge($_POST, []); // form-data o JSON
-            // Aceptar también body JSON
-            if (empty($data) || !isset($data['code_type'])) {
-                $body = file_get_contents('php://input');
-                $data = json_decode($body, true) ?: [];
-            }
+            $parsed = json_decode((string) file_get_contents('php://input'), true);
+            $data = array_merge(is_array($parsed) ? $parsed : [], $_POST);
             // Validación mínima
             if (empty($data['code_type']) || empty($data['auth_mode']) || empty($data['insurance_company_id'])) {
                 covl_json(['error' => xl('Campos requeridos: insurance_company_id, code_type, auth_mode')], 422);
@@ -121,11 +121,8 @@ try {
             if ($row === null) {
                 covl_json(['error' => xl('Regla no encontrada')], 404);
             }
-            $data = array_merge($_POST, []);
-            if (empty($data) || !isset($data['code_type'])) {
-                $body = file_get_contents('php://input');
-                $data = json_decode($body, true) ?: [];
-            }
+            $parsed = json_decode((string) file_get_contents('php://input'), true);
+            $data = array_merge(is_array($parsed) ? $parsed : [], $_POST);
             if (empty($data['code_type']) || empty($data['auth_mode']) || empty($data['insurance_company_id'])) {
                 covl_json(['error' => xl('Campos requeridos: insurance_company_id, code_type, auth_mode')], 422);
             }

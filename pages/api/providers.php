@@ -34,7 +34,11 @@ use OpenEMR\Common\Acl\AclMain;
 use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Repository\ProviderCoverageRepository;
 
-if (empty($session->get('authUserID'))) {
+$authUserId = null;
+if (is_object($session) && method_exists($session, 'get')) {
+    $authUserId = $session->get('authUserID');
+}
+if (empty($authUserId)) {
     http_response_code(401);
     header('Content-Type: application/json');
     echo json_encode(['error' => xl('No autenticado')]);
@@ -111,11 +115,8 @@ try {
 
         // -----------------------------------------------------------------------
         case 'create':
-            $data = array_merge($_POST, []); // form-data o JSON
-            if (empty($data) || !isset($data['user_id'])) {
-                $body = file_get_contents('php://input');
-                $data = json_decode($body, true) ?: [];
-            }
+            $parsed = json_decode((string) file_get_contents('php://input'), true);
+            $data = array_merge(is_array($parsed) ? $parsed : [], $_POST);
             // Validación mínima
             if (empty($data['user_id']) || empty($data['insurance_company_id']) || empty($data['date_from'])) {
                 covl_json(['error' => xl('Campos requeridos: user_id, insurance_company_id, date_from')], 422);
@@ -130,11 +131,8 @@ try {
             if ($row === null) {
                 covl_json(['error' => xl('Convenio no encontrado')], 404);
             }
-            $data = array_merge($_POST, []);
-            if (empty($data) || !isset($data['user_id'])) {
-                $body = file_get_contents('php://input');
-                $data = json_decode($body, true) ?: [];
-            }
+            $parsed = json_decode((string) file_get_contents('php://input'), true);
+            $data = array_merge(is_array($parsed) ? $parsed : [], $_POST);
             if (empty($data['user_id']) || empty($data['insurance_company_id']) || empty($data['date_from'])) {
                 covl_json(['error' => xl('Campos requeridos: user_id, insurance_company_id, date_from')], 422);
             }

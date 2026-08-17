@@ -38,7 +38,11 @@ use OpenEMR\Common\Acl\AclMain;
 use OpenEMR\Modules\CoverageLatam\CsrfCompat;
 use OpenEMR\Modules\CoverageLatam\Repository\SettlementBatchRepository;
 
-if (empty($session->get('authUserID'))) {
+$authUserId = null;
+if (is_object($session) && method_exists($session, 'get')) {
+    $authUserId = $session->get('authUserID');
+}
+if (empty($authUserId)) {
     http_response_code(401);
     header('Content-Type: application/json');
     echo json_encode(['error' => xl('No autenticado')]);
@@ -80,15 +84,8 @@ if (in_array($action, ['create', 'update', 'transition', 'delete', 'add_item', '
 // ---------------------------------------------------------------------------
 function covl_body(): array
 {
-    $data = array_merge($_POST, []);
-    if (empty($data)) {
-        $body = file_get_contents('php://input');
-        $json = json_decode($body, true);
-        if (is_array($json)) {
-            $data = $json;
-        }
-    }
-    return $data;
+    $parsed = json_decode((string) file_get_contents('php://input'), true);
+    return array_merge(is_array($parsed) ? $parsed : [], $_POST);
 }
 
 // ---------------------------------------------------------------------------
