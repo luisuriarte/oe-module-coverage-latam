@@ -123,7 +123,7 @@
             const curName   = escHtml(r.currency_name  ?? r.currency_code ?? '');
             return `<tr>
                 <td>
-                    <span class="covl-country-flag">${flagEmoji(r.country_code)}</span>
+                    <span class="covl-country-flag fi fi-${code.toLowerCase()}"></span>
                     <strong>${code}</strong>
                 </td>
                 <td>${escHtml(r.name)}</td>
@@ -216,7 +216,7 @@
             return `<button type="button" class="covl-country-item ${p.installed ? 'is-installed' : ''}"
                     data-code="${escHtml(p.country_code)}"
                     onclick="window.__COVL_Countries.install('${escHtml(p.country_code)}')">
-                <span class="covl-country-flag">${flagEmoji(p.country_code)}</span>
+                <span class="covl-country-flag fi fi-${code.toLowerCase()}"></span>
                 <span class="covl-country-body">
                     <span class="covl-country-title">
                         <strong>${escHtml(p.name)}</strong> ${badge}

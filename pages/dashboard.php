@@ -238,7 +238,7 @@ $covlI18n = [
     'countries_empty'   => xlt('No hay paquetes de país instalados. Agregá uno desde el catálogo.'),
     'rules_loaded'      => xlt('Cargadas'),
     'rules_pending'     => xlt('Sin reglas'),
-    'update'            => xlt('Actualizar'),
+    'update'            => xlt('Instalar'),
     'installed'         => xlt('Instalado'),
     'not_installed'     => xlt('No instalado'),
     'auth_rules_short'  => xlt('aut.'),
@@ -246,10 +246,10 @@ $covlI18n = [
     'code_maps_short'   => xlt('mapas'),
     'country_installed' => xlt('Paquete de país instalado'),
     'error_install'     => xlt('No se pudo instalar el paquete de país'),
-    'reimport'          => xlt('Reimportar'),
-    'reimport_title'    => xlt('Reimportar paquete de país'),
-    'country_reimported'=> xlt('Paquete de país reimportado'),
-    'error_reimport'    => xlt('No se pudo reimportar el paquete de país'),
+    'reimport'          => xlt('Actualizar'),
+    'reimport_title'    => xlt('Actualizar paquete de país'),
+    'country_reimported'=> xlt('Paquete de país actualizado'),
+    'error_reimport'    => xlt('No se pudo actualizar el paquete de país'),
 ];
 
 ?>
