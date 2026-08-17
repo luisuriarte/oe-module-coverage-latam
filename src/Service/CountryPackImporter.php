@@ -247,7 +247,6 @@ class CountryPackImporter
     private function upsertAuthRules(string $countryCode, string $codeTypeKey, array $rules): array
     {
         $result = ['inserted' => 0, 'updated' => 0];
-        error_log("[covl] upsertAuthRules START: country={$countryCode}, type={$codeTypeKey}, rulesType=" . gettype($rules) . ", rulesCount=" . (is_array($rules) ? count($rules) : 'N/A') . ", rulesFirst=" . print_r($rules[0] ?? 'EMPTY', true));
         foreach ($rules as $rule) {
             if (!is_array($rule)) {
                 continue;

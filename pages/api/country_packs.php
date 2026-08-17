@@ -60,9 +60,6 @@ if ($action === 'install' || $action === 'reimport') {
     $receivedPostToken = $_POST['csrf_token'] ?? '';
     $receivedHeaderToken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
 
-    // Loguear valores de depuración en error_log
-    error_log('[covl] CSRF debug - body: "' . $receivedBodyToken . '", post: "' . $receivedPostToken . '", header: "' . $receivedHeaderToken . '"');
-
     $csrfToken = $receivedBodyToken
         ?? $receivedPostToken
         ?? $receivedHeaderToken;
@@ -124,30 +121,10 @@ if ($action === 'catalog') {
     }
     try {
         $result = (new CountryPackImporter())->importCountryPack($code);
-        // Loguear éxito con detalles del resultado para depuración
-        error_log('[covl] Import success: code=' . $code . ' result=' . print_r($result, true));
         covl_json(['ok' => true, 'data' => $result]);
     } catch (\Throwable $e) {
-        // Capturar error completo incluyendo el de MySQL
-        $errorMsg = 'Error al importar el paquete ' . $code . ': ' . $e->getMessage();
-        if (method_exists($e, 'getPrevious')) {
-            $prev = $e->getPrevious();
-            if ($prev !== null) {
-                $errorMsg .= ' - Caused by: ' . $prev->getMessage();
-            }
-        }
-        error_log('[covl] ERROR importing country pack ' . $code . ': ' . $errorMsg . ' in ' . $e->getFile() . ':' . $e->getLine());
-        // Respuesta de error detallada para diagnóstico
-        $errorDetail = [
-            'error' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-        ];
-        $prev = $e->getPrevious();
-        if ($prev !== null && method_exists($prev, 'getCode')) {
-            $errorDetail['errno'] = $prev->getCode();
-        }
-        covl_json(['error' => $errorDetail], 500);
+        error_log('[covl] ERROR importing ' . $code . ': ' . $e->getMessage());
+        covl_json(['error' => $e->getMessage()], 500);
     }
 }
 
