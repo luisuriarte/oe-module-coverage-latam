@@ -1,5 +1,5 @@
 -- ============================================================
--- ARCHIVO: latam_packs_real.sql
+-- ARCHIVO: latam_packs.sql
 -- BASE DE DATOS: MariaDB / MySQL
 -- TABLA: cpt_codes_es
 -- DESCRIPCIÓN: Códigos CPT4 reales extraídos de fuentes públicas
