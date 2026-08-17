@@ -2653,7 +2653,408 @@ INSERT INTO cpt_codes (
 ('0562T', 'Nuevo', 'Guía 3D impresa - adicional', 'Producción de guías 3D impresas para corte/perforación (adicional)',
  'Production of 3D-printed cutting or drilling guides using individualized imaging data; each additional guide (List separately in addition to code for primary procedure). ',
  'Categoría III', 'Radiología', 0.000, 0.000, 0.000,
- 'Producción de guías quirúrgicas 3D adicionales.', 'No', 2026, 'AMA');
+ 'Producción de guías quirúrgicas 3D adicionales.', 'No', 2026, 'AMA'),
+
+ -- ============================================================
+-- 3. CATEGORÍAS II Y III - Calidad y Tecnología Emergente
+-- Fuente: AMA, NCQA/HEDIS, AAPC
+-- NOTA: Categoría II = calidad (sin RVU), Categoría III = tecnología emergente
+-- EFECTIVOS: Julio 2025 y 2026 (early release)
+-- ============================================================
+
+-- ------------------------------------------------------------
+-- 3.1 CATEGORÍA II (0001F-9007F) - Códigos de Medición de Desempeño
+-- Fuente: Guías CPT 2025, AMA, HEDIS, Arkansas Total Care
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+-- Cuidado Prenatal y Postparto
+('0500F', 'Vigente', 'Visita prenatal inicial', 'Visita prenatal inicial',
+ 'Initial prenatal care visit. Report at first prenatal encounter with healthcare professional providing obstetrical care. Report the date of the visit and in a separate field, the date of the last menstrual period. ',
+ 'Categoría II', 'Cuidado Prenatal', 0.000, 0.000, 0.000,
+ 'Código de calidad para la primera visita de control prenatal.', 'No', 2025, 'NCQA/HEDIS'),
+
+('0501F', 'Vigente', 'Flujo prenatal documentado', 'Flujo prenatal documentado en historia clínica',
+ 'Prenatal flow sheet documented in medical record by first prenatal visit. Documentation includes at minimum blood pressure, weight, urine protein, uterine size, fetal heart tones, and estimated date of delivery. ',
+ 'Categoría II', 'Cuidado Prenatal', 0.000, 0.000, 0.000,
+ 'Código de calidad que confirma que se ha documentado el flujo prenatal en la primera visita.', 'No', 2025, 'NCQA/HEDIS'),
+
+('0502F', 'Vigente', 'Visita prenatal subsecuente', 'Visita prenatal subsecuente',
+ 'Subsequent prenatal care visit. ',
+ 'Categoría II', 'Cuidado Prenatal', 0.000, 0.000, 0.000,
+ 'Código de calidad para una visita de control prenatal de seguimiento.', 'No', 2025, 'NCQA/HEDIS'),
+
+('0503F', 'Vigente', 'Visita de cuidado postparto', 'Visita de cuidado postparto',
+ 'Postpartum care visit. ',
+ 'Categoría II', 'Cuidado Prenatal', 0.000, 0.000, 0.000,
+ 'Código de calidad para la visita de cuidado postparto.', 'No', 2025, 'NCQA/HEDIS'),
+
+-- Examen Oftalmológico (Cuidado de la Diabetes)
+('2022F', 'Vigente', 'Examen ocular con retinopatía', 'Examen ocular dilatado con evidencia de retinopatía',
+ 'Dilated retinal eye exam with interpretation by an ophthalmologist or optometrist documented and reviewed; with evidence of retinopathy. ',
+ 'Categoría II', 'Cuidado de la Diabetes', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar que un paciente diabético tiene retinopatía.', 'No', 2025, 'NCQA/HEDIS'),
+
+('2023F', 'Vigente', 'Examen ocular sin retinopatía', 'Examen ocular dilatado sin evidencia de retinopatía',
+ 'Dilated retinal eye exam with interpretation by an ophthalmologist or optometrist documented and reviewed; without evidence of retinopathy. ',
+ 'Categoría II', 'Cuidado de la Diabetes', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar que un paciente diabético NO tiene retinopatía.', 'No', 2025, 'NCQA/HEDIS'),
+
+('2024F', 'Vigente', 'Fotos retinianas con retinopatía', 'Fotos retinianas 7 campos con retinopatía',
+ 'Seven standard field stereoscopic retinal photos with interpretation by an ophthalmologist or optometrist documented and reviewed; with evidence of retinopathy. ',
+ 'Categoría II', 'Cuidado de la Diabetes', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar retinopatía usando fotos retinianas.', 'No', 2025, 'NCQA/HEDIS'),
+
+('2025F', 'Vigente', 'Fotos retinianas sin retinopatía', 'Fotos retinianas 7 campos sin retinopatía',
+ 'Seven standard field stereoscopic retinal photos with interpretation by an ophthalmologist or optometrist documented and reviewed; without evidence of retinopathy. ',
+ 'Categoría II', 'Cuidado de la Diabetes', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar que NO hay retinopatía usando fotos retinianas.', 'No', 2025, 'NCQA/HEDIS'),
+
+('2026F', 'Vigente', 'Imagen ocular con retinopatía', 'Imagen ocular validada con retinopatía',
+ 'Eye imaging validated to match diagnosis from seven standard field stereoscopic retinal photos results documented and reviewed; with evidence of retinopathy. ',
+ 'Categoría II', 'Cuidado de la Diabetes', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar retinopatía usando imágenes oculares validadas.', 'No', 2025, 'NCQA/HEDIS'),
+
+('2033F', 'Vigente', 'Imagen ocular sin retinopatía', 'Imagen ocular validada sin retinopatía',
+ 'Eye imaging validated to match diagnosis from seven standard field stereoscopic retinal photos results documented and reviewed; without evidence of retinopathy. ',
+ 'Categoría II', 'Cuidado de la Diabetes', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar que NO hay retinopatía usando imágenes oculares validadas.', 'No', 2025, 'NCQA/HEDIS'),
+
+('3072F', 'Vigente', 'Bajo riesgo retinopatía', 'Bajo riesgo de retinopatía (sin evidencia año anterior)',
+ 'Low risk for retinopathy (no evidence of retinopathy in the prior year). ',
+ 'Categoría II', 'Cuidado de la Diabetes', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar bajo riesgo de retinopatía sin evidencia en el año anterior.', 'No', 2025, 'NCQA/HEDIS'),
+
+-- Control de la Diabetes (HbA1c)
+('3044F', 'Vigente', 'HbA1c < 7.0%', 'HbA1c menor a 7.0%',
+ 'Most recent hemoglobin A1c (HbA1c) level less than 7.0%. ',
+ 'Categoría II', 'Cuidado de la Diabetes', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar un buen control de glucosa (HbA1c < 7%).', 'No', 2025, 'NCQA/HEDIS'),
+
+('3046F', 'Vigente', 'HbA1c > 9.0%', 'HbA1c mayor a 9.0%',
+ 'Most recent hemoglobin A1c level greater than 9.0%. ',
+ 'Categoría II', 'Cuidado de la Diabetes', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar un mal control de glucosa (HbA1c > 9%).', 'No', 2025, 'NCQA/HEDIS'),
+
+('3051F', 'Vigente', 'HbA1c 7.0-8.0%', 'HbA1c entre 7.0% y 8.0%',
+ 'Most recent hemoglobin A1c (HbA1c) level greater than or equal to 7.0% and less than 8.0%. ',
+ 'Categoría II', 'Cuidado de la Diabetes', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar un control de glucosa moderado (HbA1c 7-8%).', 'No', 2025, 'NCQA/HEDIS'),
+
+('3052F', 'Vigente', 'HbA1c 8.0-9.0%', 'HbA1c entre 8.0% y 9.0%',
+ 'Most recent hemoglobin A1c (HbA1c) level greater than or equal to 8.0% and less than or equal to 9.0%. ',
+ 'Categoría II', 'Cuidado de la Diabetes', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar un control de glucosa subóptimo (HbA1c 8-9%).', 'No', 2025, 'NCQA/HEDIS'),
+
+-- Control del Colesterol (LDL-C)
+('3048F', 'Vigente', 'LDL-C < 100 mg/dL', 'LDL-C menor a 100 mg/dL',
+ 'Most recent LDL-C less than 100 mg/dL. ',
+ 'Categoría II', 'Control Lipídico', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar un buen control de colesterol (LDL < 100).', 'No', 2025, 'NCQA/HEDIS'),
+
+('3049F', 'Vigente', 'LDL-C 100-129 mg/dL', 'LDL-C entre 100 y 129 mg/dL',
+ 'Most recent LDL-C 100-129 mg/dL. ',
+ 'Categoría II', 'Control Lipídico', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar un control de colesterol intermedio (LDL 100-129).', 'No', 2025, 'NCQA/HEDIS'),
+
+('3050F', 'Vigente', 'LDL-C >= 130 mg/dL', 'LDL-C mayor o igual a 130 mg/dL',
+ 'Most recent LDL-C greater than or equal to 130 mg/dL. ',
+ 'Categoría II', 'Control Lipídico', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar un mal control de colesterol (LDL >= 130).', 'No', 2025, 'NCQA/HEDIS'),
+
+-- Control de la Presión Arterial
+('3074F', 'Vigente', 'Sistólica < 130 mmHg', 'Presión arterial sistólica menor a 130 mm Hg',
+ 'Most recent systolic blood pressure less than 130 mm Hg. ',
+ 'Categoría II', 'Control de PA', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar una buena presión sistólica (< 130).', 'No', 2025, 'NCQA/HEDIS'),
+
+('3075F', 'Vigente', 'Sistólica 130-139 mmHg', 'Presión arterial sistólica 130-139 mm Hg',
+ 'Most recent systolic blood pressure 130-139 mm Hg. ',
+ 'Categoría II', 'Control de PA', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar una presión sistólica elevada (130-139).', 'No', 2025, 'NCQA/HEDIS'),
+
+('3077F', 'Vigente', 'Sistólica >= 140 mmHg', 'Presión arterial sistólica mayor o igual a 140 mm Hg',
+ 'Most recent systolic blood pressure greater than or equal to 140 mm Hg. ',
+ 'Categoría II', 'Control de PA', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar una presión sistólica alta (>= 140).', 'No', 2025, 'NCQA/HEDIS'),
+
+('3078F', 'Vigente', 'Diastólica < 80 mmHg', 'Presión arterial diastólica menor a 80 mm Hg',
+ 'Most recent diastolic blood pressure less than 80 mm Hg. ',
+ 'Categoría II', 'Control de PA', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar una buena presión diastólica (< 80).', 'No', 2025, 'NCQA/HEDIS'),
+
+('3079F', 'Vigente', 'Diastólica 80-89 mmHg', 'Presión arterial diastólica 80-89 mm Hg',
+ 'Most recent diastolic blood pressure 80-89 mm Hg. ',
+ 'Categoría II', 'Control de PA', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar una presión diastólica elevada (80-89).', 'No', 2025, 'NCQA/HEDIS'),
+
+('3080F', 'Vigente', 'Diastólica >= 90 mmHg', 'Presión arterial diastólica mayor o igual a 90 mm Hg',
+ 'Most recent diastolic blood pressure greater than or equal to 90 mm Hg. ',
+ 'Categoría II', 'Control de PA', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar una presión diastólica alta (>= 90).', 'No', 2025, 'NCQA/HEDIS'),
+
+-- Control de la Función Cardíaca
+('3055F', 'Vigente', 'FEVI <= 35%', 'Fracción de eyección ventricular izquierda menor o igual a 35%',
+ 'LVEF less than or equal to 35%. ',
+ 'Categoría II', 'Control Cardíaco', 0.000, 0.000, 0.000,
+ 'Código de calidad para reportar una fracción de eyección ventricular izquierda baja (<= 35%).', 'No', 2025, 'NCQA/HEDIS'),
+
+-- Medidas Generales
+('4000F', 'Vigente', 'Índice de masa corporal (IMC)', 'IMC documentado y evaluado',
+ 'Body Mass Index (BMI) measured and recorded. ',
+ 'Categoría II', 'Salud General', 0.000, 0.000, 0.000,
+ 'Código de calidad para confirmar que se midió y documentó el IMC.', 'No', 2025, 'NCQA/HEDIS');
+
+
+-- ============================================================
+-- NOTA SOBRE RVU: 
+-- Los códigos de Categoría II no tienen valores de RVU. Son para medición de calidad y no generan reembolso directo. 
+-- ============================================================
+
+-- ------------------------------------------------------------
+-- 3.2 CATEGORÍA III (0042T-1053T) - Códigos para Tecnología Emergente
+-- Fuente: AMA (medium descriptors), AAPC
+-- NOTA: Códigos temporales para nuevas tecnologías. Uso para recolección de datos.
+-- EFECTIVOS: Julio 2025-2026 (early release) [citation:1][citation:4]
+-- ============================================================
+
+INSERT INTO cpt_codes (
+    code, code_status, short_description, medium_description, long_description,
+    chapter_section, subsection, work_rvu, practice_expense_rvu, malpractice_rvu,
+    lay_terms, modifiers_allowed, year_effective, source
+) VALUES
+-- Códigos de Modelos 3D y FAR - EFECTIVOS: Julio 2026 [citation:1][citation:4]
+('1030T', 'Nuevo', 'Modelo 3D FAR 30-45 min', 'Creación de modelo 3D final (FAR) 30-45 minutos',
+ 'Creation of digital 3D model (final anatomic representation (FAR)) of patient-specific anatomy from surface mesh files; 30-45 minutes. ',
+ 'Categoría III', 'Radiología', 0.000, 0.000, 0.000,
+ 'Creación de un modelo 3D digital de la anatomía del paciente (FAR) de 30-45 minutos.', 'No', 2026, 'AMA'),
+
+('1031T', 'Nuevo', 'Modelo 3D FAR 46-60 min', 'Creación de modelo 3D final (FAR) 46-60 minutos',
+ 'Creation of digital 3D model (final anatomic representation (FAR)) of patient-specific anatomy from surface mesh files; 46-60 minutes. ',
+ 'Categoría III', 'Radiología', 0.000, 0.000, 0.000,
+ 'Creación de un modelo 3D digital de la anatomía del paciente (FAR) de 46-60 minutos.', 'No', 2026, 'AMA'),
+
+('1032T', 'Nuevo', 'Modelo 3D FAR 61-75 min', 'Creación de modelo 3D final (FAR) 61-75 minutos',
+ 'Creation of digital 3D model (final anatomic representation (FAR)) of patient-specific anatomy from surface mesh files; 61-75 minutes. ',
+ 'Categoría III', 'Radiología', 0.000, 0.000, 0.000,
+ 'Creación de un modelo 3D digital de la anatomía del paciente (FAR) de 61-75 minutos.', 'No', 2026, 'AMA'),
+
+('1033T', 'Nuevo', 'Modelo 3D FAR 76-90 min', 'Creación de modelo 3D final (FAR) 76-90 minutos',
+ 'Creation of digital 3D model (final anatomic representation (FAR)) of patient-specific anatomy from surface mesh files; 76-90 minutes. ',
+ 'Categoría III', 'Radiología', 0.000, 0.000, 0.000,
+ 'Creación de un modelo 3D digital de la anatomía del paciente (FAR) de 76-90 minutos.', 'No', 2026, 'AMA'),
+
+('1034T', 'Nuevo', 'Modelo 3D FAR 91-105 min', 'Creación de modelo 3D final (FAR) 91-105 minutos',
+ 'Creation of digital 3D model (final anatomic representation (FAR)) of patient-specific anatomy from surface mesh files; 91-105 minutes. ',
+ 'Categoría III', 'Radiología', 0.000, 0.000, 0.000,
+ 'Creación de un modelo 3D digital de la anatomía del paciente (FAR) de 91-105 minutos.', 'No', 2026, 'AMA'),
+
+('1035T', 'Nuevo', 'Modelo 3D FAR 106-120 min', 'Creación de modelo 3D final (FAR) 106-120 minutos',
+ 'Creation of digital 3D model (final anatomic representation (FAR)) of patient-specific anatomy from surface mesh files; 106-120 minutes. ',
+ 'Categoría III', 'Radiología', 0.000, 0.000, 0.000,
+ 'Creación de un modelo 3D digital de la anatomía del paciente (FAR) de 106-120 minutos.', 'No', 2026, 'AMA'),
+
+-- Modelos 3D Impresos - EFECTIVOS: Julio 2026 [citation:1][citation:4]
+('0559T', 'Nuevo', 'Modelo 3D impreso - producción', 'Producción de modelos 3D impresos de estructuras anatómicas',
+ 'Production of 3D-printed models of individually prepared and processed components of anatomy structures. ',
+ 'Categoría III', 'Radiología', 0.000, 0.000, 0.000,
+ 'Producción de modelos impresos en 3D de estructuras anatómicas.', 'No', 2026, 'AMA'),
+
+('0560T', 'Nuevo', 'Modelo 3D impreso - adicional', 'Producción de modelos 3D impresos (adicional)',
+ 'Production of 3D-printed models of individually prepared and processed components of anatomy structures; each additional model (List separately in addition to code for primary procedure). ',
+ 'Categoría III', 'Radiología', 0.000, 0.000, 0.000,
+ 'Producción de modelos 3D impresos adicionales (código adicional).', 'No', 2026, 'AMA'),
+
+('0561T', 'Nuevo', 'Guía 3D impresa - producción', 'Producción de guías 3D impresas para corte/perforación',
+ 'Production of 3D-printed cutting or drilling guides using individualized imaging data. ',
+ 'Categoría III', 'Radiología', 0.000, 0.000, 0.000,
+ 'Producción de guías quirúrgicas impresas en 3D.', 'No', 2026, 'AMA'),
+
+('0562T', 'Nuevo', 'Guía 3D impresa - adicional', 'Producción de guías 3D impresas (adicional)',
+ 'Production of 3D-printed cutting or drilling guides using individualized imaging data; each additional guide (List separately in addition to code for primary procedure). ',
+ 'Categoría III', 'Radiología', 0.000, 0.000, 0.000,
+ 'Producción de guías quirúrgicas 3D adicionales (código adicional).', 'No', 2026, 'AMA'),
+
+-- Códigos de Monitoreo EEG Subcutáneo - EFECTIVOS: Julio 2025 [citation:1][citation:4][citation:14]
+('0956T', 'Nuevo', 'Implante EEG subcutáneo', 'Implante de electrodos para monitoreo EEG subcutáneo',
+ 'Partial craniectomy, channel creation, and tunneling of electrode for sub-scalp implantation of an electrode array, receiver, and telemetry unit for continuous bilateral electroencephalography monitoring system, including imaging guidance. ',
+ 'Categoría III', 'Neurocirugía', 0.000, 0.000, 0.000,
+ 'Procedimiento para implantar un sistema de monitoreo de EEG bajo el cuero cabelludo.', 'Sí', 2025, 'AMA'),
+
+('0957T', 'Nuevo', 'Revisión EEG subcutáneo', 'Revisión de electrodos para monitoreo EEG subcutáneo',
+ 'Revision of sub-scalp implanted electrode array, receiver, and telemetry unit for electrode, when required, including imaging guidance. ',
+ 'Categoría III', 'Neurocirugía', 0.000, 0.000, 0.000,
+ 'Revisión del sistema de monitoreo EEG subcutáneo.', 'Sí', 2025, 'AMA'),
+
+('0958T', 'Nuevo', 'Remoción EEG subcutáneo', 'Remoción de electrodos para monitoreo EEG subcutáneo',
+ 'Removal of sub-scalp implanted electrode array, receiver, and telemetry unit for continuous bilateral electroencephalography monitoring system, including imaging guidance. ',
+ 'Categoría III', 'Neurocirugía', 0.000, 0.000, 0.000,
+ 'Remoción del sistema de monitoreo EEG subcutáneo.', 'Sí', 2025, 'AMA'),
+
+('0959T', 'Nuevo', 'Reemplazo imán EEG', 'Remoción o reemplazo de imán del sistema EEG',
+ 'Removal or replacement of magnet from coil assembly that is connected to continuous bilateral electroencephalography monitoring system, including imaging guidance. ',
+ 'Categoría III', 'Neurocirugía', 0.000, 0.000, 0.000,
+ 'Remoción o reemplazo del imán del sistema de monitoreo EEG.', 'Sí', 2025, 'AMA'),
+
+('0960T', 'Nuevo', 'Reemplazo EEG subcutáneo', 'Reemplazo de electrodos para monitoreo EEG subcutáneo',
+ 'Replacement of sub-scalp implanted electrode array, receiver, and telemetry unit with tunneling of electrode for continuous bilateral electroencephalography monitoring system, including imaging guidance. ',
+ 'Categoría III', 'Neurocirugía', 0.000, 0.000, 0.000,
+ 'Reemplazo del sistema de monitoreo EEG subcutáneo.', 'Sí', 2025, 'AMA'),
+
+-- Neuroestimulación Epicraneal - EFECTIVOS: Julio 2025 [citation:1][citation:4][citation:14]
+('0968T', 'Nuevo', 'Implante neuroestimulador epicraneal', 'Inserción o reemplazo de sistema de neuroestimulación epicraneal',
+ 'Insertion or replacement of epicranial neurostimulator system, including electrode array and pulse generator, with connection to electrode array. ',
+ 'Categoría III', 'Neurocirugía', 0.000, 0.000, 0.000,
+ 'Procedimiento para implantar un sistema de neuroestimulación sobre el cráneo.', 'Sí', 2025, 'AMA'),
+
+('0969T', 'Nuevo', 'Remoción neuroestimulador epicraneal', 'Remoción de sistema de neuroestimulación epicraneal',
+ 'Removal of epicranial neurostimulator system. ',
+ 'Categoría III', 'Neurocirugía', 0.000, 0.000, 0.000,
+ 'Procedimiento para retirar un sistema de neuroestimulación epicraneal.', 'Sí', 2025, 'AMA'),
+
+-- OCT Vascular Cerebral - EFECTIVOS: Julio 2025 [citation:14]
+('0984T', 'Nuevo', 'OCT vascular cerebral inicial', 'Imagen intravascular vasos cerebrales OCT - vaso inicial',
+ 'Intravascular imaging of extracranial cerebral vessels using optical coherence tomography (OCT) during diagnostic evaluation and/or therapeutic intervention, including all associated radiological supervision, interpretation, and report; initial vessel (List separately in addition to code for primary procedure). ',
+ 'Categoría III', 'Neurocirugía', 0.000, 0.000, 0.000,
+ 'Imagen intravascular de vasos cerebrales con OCT (vaso inicial, código adicional).', 'Sí', 2025, 'AMA'),
+
+('0985T', 'Nuevo', 'OCT vascular cerebral adicional', 'Imagen intravascular vasos cerebrales OCT - vaso adicional',
+ 'Intravascular imaging of extracranial cerebral vessels using optical coherence tomography (OCT) during diagnostic evaluation and/or therapeutic intervention, including all associated radiological supervision, interpretation, and report; each additional vessel (List separately in addition to code for primary procedure). ',
+ 'Categoría III', 'Neurocirugía', 0.000, 0.000, 0.000,
+ 'Imagen intravascular de vasos cerebrales con OCT (vaso adicional, código adicional).', 'Sí', 2025, 'AMA'),
+
+('0986T', 'Nuevo', 'OCT intracraneal inicial', 'Imagen intravascular vasos cerebrales intracraneales OCT - inicial',
+ 'Intravascular imaging of intracranial cerebral vessels using optical coherence tomography (OCT) during diagnostic evaluation and/or therapeutic intervention, including all associated radiological supervision, interpretation, and report; initial vessel (List separately in addition to code for primary procedure). ',
+ 'Categoría III', 'Neurocirugía', 0.000, 0.000, 0.000,
+ 'Imagen intravascular de vasos cerebrales intracraneales con OCT (inicial, código adicional).', 'Sí', 2025, 'AMA'),
+
+('0987T', 'Nuevo', 'OCT intracraneal adicional', 'Imagen intravascular vasos cerebrales intracraneales OCT - adicional',
+ 'Intravascular imaging of intracranial cerebral vessels using optical coherence tomography (OCT) during diagnostic evaluation and/or therapeutic intervention, including all associated radiological supervision, interpretation, and report; each additional vessel (List separately in addition to code for primary procedure). ',
+ 'Categoría III', 'Neurocirugía', 0.000, 0.000, 0.000,
+ 'Imagen intravascular de vasos cerebrales intracraneales con OCT (adicional, código adicional).', 'Sí', 2025, 'AMA'),
+
+-- Evaluación de Riesgo Cardíaco con IA - EFECTIVOS: Enero 2026 [citation:9]
+('0992T', 'Nuevo', 'Riesgo cardíaco IA sin TAC', 'Evaluación de riesgo cardíaco por IA sin TAC',
+ 'Noninvasive assessment of cardiac risk derived from augmentative software analysis of perivascular fat without concurrent computed tomography (CT) scan of the heart, including patient-specific clinical factors, with interpretation and report by a physician or other qualified health care professional. ',
+ 'Categoría III', 'Cardiología', 0.000, 0.000, 0.000,
+ 'Evaluación de riesgo cardíaco con análisis de IA de grasa perivascular, sin TAC cardíaco.', 'No', 2026, 'AMA'),
+
+('0993T', 'Nuevo', 'Riesgo cardíaco IA con TAC', 'Evaluación de riesgo cardíaco por IA con TAC',
+ 'Noninvasive assessment of cardiac risk derived from augmentative software analysis of perivascular fat with concurrent computed tomography scan of the heart, including patient-specific clinical factors, with interpretation and report by a physician or other qualified health care professional. ',
+ 'Categoría III', 'Cardiología', 0.000, 0.000, 0.000,
+ 'Evaluación de riesgo cardíaco con análisis de IA de grasa perivascular, con TAC cardíaco.', 'No', 2026, 'AMA'),
+
+-- Nuevos Códigos 2026 (Efectivos Julio 2026) [citation:1][citation:4]
+('1026T', 'Nuevo', 'Fotobiomodulación vaginal', 'Terapia de fotobiomodulación láser transvaginal de la pelvis',
+ 'Transvaginal laser photobiomodulation therapy of the pelvis. ',
+ 'Categoría III', 'Ginecología', 0.000, 0.000, 0.000,
+ 'Terapia de fotobiomodulación con láser transvaginal de la pelvis.', 'Sí', 2026, 'AMA'),
+
+('1027T', 'Nuevo', 'Neuroestimulación frénica', 'Terapia de neuroestimulación frénica transvenosa',
+ 'Transvenous phrenic neurostimulation therapy for diaphragm activation in ventilated patients. ',
+ 'Categoría III', 'Neumología', 0.000, 0.000, 0.000,
+ 'Terapia de neuroestimulación del nervio frénico para activación del diafragma.', 'Sí', 2026, 'AMA'),
+
+('1036T', 'Nuevo', 'Evaluación hemodinámica no invasiva', 'Evaluación hemodinámica no invasiva',
+ 'Noninvasive hemodynamic assessment. ',
+ 'Categoría III', 'Cardiología', 0.000, 0.000, 0.000,
+ 'Evaluación hemodinámica no invasiva.', 'No', 2026, 'AMA'),
+
+('1037T', 'Nuevo', 'Histotripsia páncreas', 'Histotripsia de tejido pancreático maligno',
+ 'Histotripsy of malignant pancreatic tissue. ',
+ 'Categoría III', 'Gastroenterología', 0.000, 0.000, 0.000,
+ 'Histotripsia (ablación ultrasónica) de tejido pancreático maligno.', 'Sí', 2026, 'AMA'),
+
+('1038T', 'Nuevo', 'Terapia celular muscular', 'Terapia con células musculares autólogas',
+ 'Autologous muscle cell therapy. ',
+ 'Categoría III', 'Medicina Regenerativa', 0.000, 0.000, 0.000,
+ 'Terapia con células musculares autólogas.', 'Sí', 2026, 'AMA'),
+
+('1039T', 'Nuevo', 'Conectómica MRI cerebral', 'Análisis conectómico de MRI cerebral multimodal previo',
+ 'Connectomic analysis of previously performed multi-modal brain MRI. ',
+ 'Categoría III', 'Neurología', 0.000, 0.000, 0.000,
+ 'Análisis conectómico de resonancia magnética cerebral multimodal previamente realizada.', 'No', 2026, 'AMA'),
+
+('1040T', 'Nuevo', 'Broncoscopía con crioterapia', 'Broncoscopía flexible con crioterapia bronquial',
+ 'Flexible bronchoscopy with bronchial cryotherapy. ',
+ 'Categoría III', 'Neumología', 0.000, 0.000, 0.000,
+ 'Broncoscopía flexible con crioterapia bronquial.', 'Sí', 2026, 'AMA'),
+
+('1041T', 'Nuevo', 'Análisis EEG con IA', 'Análisis algorítmico aumentativo de formas de onda encefalográficas',
+ 'Augmentative algorithmic analysis of encephalographic waveforms. ',
+ 'Categoría III', 'Neurología', 0.000, 0.000, 0.000,
+ 'Análisis algorítmico aumentativo de formas de onda encefalográficas.', 'No', 2026, 'AMA'),
+
+('1042T', 'Nuevo', 'Andamio uretral absorbible', 'Implante de andamio urológico absorbible para uretra prostática',
+ 'Implantation of absorbable urologic scaffold for prostatic urethra restoration of reconstructed bladder neck and urethral anastomosis (List separately in addition to code for primary procedure). ',
+ 'Categoría III', 'Urología', 0.000, 0.000, 0.000,
+ 'Implante de andamio urológico absorbible para restauración de la uretra prostática (código adicional).', 'Sí', 2026, 'AMA'),
+
+('1043T', 'Nuevo', 'RMN hepática en punto de atención', 'Prueba de RM cuantitativa en punto de atención para evaluación hepática',
+ 'Point-of-care quantitative magnetic resonance (MR) test, without imaging, for liver assessment. ',
+ 'Categoría III', 'Gastroenterología', 0.000, 0.000, 0.000,
+ 'Prueba de RM cuantitativa en punto de atención para evaluación hepática (sin imagen).', 'No', 2026, 'AMA'),
+
+('1044T', 'Nuevo', 'Sustituto de piel 1', 'Sustituto de piel',
+ 'Skin substitute code 1. ',
+ 'Categoría III', 'Dermatología', 0.000, 0.000, 0.000,
+ 'Código de sustituto de piel (grupo de 6 códigos).', 'Sí', 2026, 'AMA'),
+
+('1045T', 'Nuevo', 'Sustituto de piel 2', 'Sustituto de piel',
+ 'Skin substitute code 2. ',
+ 'Categoría III', 'Dermatología', 0.000, 0.000, 0.000,
+ 'Código de sustituto de piel (grupo de 6 códigos).', 'Sí', 2026, 'AMA'),
+
+('1046T', 'Nuevo', 'Sustituto de piel 3', 'Sustituto de piel',
+ 'Skin substitute code 3. ',
+ 'Categoría III', 'Dermatología', 0.000, 0.000, 0.000,
+ 'Código de sustituto de piel (grupo de 6 códigos).', 'Sí', 2026, 'AMA'),
+
+('1047T', 'Nuevo', 'Sustituto de piel 4', 'Sustituto de piel',
+ 'Skin substitute code 4. ',
+ 'Categoría III', 'Dermatología', 0.000, 0.000, 0.000,
+ 'Código de sustituto de piel (grupo de 6 códigos).', 'Sí', 2026, 'AMA'),
+
+('1048T', 'Nuevo', 'Sustituto de piel 5', 'Sustituto de piel',
+ 'Skin substitute code 5. ',
+ 'Categoría III', 'Dermatología', 0.000, 0.000, 0.000,
+ 'Código de sustituto de piel (grupo de 6 códigos).', 'Sí', 2026, 'AMA'),
+
+('1049T', 'Nuevo', 'Sustituto de piel 6', 'Sustituto de piel',
+ 'Skin substitute code 6. ',
+ 'Categoría III', 'Dermatología', 0.000, 0.000, 0.000,
+ 'Código de sustituto de piel (grupo de 6 códigos).', 'Sí', 2026, 'AMA'),
+
+('1050T', 'Nuevo', 'Monitorización IC subcutánea', 'Monitorización subcutánea de descompensación de insuficiencia cardíaca',
+ 'Subcutaneous heart failure decompensation monitoring. ',
+ 'Categoría III', 'Cardiología', 0.000, 0.000, 0.000,
+ 'Monitorización subcutánea de descompensación de insuficiencia cardíaca.', 'Sí', 2026, 'AMA'),
+
+('1051T', 'Nuevo', 'Monitoreo IC - análisis', 'Monitoreo subcutáneo de descompensación cardíaca - análisis de datos',
+ 'Subcutaneous heart failure decompensation monitoring, data analysis. ',
+ 'Categoría III', 'Cardiología', 0.000, 0.000, 0.000,
+ 'Análisis de datos de monitorización subcutánea de insuficiencia cardíaca.', 'No', 2026, 'AMA'),
+
+('1052T', 'Nuevo', 'Monitoreo IC - informes', 'Monitoreo subcutáneo de descompensación cardíaca - informes',
+ 'Subcutaneous heart failure decompensation monitoring, report generation. ',
+ 'Categoría III', 'Cardiología', 0.000, 0.000, 0.000,
+ 'Generación de informes de monitorización subcutánea de insuficiencia cardíaca.', 'No', 2026, 'AMA'),
+
+('1053T', 'Nuevo', 'Monitoreo IC - reprogramación', 'Monitoreo subcutáneo de descompensación cardíaca - reprogramación',
+ 'Subcutaneous heart failure decompensation monitoring, device reprogramming. ',
+ 'Categoría III', 'Cardiología', 0.000, 0.000, 0.000,
+ 'Reprogramación del dispositivo de monitorización subcutánea de insuficiencia cardíaca.', 'Sí', 2026, 'AMA');
+
+-- ============================================================
+-- NOTA SOBRE RVU: 
+-- Los códigos de Categoría III no tienen valores de RVU asignados. Son temporales y su reembolso varía según el pagador.
+-- Códigos 1044T-1049T son sustitutos de piel (grupo de 6 códigos) [citation:1]
+-- Código 1042T descriptor corregido por AMA (cambio de "prosthetic" a "prostatic" en errata del 26/03/2026) [citation:5][citation:10]
+-- ============================================================
 
 -- ============================================================
 -- NOTA SOBRE RVU: 
