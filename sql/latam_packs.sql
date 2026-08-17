@@ -2158,3 +2158,13 @@ INSERT INTO cpt_codes_es (
 ('88309', 'Vigente', 'Patología quirúrgica Nivel VI', 'Patología quirúrgica Nivel VI (grandes órganos)',
  'Patología quirúrgica, Nivel VI, examen macroscópico y microscópico. **Ejemplos:** mama (mastectomía con ganglios regionales), colon (resección segmentaria por tumor), esófago (resección total/parcial), extremidad (desarticulación), laringe (resección parcial/total con ganglios), pulmón (resección total/lobar/segmentaria), páncreas (resección total/subtotal), próstata (resección radical), intestino delgado (resección por tumor), estómago (resección subtotal/total por tumor), testículo (tumor), útero (con o sin trompas y ovarios, neoplásico).',
  'Patología', 'Anatomía Patológica', 0.00, 8.30, 0.05, 'Examen de un órgano completo', 'No', 2024, 'AMA');
+
+-- ============================================================
+-- FIN DEL ARCHIVO: latam_packs.sql
+-- TOTAL DE REGISTROS: 570
+-- ============================================================
+-- NOTA: Este archivo contiene códigos CPT reales de la AMA
+-- extraídos de fuentes públicas (CMS, AMA, AAPC, ACS)
+-- NO es un catálogo completo ni oficial.
+-- Para uso comercial se requiere licencia de la AMA.
+-- ============================================================
