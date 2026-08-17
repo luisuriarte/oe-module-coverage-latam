@@ -1458,6 +1458,7 @@ $covlI18n = [
     <script src="<?= attr($moduleBase) ?>/assets/js/batches-crud.js"></script>
     <script src="<?= attr($moduleBase) ?>/assets/js/countries-crud.js"></script>
     <script src="<?= attr($moduleBase) ?>/assets/js/rules-crud.js"></script>
+    <script src="<?= attr($moduleBase) ?>/assets/js/cpt-search.js"></script>
 
     <!-- Poblar selects de financiadores en los filtros al arrancar -->
     <script>
