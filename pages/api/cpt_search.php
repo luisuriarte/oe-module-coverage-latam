@@ -1,12 +1,14 @@
 <?php
 
 /**
- * oe-module-coverage-latam — API: Búsqueda de códigos CPT4
+ * oe-module-coverage-latam — API: Búsqueda de códigos médicos
  *
- * Endpoint de solo lectura para autocompletado de códigos CPT/HCPCS
+ * Endpoint de solo lectura para autocompletado de códigos
  * desde los modales de autorización y frecuencia.
  *
- * GET ?action=search&q=texto&limit=15
+ * GET ?action=search&code_type=CPT4&q=texto&limit=15
+ *
+ * Tipos soportados: CPT4, CDT, ICD10-PCS, SNOMED-PR
  *
  * @package   OpenEMR\Modules\CoverageLatam
  * @author    Luis A. Uriarte <luis.uriarte@gmail.com>
@@ -49,61 +51,90 @@ function covl_cpt_json(mixed $data, int $status = 200): void
 }
 
 // ---------------------------------------------------------------------------
-// Whitelist de idiomas → tabla/columnas (nunca construir nombres desde input)
-// 'es' => cpt_codes_es  (code, short_description, medium_description)
-// 'en' => cpt_codes     (cpt_code AS code, short_description, NULL AS medium_description)
-// 'pt' => cpt_codes_pt  (futuro)
+// Whitelist de code_type → tabla/columnas (nunca construir desde input)
 // ---------------------------------------------------------------------------
-function getCptTables(): array
+function getCodeTables(): array
 {
     return [
-        'es' => [
-            'table'       => 'cpt_codes_es',
-            'colCode'     => 'code',
-            'colShort'    => 'short_description',
-            'colMedium'   => 'medium_description',
-            'hasMedium'   => true,
+        'CPT4' => [
+            'table'     => 'cpt_codes_es',
+            'colCode'   => 'code',
+            'colShort'  => 'short_description',
+            'colMedium' => 'medium_description',
+            'hasMedium' => true,
+            'where'     => null,
+            'label'     => 'CPT4',
         ],
-        // 'en' => [
+        // 'CPT4_EN' => [
         //     'table'     => 'cpt_codes',
         //     'colCode'   => 'cpt_code',
         //     'colShort'  => 'short_description',
-        //     'colMedium' => null,           // cpt_codes no tiene medium_description
+        //     'colMedium' => null,
         //     'hasMedium' => false,
+        //     'where'     => null,
+        //     'label'     => 'CPT4 (EN)',
         // ],
-        // 'pt' => [
-        //     'table'     => 'cpt_codes_pt',
-        //     'colCode'   => 'code',
-        //     'colShort'  => 'short_description',
-        //     'colMedium' => 'medium_description',
-        //     'hasMedium' => true,
-        // ],
+        'CDT' => [
+            'table'     => 'cdt_codes',
+            'colCode'   => 'cdt_code',
+            'colShort'  => 'description',
+            'colMedium' => null,
+            'hasMedium' => false,
+            'where'     => null,
+            'label'     => 'Dental CDT Codes',
+        ],
+        'ICD10-PCS' => [
+            'table'     => 'icd10_pcs_order_code',
+            'colCode'   => 'pcs_code',
+            'colShort'  => 'long_desc',
+            'colMedium' => 'short_desc',
+            'hasMedium' => true,
+            'where'     => 'active = 1',
+            'label'     => 'ICD10 Procedure/Service',
+        ],
+        'SNOMED-PR' => [
+            'table'     => 'sct2_description',
+            'colCode'   => 'conceptId',
+            'colShort'  => 'term',
+            'colMedium' => null,
+            'hasMedium' => false,
+            'where'     => "active = '1' AND effectiveTime > '2003-10-31' AND term LIKE '%(procedimiento)'",
+            'label'     => 'SNOMED Procedure',
+        ],
+        'ODONTO' => [
+            'table'     => 'odontologico',
+            'colCode'   => 'codigo',
+            'colShort'  => 'descripcion',
+            'colMedium' => null,
+            'hasMedium' => false,
+            'where'     => null,
+            'label'     => 'Odontologico',
+        ],
     ];
 }
 
 // ---------------------------------------------------------------------------
 // Función principal de búsqueda
 // ---------------------------------------------------------------------------
-function searchCptCodes(string $lang, string $query, int $limit): array
+function searchCodes(string $codeType, string $query, int $limit): array
 {
-    $tables = getCptTables();
+    $tables = getCodeTables();
 
-    if (!isset($tables[$lang])) {
-        covl_cpt_json(['error' => xl('Idioma no soportado')], 400);
+    if (!isset($tables[$codeType])) {
+        covl_cpt_json(['error' => xl('Tipo de código no soportado')], 400);
     }
 
-    $tbl  = $tables[$lang];
-    $q    = trim($query);
+    $tbl = $tables[$codeType];
+    $q   = trim($query);
 
     if ($q === '') {
         return [];
     }
 
-    // Parámetros seguros
     $params = [];
     $limit  = max(1, min($limit, 25));
 
-    // Construir SELECT con alias normalizado
+    // SELECT con alias normalizado
     $selectCols = [
         $tbl['colCode'] . ' AS code',
         $tbl['colShort'] . ' AS short_description',
@@ -113,11 +144,9 @@ function searchCptCodes(string $lang, string $query, int $limit): array
     } else {
         $selectCols[] = 'NULL AS medium_description';
     }
+    $selectCols[] = "'" . $tbl['label'] . "' AS code_type_label";
 
-    $selectCols[] = "'" . $tbl['table'] . "' AS source_table";
-
-    // Coincidencia por código (prefijo) y por descripción
-    // Prioridad: código exacto > código con prefijo > descripción
+    // WHERE: búsqueda por código (prefijo) o descripción
     $prefix  = $q . '%';
     $pattern = '%' . $q . '%';
 
@@ -125,29 +154,30 @@ function searchCptCodes(string $lang, string $query, int $limit): array
         $tbl['colCode']  . ' LIKE ?',
         $tbl['colShort'] . ' LIKE ?',
     ];
-    $params[] = $prefix;   // code LIKE 'q%'
-    $params[] = $pattern;  // short_description LIKE '%q%'
+    $params[] = $prefix;
+    $params[] = $pattern;
 
-    // Solo incluir medium_description si la tabla la tiene
     if ($tbl['hasMedium']) {
         $whereClauses[] = $tbl['colMedium'] . ' LIKE ?';
-        $params[] = $pattern;  // medium_description LIKE '%q%'
+        $params[] = $pattern;
     }
 
+    // Filtro adicional de la tabla (ej: active, procedimiento SNOMED)
     $sql = "SELECT " . implode(', ', $selectCols) . "
             FROM " . $tbl['table'] . "
-            WHERE (" . implode(' OR ', $whereClauses) . ")
+            WHERE (" . implode(' OR ', $whereClauses) . ")" .
+            (!empty($tbl['where']) ? " AND (" . $tbl['where'] . ")" : "") . "
             ORDER BY
                 CASE
-                    WHEN " . $tbl['colCode'] . " = ? THEN 0
-                    WHEN " . $tbl['colCode'] . " LIKE ? THEN 1
+                    WHEN CAST(" . $tbl['colCode'] . " AS CHAR) = ? THEN 0
+                    WHEN CAST(" . $tbl['colCode'] . " AS CHAR) LIKE ? THEN 1
                     ELSE 2
                 END,
                 " . $tbl['colCode'] . "
             LIMIT ?";
 
-    $params[] = $q;      // code = 'q' (orden exacto)
-    $params[] = $prefix; // code LIKE 'q%' (orden prefijo)
+    $params[] = $q;
+    $params[] = $prefix;
     $params[] = $limit;
 
     $res = sqlStatement($sql, $params);
@@ -155,10 +185,10 @@ function searchCptCodes(string $lang, string $query, int $limit): array
     $results = [];
     while ($row = sqlFetchArray($res)) {
         $results[] = [
-            'code'               => $row['code'],
-            'short_description'  => $row['short_description'],
+            'code'              => (string) $row['code'],
+            'short_description' => $row['short_description'],
             'medium_description' => $row['medium_description'],
-            'source_table'       => $row['source_table'],
+            'code_type_label'   => $row['code_type_label'],
         ];
     }
 
@@ -166,17 +196,17 @@ function searchCptCodes(string $lang, string $query, int $limit): array
 }
 
 // ---------------------------------------------------------------------------
-// Router (solo acción search)
+// Router
 // ---------------------------------------------------------------------------
 $action = $_REQUEST['action'] ?? '';
 
 try {
     switch ($action) {
         case 'search':
-            $q     = $_GET['q'] ?? '';
-            $lang  = $_GET['lang'] ?? 'es';
-            $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 15;
-            $data  = searchCptCodes($lang, $q, $limit);
+            $codeType = $_GET['code_type'] ?? 'CPT4';
+            $q        = $_GET['q'] ?? '';
+            $limit    = isset($_GET['limit']) ? (int) $_GET['limit'] : 15;
+            $data     = searchCodes($codeType, $q, $limit);
             covl_cpt_json(['data' => $data]);
             break;
 

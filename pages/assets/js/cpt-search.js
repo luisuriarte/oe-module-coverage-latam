@@ -1,27 +1,31 @@
 /**
- * oe-module-coverage-latam — CPT4 Code Search Popover
+ * oe-module-coverage-latam — Medical Code Search Popover
  *
- * Muestra una lupa junto al input de código cuando el tipo es CPT4.
- * Al hacer clic abre un popover con búsqueda en vivo contra cpt_codes_es.
+ * Muestra una lupa junto al input de código cuando el tipo es soportado
+ * (CPT4, CDT, ICD10-PCS, SNOMED-PR). Al hacer clic abre un popover
+ * con búsqueda en vivo contra la tabla correspondiente.
  *
- * Depende de: covlConfig (inyectado por dashboard.php), escHtml(), debounce()
+ * Depende de: covlConfig (inyectado por dashboard.php)
  * @package   OpenEMR\Modules\CoverageLatam
  */
 
 const COVL_CptSearch = (() => {
     'use strict';
 
-    // ── Configuración de pares select → input ────────────────────────────
+    // ── Code types con búsqueda soportada ─────────────────────────────────
+    const SEARCHABLE_TYPES = ['CPT4', 'CDT', 'ICD10-PCS', 'SNOMED-PR', 'ODONTO'];
+
+    // ── Pares select → input ──────────────────────────────────────────────
     const PAIRS = [
         { codetypeId: 'fld-auth-codetype', codeId: 'fld-auth-code' },
         { codetypeId: 'fld-freq-codetype', codeId: 'fld-freq-code' },
     ];
 
-    const POPUP_WIDTH = 360;
-    const SEARCH_MIN  = 2;
+    const POPUP_WIDTH  = 360;
+    const SEARCH_MIN   = 2;
     const SEARCH_LIMIT = 15;
 
-    // ── Helpers reutilizados del patrón existente ────────────────────────
+    // ── Helpers ───────────────────────────────────────────────────────────
     const escHtml = (str) => String(str ?? '')
         .replace(/&/g, '&amp;').replace(/</g, '&lt;')
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -40,11 +44,10 @@ const COVL_CptSearch = (() => {
     };
 
     // ── Estado ───────────────────────────────────────────────────────────
-    let activePopover = null; // referencia al popover abierto actualmente
+    let activePopover = null;
 
-    // ── Crear markup del popover (se reutiliza) ──────────────────────────
-    function createPopover(codeInput) {
-        // Wrapper relativo alrededor del input de código
+    // ── Crear markup del popover ──────────────────────────────────────────
+    function createPopover(codeInput, codetypeSelect) {
         let wrap = codeInput.parentElement;
         if (!wrap.classList.contains('covl-cpt-wrap')) {
             const newWrap = document.createElement('div');
@@ -75,7 +78,7 @@ const COVL_CptSearch = (() => {
             wrap.appendChild(icon);
         }
 
-        // Contenedor del popover
+        // Popover
         let pop = wrap.querySelector('.covl-cpt-popover');
         if (!pop) {
             pop = document.createElement('div');
@@ -116,14 +119,15 @@ const COVL_CptSearch = (() => {
 
             wrap.appendChild(pop);
 
-            // Eventos del popover
+            // Búsqueda con debounce
             searchInput.addEventListener('input', debounce(async () => {
                 const q = searchInput.value.trim();
                 if (q.length < SEARCH_MIN) {
                     resultsDiv.innerHTML = '';
                     return;
                 }
-                await doSearch(q, resultsDiv, codeInput);
+                const codeType = codetypeSelect.value;
+                await doSearch(q, codeType, resultsDiv, codeInput);
             }, 300));
 
             // Cerrar al hacer clic fuera
@@ -140,16 +144,17 @@ const COVL_CptSearch = (() => {
             });
         }
 
-        return { icon, pop, wrap };
+        return { icon, pop };
     }
 
     // ── Búsqueda ─────────────────────────────────────────────────────────
-    async function doSearch(query, resultsDiv, codeInput) {
+    async function doSearch(query, codeType, resultsDiv, codeInput) {
         resultsDiv.innerHTML = '<div style="padding:8px 12px;color:#888;font-size:.85rem">Buscando...</div>';
 
         try {
             const url = apiUrl('cpt_search.php', {
                 action: 'search',
+                code_type: codeType,
                 q: query,
                 limit: SEARCH_LIMIT,
             });
@@ -179,10 +184,12 @@ const COVL_CptSearch = (() => {
                     fontSize: '.85rem',
                 });
 
+                // Código en negrita
                 const codeBold = document.createElement('strong');
                 codeBold.textContent = row.code;
                 codeBold.style.marginRight = '6px';
 
+                // Descripción corta
                 const desc = document.createElement('span');
                 desc.textContent = row.short_description ?? '';
                 desc.style.color = '#555';
@@ -201,7 +208,7 @@ const COVL_CptSearch = (() => {
 
                 resultsDiv.appendChild(item);
             });
-        } catch (err) {
+        } catch {
             resultsDiv.innerHTML = '<div style="padding:8px 12px;color:#dc3545;font-size:.85rem">Error de búsqueda</div>';
         }
     }
@@ -214,22 +221,19 @@ const COVL_CptSearch = (() => {
         }
     }
 
-    function togglePopover(pop, icon) {
+    function togglePopover(pop) {
         if (activePopover === pop) {
             closePopover();
             return;
         }
-        // Cerrar cualquier otro popover abierto
         closePopover();
 
         pop.style.display = 'block';
         activePopover = pop;
 
-        // Posicionar debajo del icono
         const wrapWidth = pop.parentElement.offsetWidth;
         pop.style.left = Math.max(0, wrapWidth - POPUP_WIDTH) + 'px';
 
-        // Focus en el input de búsqueda
         const searchInput = pop.querySelector('.covl-cpt-search-input');
         if (searchInput) {
             searchInput.value = '';
@@ -242,9 +246,9 @@ const COVL_CptSearch = (() => {
     // ── Visibilidad de la lupa ───────────────────────────────────────────
     function updateIconVisibility(codetypeSelect, icon) {
         if (!icon) return;
-        const isCpt4 = codetypeSelect.value === 'CPT4';
-        icon.style.display = isCpt4 ? 'block' : 'none';
-        if (!isCpt4) closePopover();
+        const show = SEARCHABLE_TYPES.includes(codetypeSelect.value);
+        icon.style.display = show ? 'block' : 'none';
+        if (!show) closePopover();
     }
 
     // ── Inicialización ───────────────────────────────────────────────────
@@ -254,26 +258,22 @@ const COVL_CptSearch = (() => {
             const codeInput      = document.getElementById(codeId);
             if (!codetypeSelect || !codeInput) return;
 
-            const { icon, pop } = createPopover(codeInput);
+            const { icon, pop } = createPopover(codeInput, codetypeSelect);
 
-            // Estado inicial
             updateIconVisibility(codetypeSelect, icon);
 
-            // Cambio de tipo de código
             codetypeSelect.addEventListener('change', () => {
                 updateIconVisibility(codetypeSelect, icon);
             });
 
-            // Click en la lupa
             icon.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                togglePopover(pop, icon);
+                togglePopover(pop);
             });
         });
     }
 
-    // Arrancar cuando el DOM esté listo
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
