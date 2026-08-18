@@ -21,8 +21,12 @@
 - [Instalación](#-instalación)
 - [Navegación y Estructura del Menú](#-navegación-y-estructura-del-menú)
 - [Paquete Argentina](#-paquete-argentina)
+- [Catálogo CPT4 Español](#-catálogo-cpt4-español)
 - [Adaptadores de integración](#-adaptadores-de-integración)
 - [Servicios incluidos](#-servicios-incluidos)
+- [Repositorios](#-repositorios)
+- [API REST](#-api-rest)
+- [Búsqueda de Códigos Médicos](#-búsqueda-de-códigos-médicos)
 - [Estructura de archivos](#-estructura-de-archivos)
 - [Relación con OpenEMR nativo](#-relación-con-openemr-nativo)
 - [Preguntas frecuentes](#-preguntas-frecuentes)
@@ -106,44 +110,53 @@ Interfaz común para conectar sistemas externos de financiadores:
 
 ## 🏗️ Arquitectura
 
-El módulo está organizado en **3 capas** que se apoyan sobre OpenEMR sin modificarlo:
+El módulo está organizado en **4 capas** que se apoyan sobre OpenEMR sin modificarlo:
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│              Capa País / Financiador                    │
-│  Paquete Argentina (NNAR, reglas por defecto, semillas) │
-│  Futuros: Chile (FONASA), Colombia (EPS), México, etc.  │
-├─────────────────────────────────────────────────────────┤
-│              Capa Núcleo LATAM (covl_*)                 │
-│  Autorizaciones · Frecuencia · Convenios · Lotes        │
-│  Adaptadores · Log de integración · Config              │
-├─────────────────────────────────────────────────────────┤
-│              Capa OpenEMR Nativa (reutilizada)          │
-│  insurance_companies · insurance_data · billing         │
-│  form_encounter · codes · users · facility              │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                    Capa UI (pages/)                          │
+│  dashboard.php · 6 JavaScript · CSS · Modales Bootstrap     │
+├──────────────────────────────────────────────────────────────┤
+│                    Capa API (pages/api/)                      │
+│  7 endpoints REST · Sesión OpenEMR · Validación              │
+├──────────────────────────────────────────────────────────────┤
+│                    Capa Núcleo LATAM (src/)                   │
+│  Services (7) · Repositories (5) · Contracts · DTOs · CsrfCompat │
+├──────────────────────────────────────────────────────────────┤
+│                    Capa OpenEMR Nativa (reutilizada)          │
+│  insurance_companies · insurance_data · billing              │
+│  form_encounter · codes · code_types · users · facility      │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ### Capas PHP
 
 ```
 src/
-├── Contracts/          ← Interfaces del contrato (nunca cambian)
+├── CsrfCompat.php              ← Compatibilidad CSRF (OpenEMR 8.0–8.3+)
+├── Contracts/                  ← Interfaces del contrato (estables)
 │   ├── CoverageAdapterInterface.php
 │   ├── EligibilityResultInterface.php
 │   └── AuthorizationResultInterface.php
-├── Dto/                ← Value objects inmutables
+├── Dto/                        ← Value objects inmutables
 │   ├── EligibilityResult.php
 │   └── AuthorizationResult.php
-├── Adapter/            ← Implementaciones de integraciones
+├── Adapter/                    ← Implementaciones de integraciones
 │   └── ManualFallbackAdapter.php
-├── Service/            ← Lógica de negocio
+├── Service/                    ← Lógica de negocio (7 servicios)
 │   ├── AuthorizationService.php
 │   ├── FrequencyCheckService.php
 │   ├── ProviderCoverageService.php
-│   └── AdapterRegistry.php
-└── Repository/         ← Acceso a datos con sqlStatement nativo
-    └── AuthorizationRepository.php
+│   ├── AdapterRegistry.php
+│   ├── CountryPackCatalog.php
+│   ├── CountryPackImporter.php
+│   └── CountryPackInstaller.php
+└── Repository/                 ← Acceso a datos con sqlStatement nativo (5 repos)
+    ├── AuthorizationRepository.php
+    ├── AuthRulesRepository.php
+    ├── FrequencyRulesRepository.php
+    ├── ProviderCoverageRepository.php
+    └── SettlementBatchRepository.php
 ```
 
 ---
@@ -245,17 +258,19 @@ Al activar el módulo desde el **Module Manager**, se registra la entrada en el 
 ```
 📂 Servicios / Honorarios (o Menú Principal)
 └── 🏥 Coberturas LATAM
-    ├── 📊 Dashboard                  (Métricas globales y resumen operativo)
-    ├── 📋 Autorizaciones             (Gestión de solicitudes y estado de trámites)
-    ├── 📦 Lotes de Liquidación       (Presentaciones masivas y cobro a obras sociales)
-    ├── 👨‍⚕️ Convenios Prestadores     (Vigencia por profesional y financiador)
-    ├── 🌎 Países                     (Catálogo e instalación de paquetes por país)
-    └── ⚙️ Configuración              (Reglas de autorización previa y frecuencia)
+    ├── 📊 Dashboard              (?tab=dashboard)     Métricas globales y resumen operativo
+    ├── 📋 Autorizaciones         (?tab=authorizations) Gestión de solicitudes y estados
+    ├── 📦 Lotes de Liquidación   (?tab=batches)       Presentaciones masivas y cobro
+    ├── 👨‍⚕️ Convenios Prestadores (?tab=providers)     Vigencia por profesional y financiador
+    ├── 📋 Reglas de Autorización (?tab=auth_rules)    Configuración por práctica × financiador
+    └── 🔄 Reglas de Frecuencia   (?tab=freq_rules)    Intervalos mínimos entre prácticas
 ```
+
+> **Nota:** La pestaña **Países** (`?tab=countries`) y **Configuración** (`?tab=config`) también están disponibles dentro del dashboard unificado, pero no son ítems de menú separados. Se acceden desde la interfaz del dashboard.
 
 ### 🔒 Permisos y control de acceso (ACL):
 - 📊 **Dashboard, Autorizaciones y Lotes:** Accesibles para personal administrativo y recepción (`patients`, `demo`).
-- 👨‍⚕️ **Convenios Prestadores y Configuración:** Accesibles exclusivamente para administradores y auditores médicos (`admin`, `docs`).
+- 👨‍⚕️ **Convenios Prestadores, Reglas de Autorización y Reglas de Frecuencia:** Accesibles exclusivamente para administradores y auditores médicos (`admin`, `docs`).
 
 ---
 
@@ -313,7 +328,67 @@ Se pueden cargar obras sociales (OSDE, Swiss Medical, Galeno, IOMA, etc.) y prep
 
 ---
 
-## 🔌 Adaptadores de integración
+## 📚 Catálogo CPT4 Español
+
+El módulo incluye un catálogo completo de códigos CPT4 traducidos al español latinoamericano, listos para usar en países sin nomenclador nacional propio.
+
+### `latam_packs.sql`
+
+Archivo SQL independiente (210 KB) que crea la tabla `cpt_codes_es` y la popula con **570+ códigos CPT4 reales** extraídos de fuentes públicas.
+
+```bash
+# Importar desde la raíz de OpenEMR
+mysql -u root openemr < oe-module-coverage-latam/sql/latam_packs.sql
+```
+
+### Estructura de la tabla
+
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `id` | INT AUTO_INCREMENT | ID único |
+| `code` | VARCHAR(10) | Código CPT4 |
+| `short_description` | VARCHAR(50) | Descripción en español |
+| `medium_description` | VARCHAR(80) | Descripción extendida |
+| `long_description` | TEXT | Descripción completa |
+| `work_rvu` | DECIMAL | Work RVU |
+| `practice_expense_rvu` | DECIMAL | Practice Expense RVU |
+| `malpractice_rvu` | DECIMAL | Malpractice RVU |
+| `modifiers_allowed` | VARCHAR(20) | Modificadores permitidos |
+| `year_effective` | YEAR | Año de vigente |
+| `source` | VARCHAR(20) | Fuente del dato |
+
+### Secciones cubiertas (32)
+
+| # | Sección | Rango CPT |
+|---|---|---|
+| 1 | Evaluación y Manejo (E/M) | 99202–99215 |
+| 2 | Psicoterapia y Salud Mental | 90791–90853 |
+| 3 | Cirugía General | 10060–64999 |
+| 4 | Cirugía de Columna | 22551–63075 |
+| 5 | Anestesia | 00104–01922 |
+| 6 | Neurocirugía y Radiocirugía | 61520–77432 |
+| 7 | Urología Percutánea | 50382–50706 |
+| 8 | Inmunizaciones y Vacunas | 90480–90613 |
+| 9 | Oftalmología (Corneal) | 65272–65855 |
+| 10 | Radiología Intervencionista | 37255–37273 |
+| 11 | Cardiología e Intervencionismo | 92920–93453 |
+| 12 | Cuidados Paliativos / Hospicio | 99377–99378 |
+| 13 | Neuroestimulación | 63685–64595 |
+| 14 | Ecocardiografía | 93303–93351 |
+| 15 | Cirugía Plástica y Reconstructiva | 15847–21275 |
+| 16 | Rehabilitación y Terapia Física | 97001–97760 |
+| 17 | Medicina del Dolor | 62310–64490 |
+| 18 | Medicina Preventiva y Conductual | 99401–99484 |
+| 19 | Cirugía Vascular | 35500–37799 |
+| 20 | Radiología (Diagnóstica) | 70010–79999 |
+| 21 | Mamografía | 77061–77067 |
+| 22 | Radioterapia | 77261–77799 |
+| 23 | Medicina Nuclear | 78000–79999 |
+| 24 | Patología y Laboratorio | 80047–89398 |
+| 25 | Códigos PLA (Longitud del Produto) | 0001A–0196A |
+| 26–32 | Otras especialidades | Varios |
+
+> **Uso:** Ideal para clínicas en LATAM que usan CPT4 como código base pero necesitan descripciones en español para el personal médico y administrativo.
 
 El módulo define una interfaz plugable para conectar sistemas externos. Cada financiador puede tener su propia implementación.
 
@@ -397,6 +472,154 @@ Resuelve qué adaptador usar para cada financiador:
 - Si la clase PHP existe y está disponible, la instancia dinámicamente
 - Siempre tiene `ManualFallbackAdapter` como respaldo
 
+### `CountryPackCatalog`
+Lee y valida los archivos `packs/*.json` del catálogo de países:
+- Retorna la lista de países disponibles con metadatos (nombre, moneda, versión)
+- Valida la estructura JSON antes de importar
+- Usado por el tab de Países en el dashboard
+
+### `CountryPackImporter`
+Importa un paquete de país de forma idempotente dentro de una transacción:
+- Registra el tipo de código en `code_types` (si no existe)
+- Upsert de reglas de autorización en `covl_auth_rules`
+- Upsert de reglas de frecuencia en `covl_frequency_rules`
+- Inserta equivalencias de códigos en `covl_country_code_maps`
+- Marca `default_rules_loaded = 1` en `covl_country_packs`
+- Revertible: si falla, la transacción se revierte completamente
+
+### `CountryPackInstaller`
+Capa de compatibilidad sobre `CountryPackImporter`:
+- Expone métodos de alto nivel para instalar/actualizar un país
+- Maneja la lógica de "primera vez" vs "actualización"
+- Usado por el bootstrapper y la API `country_packs.php`
+
+---
+
+## 🗃️ Repositorios
+
+Acceso a datos con `sqlStatement` nativo de OpenEMR (sin ORM).
+
+### `AuthorizationRepository`
+CRUD completo para `covl_authorizations` + `covl_authorization_history`:
+- `findForPatient($pid)` → autorizaciones de un paciente
+- `findByStatus($status)` → filtrar por estado
+- `create($data)` / `update($id, $data)` → persistencia
+- `addHistory($authId, $from, $to, $userId, $notes)` → registro de auditoría
+
+### `AuthRulesRepository`
+CRUD para `covl_auth_rules`:
+- `findAll($filters)` → listado con filtros por código, financiador, plan
+- `findByCodeAndInsurer($code, $codeType, $insCompanyId)` → regla específica
+- `create($data)` / `update($id, $data)` / `delete($id)`
+- `toggle($id)` → activar/desactivar
+
+### `FrequencyRulesRepository`
+CRUD para `covl_frequency_rules`:
+- `findAll($filters)` → listado con filtros
+- `findByCodeAndType($code, $codeType)` → regla para un código
+- `create($data)` / `update($id, $data)` / `delete($id)`
+- `toggle($id)` → activar/desactivar
+
+### `ProviderCoverageRepository`
+CRUD para `covl_provider_coverage`:
+- `findForProvider($userId)` → convenios de un profesional
+- `findActiveForInsurer($insCompanyId)` → profesionales vigentes de un financiador
+- `create($data)` / `update($id, $data)` / `delete($id)`
+- `toggle($id)` → activar/desactivar
+
+### `SettlementBatchRepository`
+CRUD para `covl_settlement_batches` + `covl_settlement_items`:
+- `findAll($filters)` → lotes con filtros por estado, financiador, período
+- `findItems($batchId)` → ítems de un lote
+- `create($data)` / `update($id, $data)` / `delete($id)`
+- `transition($id, $newStatus)` → cambio de estado con validación
+- `addItem($batchId, $billingId)` / `removeItem($itemId)`
+- `getFacilities()` / `getBillings($batchId)` → datos para formularios
+
+---
+
+## 🌐 API REST
+
+7 endpoints PHP que sirven la UI del dashboard. Todos requieren sesión activa de OpenEMR y usan `sqlStatement` nativo.
+
+### Endpoints
+
+| Endpoint | Método | Acciones |
+|---|---|---|
+| `auth_rules.php` | GET/POST | `list`, `get`, `create`, `update`, `toggle`, `delete` |
+| `frequency_rules.php` | GET/POST | `list`, `get`, `create`, `update`, `toggle`, `delete` |
+| `providers.php` | GET/POST | `list`, `get`, `professionals`, `facilities`, `create`, `update`, `toggle`, `delete` |
+| `batches.php` | GET/POST | `list`, `get`, `facilities`, `billings`, `create`, `update`, `transition`, `delete`, `add_item`, `remove_item`, `item_status` |
+| `country_packs.php` | GET/POST | `catalog`, `list`, `install` |
+| `insurers.php` | GET | Lista de `insurance_companies` (opcional: `country_code`) |
+| `cpt_search.php` | GET | `search` — Búsqueda de códigos médicos (CPT4, CDT, ICD10-PCS, SNOMED-PR, ODONTO) |
+
+### Patrón común
+
+```php
+// Todas las APIs siguen este patrón:
+$ignoreAuth = false;                    // Requiere sesión
+require_once __DIR__ . '/../../../../../globals.php';
+
+// Respuesta JSON con helper
+function covl_json(mixed $data, int $status = 200): void {
+    http_response_code($status);
+    echo json_encode($data, JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// Router por action
+$action = $_REQUEST['action'] ?? '';
+switch ($action) {
+    case 'list':    // ...
+    case 'create':  // ...
+}
+```
+
+---
+
+## 🔍 Búsqueda de Códigos Médicos
+
+El módulo incluye un endpoint de búsqueda en vivo para autocompletado de códigos médicos desde los modales de autorización y frecuencia.
+
+### Tipos de código soportados
+
+| Code Type | Tabla OpenEMR | Columna código | Columna descripción | Filtros |
+|---|---|---|---|---|
+| `CPT4` | `cpt_codes_es` | `code` | `short_description` + `medium_description` | — |
+| `CDT` | `cdt_codes` | `cdt_code` | `description` | — |
+| `ICD10-PCS` | `icd10_pcs_order_code` | `pcs_code` | `long_desc` + `short_desc` | `active = 1` |
+| `SNOMED-PR` | `sct2_description` | `conceptId` | `term` | `active = '1'` + `term LIKE '%(procedimiento)'` + `effectiveTime > '2003-10-31'` |
+| `ODONTO` | `odontologico` | `codigo` | `descripcion` | — |
+
+### Uso del endpoint
+
+```
+GET pages/api/cpt_search.php?action=search&code_type=CPT4&q=99213&limit=15
+```
+
+**Respuesta:**
+```json
+{
+  "data": [
+    {
+      "code": "99213",
+      "short_description": "E/M, paciente estable, problema moderado",
+      "medium_description": "Visita de oficina, nivel 3",
+      "code_type_label": "CPT4"
+    }
+  ]
+}
+```
+
+### Funcionalidad frontend
+
+- **Lupa magnificadora** aparece junto al input de código cuando el tipo es soportado
+- **Búsqueda con debounce** (300ms) contra el endpoint
+- **Prioridad**: código exacto > código con prefijo > descripción
+- **Selección**: clic en un resultado completa el input y cierra el popover
+- **Cierre**: Escape o clic fuera del popover
+
 ---
 
 ## 📁 Estructura de archivos
@@ -409,18 +632,57 @@ oe-module-coverage-latam/
 ├── 📄 index.php                   ← Entrada estándar del módulo
 ├── 📄 version.php                 ← Versión y metadatos
 ├── 📄 composer.json               ← Autoload PSR-4
+├── 📄 latam_packs.sql             ← Catálogo CPT4 español (570+ códigos)
+│
+├── 📂 packs/                      ← Paquetes de país (12 países)
+│   ├── 📄 ar.json                    Argentina (NNAR)
+│   ├── 📄 bo.json                    Bolivia
+│   ├── 📄 br.json                    Brasil
+│   ├── 📄 cl.json                    Chile
+│   ├── 📄 co.json                    Colombia
+│   ├── 📄 do.json                    República Dominicana
+│   ├── 📄 ec.json                    Ecuador
+│   ├── 📄 mx.json                    México
+│   ├── 📄 pe.json                    Perú
+│   ├── 📄 py.json                    Paraguay
+│   ├── 📄 uy.json                    Uruguay
+│   └── 📄 ve.json                    Venezuela
 │
 ├── 📂 sql/
 │   ├── 📄 install.sql             ← 12 tablas covl_* + datos iniciales
 │   ├── 📄 uninstall.sql           ← DROP en orden FK-seguro
+│   ├── 📄 latam_packs.sql         ← Catálogo CPT4 español
 │   └── 📂 legacy/
 │       └── 📄 argentina_seed.sql.bak ← Seed histórico (reemplazado por CountryPackImporter)
 │
-├── 📂 packs/
-│   └── 📄 ar.json, bo.json, br.json, cl.json, co.json, do.json,   ← Paquetes de país
-│       ec.json, mx.json, pe.json, py.json, uy.json, ve.json          (reglas + moneda)
+├── 📂 pages/
+│   ├── 📄 dashboard.php            ← UI monolítica: 7 pestañas, 10 modales
+│   │
+│   ├── 📂 api/                     ← 7 endpoints REST
+│   │   ├── 📄 auth_rules.php          CRUD reglas de autorización
+│   │   ├── 📄 frequency_rules.php     CRUD reglas de frecuencia
+│   │   ├── 📄 providers.php           CRUD convenios prestadores
+│   │   ├── 📄 batches.php             CRUD lotes de liquidación + ítems
+│   │   ├── 📄 country_packs.php       Gestión de paquetes de país
+│   │   ├── 📄 insurers.php            Lista de financiadores
+│   │   └── 📄 cpt_search.php          Búsqueda de códigos médicos
+│   │
+│   └── 📂 assets/
+│       ├── 📂 css/
+│       │   └── 📄 admin-rules.css     Estilos para reglas y modales
+│       ├── 📂 js/                      6 archivos JavaScript
+│       │   ├── 📄 rules-crud.js            CRUD de reglas (auth + freq)
+│       │   ├── 📄 countries-crud.js        CRUD de paquetes de país
+│       │   ├── 📄 providers-crud.js        CRUD de convenios prestadores
+│       │   ├── 📄 batches-crud.js          CRUD de lotes de liquidación
+│       │   ├── 📄 cpt-search.js            Búsqueda de códigos médicos
+│       │   └── 📄 modal-helper.js          Utilidades de modales
+│       └── 📂 vendor/
+│           └── 📂 flag-icons/         Biblioteca de íconos de banderas
 │
-└── 📂 src/
+└── 📂 src/                         ← PHP backend (PSR-4)
+    ├── 📄 CsrfCompat.php              Compatibilidad CSRF (OpenEMR 8.0–8.3+)
+    │
     ├── 📂 Contracts/              ← Interfaces del contrato (estables)
     │   ├── CoverageAdapterInterface.php
     │   ├── EligibilityResultInterface.php
@@ -433,17 +695,21 @@ oe-module-coverage-latam/
     ├── 📂 Adapter/                ← Implementaciones de integraciones
     │   └── ManualFallbackAdapter.php
     │
-    ├── 📂 Service/                ← Lógica de negocio
+    ├── 📂 Service/                ← Lógica de negocio (7 servicios)
     │   ├── AuthorizationService.php
     │   ├── FrequencyCheckService.php
     │   ├── ProviderCoverageService.php
-    │   ├── CountryPackCatalog.php ← Lee packs/*.json (catálogo para el tab Países)
-    │   ├── CountryPackImporter.php← Upsert idempotente de packs/*.json → covl_* (transacción)
-    │   ├── CountryPackInstaller.php ← Capa de compatibilidad sobre el importer
-    │   └── AdapterRegistry.php
+    │   ├── AdapterRegistry.php
+    │   ├── CountryPackCatalog.php
+    │   ├── CountryPackImporter.php
+    │   └── CountryPackInstaller.php
     │
-    └── 📂 Repository/             ← Acceso a datos (sqlStatement nativo)
-        └── AuthorizationRepository.php
+    └── 📂 Repository/             ← Acceso a datos (5 repos)
+        ├── AuthorizationRepository.php
+        ├── AuthRulesRepository.php
+        ├── FrequencyRulesRepository.php
+        ├── ProviderCoverageRepository.php
+        └── SettlementBatchRepository.php
 ```
 
 ---
@@ -481,7 +747,7 @@ No. Solo crea tablas propias con prefijo `covl_`. Las tablas nativas se usan med
 Sí. El `ManualFallbackAdapter` permite operar en modo manual completo: el operador gestiona autorizaciones y actualiza estados desde la interfaz del módulo.
 
 **¿Cómo agrego soporte para otro país?**  
-Desde el módulo: **Dashboard → Países → Agregar País** se instala un paquete del catálogo incluido (`packs/*.json` — Argentina, Chile, Colombia, México, Perú, Uruguay). Cada paquete registra el nomenclador nacional en `code_types`, da de alta el registro en `covl_country_packs` y carga las reglas base de autorización/frecuencia y equivalencias de códigos (upsert idempotente vía `CountryPackImporter`, en una transacción). Para un país nuevo: copiá `packs/xx.json`, completá los datos y ajustá `auth_rules`, `frequency_rules` y `code_maps`; luego instalalo desde la pestaña **Países** (o reimportalo si el país ya existe).
+Desde el módulo: **Dashboard → Países → Agregar País** se instala un paquete del catálogo incluido (`packs/*.json` — Argentina, Chile, Colombia, México, Perú, Uruguay, etc.). Cada paquete registra el nomenclador nacional en `code_types`, da de alta el registro en `covl_country_packs` y carga las reglas base de autorización/frecuencia y equivalencias de códigos (upsert idempotente vía `CountryPackImporter`, en una transacción). Para un país nuevo: copiá `packs/xx.json`, completá los datos y ajustá `auth_rules`, `frequency_rules` y `code_maps`; luego instalalo desde la pestaña **Países** (o Actualizar si el país ya existe).
 
 **¿Qué pasa si un financiador tiene reglas distintas por plan?**  
 Usá el campo `plan_pattern` en `covl_auth_rules` con comodines `%`. Ejemplo: `plan_name LIKE 'GOLD%'` → aplica a todos los planes que empiecen con "GOLD".
@@ -493,7 +759,7 @@ Sí. `covl_authorization_history` registra cada transición con `created_at`, el
 
 ## 🗺️ Hoja de ruta
 
-### v1.0 — Base (actual)
+### v1.0 — Base ✅ Completado
 - [x] Modelo de datos completo (12 tablas)
 - [x] Contratos de adaptadores
 - [x] Adaptador manual (fallback)
@@ -501,23 +767,24 @@ Sí. `covl_authorization_history` registra cada transición con `created_at`, el
 - [x] Validación de frecuencia
 - [x] Convenios de prestadores
 - [x] Paquete Argentina (semillas)
+- [x] Dashboard de gestión (PHP + UI, 7 pestañas)
+- [x] Repositorios (5 repos con CRUD completo)
+- [x] API REST (7 endpoints)
+- [x] Búsqueda de códigos médicos (CPT4, CDT, ICD10-PCS, SNOMED-PR, ODONTO)
+- [x] 12 paquetes de país
+- [x] Catálogo CPT4 español (570+ códigos)
+- [x] Compatibilidad CSRF (CsrfCompat)
 
-### v1.1 — En progreso
-- [ ] Servicio y repositorio de lotes (`SettlementService`)
-- [ ] Dashboard de gestión (PHP + UI)
-- [ ] Clase `ArgentinaCountryPack` (carga programática)
-
-### v1.2 — Planificado
+### v1.1 — Próximo
 - [ ] Integración AJAX: widget de autorización en el encuentro clínico
 - [ ] Hook de check-in: validación automática de convenio prestador
 - [ ] Exportación de lotes a Excel / PDF
 - [ ] Importación masiva de convenios de prestadores
 
 ### v2.0 — Futuro
-- [ ] Paquete Chile 🇨🇱 (FONASA, ISAPRES)
-- [ ] Paquete Colombia 🇨🇴 (EPS, régimen subsidiado)
-- [ ] API REST para consulta de autorizaciones desde sistemas externos
 - [ ] Adaptador ARCA/OSDE para verificación en línea
+- [ ] API REST para consulta de autorizaciones desde sistemas externos
+- [ ] Notificaciones push para cambios de estado de autorización
 
 ---
 
